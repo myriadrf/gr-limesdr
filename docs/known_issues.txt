@@ -1,0 +1,11 @@
+﻿1. Python Path is not /usr/lib/python2.7/site-package/:/usr/local/lib/python2.7/site-package/
+export PYTHONPATH="/usr/lib/python2.7/site-packages/:/usr/local/lib/python2.7/site-packages" 
+
+this line is need to be added in the end of .bashrc file.
+
+2. Blocks work with LimeSuite version 17.10.0 and above.
+
+3. LimeSuite libraries ar not in /usr/local/lib. Delete libraries from usr/lib and reinstall LimeSuite.
+
+4. While running GNU Radio flowgraph “aUaU” message is thrown. This means audio underrun (not enough
+samples ready to send to sound sink.

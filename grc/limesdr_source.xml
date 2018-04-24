@@ -1,0 +1,702 @@
+<?xml version="1.0"?>
+<block>
+    <name>LimeSuite Source (RX)</name>
+    <key>limesdr_source</key>
+    <category>LimeSuite</category>
+    <import>import limesdr</import>
+    <make>limesdr.source($device_number,
+			 $device_type,
+			 $chip_mode,
+			 $channel,
+			 $file_switch,
+			 $filename,
+			 $rf_freq,
+			 $samp_rate,
+			 $oversample,
+			 $calibration_ch0,
+			 $calibr_bandw_ch0,
+			 $calibration_ch1,
+			 $calibr_bandw_ch1,
+			 $lna_path_mini,
+			 $lna_path_ch0,
+			 $lna_path_ch1,
+			 $analog_filter_ch0,
+			 $analog_bandw_ch0,
+			 $analog_filter_ch1,
+			 $analog_bandw_ch1,
+			 $digital_filter_ch0,
+			 $digital_bandw_ch0,
+			 $digital_filter_ch1,
+			 $digital_bandw_ch1,
+			 $gain_dB_ch0,
+			 $gain_dB_ch1)</make>
+
+    <param>
+        <name>Device number</name>
+        <key>device_number</key>
+        <value>0</value>
+        <type>int</type>
+        <hide>none</hide>
+    </param>
+
+    <param>
+        <name>Device type</name>
+        <key>device_type</key>
+        <value>2</value>
+        <type>int</type>
+        <hide>none</hide>
+        <option>
+            <name>LimeSDR-Mini</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>LimeSDR-USB</name>
+            <key>2</key>
+        </option>
+    </param>
+
+    <param>
+        <name>Chip mode</name>
+        <key>chip_mode</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>none</hide>
+        <option>
+            <name>SISO</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>MIMO</name>
+            <key>2</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH0</name>
+        <key>channel</key>
+        <value>0</value>
+        <type>enum</type>
+        <hide>
+	  #if $device_type() == 1
+	    all
+	  #else if $chip_mode() == 2
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>A</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>B</name>
+            <key>1</key>
+        </option>
+    </param>
+
+    <param>
+        <name>Load settings</name>
+        <key>file_switch</key>
+        <value>0</value>
+        <type>int</type>
+        <hide>none</hide>
+        <option>
+            <name>NO</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>YES</name>
+            <key>1</key>
+        </option>
+    </param>
+
+    <param>
+        <name>File</name>
+        <key>filename</key>
+        <value></value>
+        <type>file_open</type>
+        <hide>
+	  #if $file_switch() == 0
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>Center frequency</name>
+        <key>rf_freq</key>
+        <value>100e6</value>
+        <type>float</type>
+        <hide>
+	  #if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>Sample rate</name>
+        <key>samp_rate</key>
+        <value>10e6</value>
+        <type>float</type>
+        <hide>
+	  #if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>Oversample</name>
+        <key>oversample</key>
+        <value>0</value>
+        <type>enum</type>
+        <hide>
+	  #if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>Default</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>1</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>2</name>
+            <key>2</key>
+        </option>
+        <option>
+            <name>4</name>
+            <key>4</key>
+        </option>
+        <option>
+            <name>8</name>
+            <key>8</key>
+        </option>
+        <option>
+            <name>16</name>
+            <key>16</key>
+        </option>
+        <option>
+            <name>32</name>
+            <key>32</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH0:Calibration</name>
+        <key>calibration_ch0</key>
+        <value>0</value>
+        <type>enum</type>
+        <hide>
+	  #if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>OFF</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>ON</name>
+            <key>1</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH0:Calibration bandw.</name>
+        <key>calibr_bandw_ch0</key>
+        <value>10e6</value>
+        <type>float</type>
+        <hide>
+	  #if $calibration_ch0() == 0
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>CH0:LNA path</name>
+        <key>lna_path_mini</key>
+        <value>1</value>
+        <type>enum</type>
+        <hide>
+	  #if $device_type() == 2
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>H</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>W</name>
+            <key>3</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH0:LNA path</name>
+        <key>lna_path_ch0</key>
+        <value>1</value>
+        <type>enum</type>
+        <hide>
+	  #if $device_type() == 1
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>H</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>L</name>
+            <key>2</key>
+        </option>
+        <option>
+            <name>W</name>
+            <key>3</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH0:Analog filter</name>
+        <key>analog_filter_ch0</key>
+        <value>0</value>
+        <type>enum</type>
+        <hide>
+	  #if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>OFF</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>ON</name>
+            <key>1</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH0:Analog filter bandw.</name>
+        <key>analog_bandw_ch0</key>
+        <value>10e6</value>
+        <type>float</type>
+        <hide>
+	  #if $analog_filter_ch0() == 0
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>CH0:Digital filter</name>
+        <key>digital_filter_ch0</key>
+        <value>0</value>
+        <type>enum</type>
+        <hide>
+	  #if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>OFF</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>ON</name>
+            <key>1</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH0:Digital filter bandw.</name>
+        <key>digital_bandw_ch0</key>
+        <value>0</value>
+        <type>float</type>
+        <hide>
+	  #if $digital_filter_ch0() == 0
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>CH0:Gain,dB</name>
+        <key>gain_dB_ch0</key>
+        <value>60</value>
+        <type>int</type>
+        <hide>
+	  #if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>CH1:Calibration</name>
+        <key>calibration_ch1</key>
+        <value>0</value>
+        <type>enum</type>
+        <hide>
+	  #if $chip_mode() == 1
+	    all
+	  #else if $device_type() == 1
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>OFF</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>ON</name>
+            <key>1</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH1:Calibration bandw.</name>
+        <key>calibr_bandw_ch1</key>
+        <value>10e6</value>
+        <type>float</type>
+        <hide>
+	  #if $calibration_ch1() == 0
+	    all
+	  #else if $chip_mode() == 1
+	    all
+	  #else if $device_type() == 1
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>CH1:LNA path</name>
+        <key>lna_path_ch1</key>
+        <value>1</value>
+        <type>enum</type>
+        <hide>
+	  #if $chip_mode() == 1
+	    all
+	  #else if $device_type() == 1
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>H</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>L</name>
+            <key>2</key>
+        </option>
+        <option>
+            <name>W</name>
+            <key>3</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH1:Analog filter</name>
+        <key>analog_filter_ch1</key>
+        <value>0</value>
+        <type>enum</type>
+        <hide>
+	  #if $chip_mode() == 1
+	    all
+	  #else if $device_type() == 1
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>OFF</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>ON</name>
+            <key>1</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH1:Analog filter bandw.</name>
+        <key>analog_bandw_ch1</key>
+        <value>10e6</value>
+        <type>float</type>
+        <hide>
+	  #if $analog_filter_ch1() == 0
+	    all
+	  #else if $chip_mode() == 1
+	    all
+	  #else if $device_type() == 1
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>CH1:Digital filter</name>
+        <key>digital_filter_ch1</key>
+        <value>0</value>
+        <type>enum</type>
+        <hide>
+	  #if $chip_mode() == 1
+	    all
+	  #else if $device_type() == 1
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+        <option>
+            <name>OFF</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>ON</name>
+            <key>1</key>
+        </option>
+    </param>
+
+    <param>
+        <name>CH1:Digital filter bandw.</name>
+        <key>digital_bandw_ch1</key>
+        <value>0</value>
+        <type>float</type>
+        <hide>
+	  #if $digital_filter_ch1() == 0
+	    all
+	  #else if $chip_mode() == 1
+	    all
+	  #else if $device_type() == 1
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <param>
+        <name>CH1:Gain,dB</name>
+        <key>gain_dB_ch1</key>
+        <value>60</value>
+        <type>int</type>
+        <hide>
+	  #if $chip_mode() == 1
+	    all
+	  #else if $device_type() == 1
+	    all
+	  #else if $file_switch() == 1
+	    all
+	  #else
+	    none
+	  #end if
+	</hide>
+    </param>
+
+    <check> $device_number >= 0 </check>
+    <check> $device_type >= $chip_mode </check>
+    <check> $device_type >= 1 </check>
+    <check> 2 >= $device_type </check>
+
+    <check> $chip_mode >= 1 </check>
+    <check> 2 >= $chip_mode </check>
+
+    <check> $rf_freq >= 100e3  </check>
+    <check> 3800e6 >= $rf_freq </check>
+
+    <check> $calibr_bandw_ch0 >= 2.5e6 </check>
+    <check> 120e6 >= $calibr_bandw_ch0</check>
+
+    <check> $calibr_bandw_ch1 >= 2.5e6 </check>
+    <check> 120e6 >= $calibr_bandw_ch1</check>
+
+    <check> $analog_bandw_ch0 >= 1.5e6 </check>
+    <check> 130e6 >= $analog_bandw_ch0</check>
+
+    <check> $analog_bandw_ch1 >= 1.5e6 </check>
+    <check> 130e6 >= $analog_bandw_ch1 </check>
+
+    <check> $digital_bandw_ch0 >= 0 </check>
+    <check> $samp_rate >= $digital_bandw_ch0</check>
+  
+    <check> $digital_bandw_ch1 >= 0 </check>
+    <check> $samp_rate >= $digital_bandw_ch1</check>
+
+    <check> $gain_dB_ch0 >= 0 </check>
+    <check> 70 >= $gain_dB_ch0 </check>
+
+    <check> $gain_dB_ch1 >= 0 </check>
+    <check> 70 >= $gain_dB_ch1 </check>
+
+    <check> $samp_rate > 0 </check>
+    <check> 61.44e6 >= $samp_rate </check>
+
+    <source>
+        <name>out</name>
+        <type>complex</type>
+        <nports>$chip_mode</nports>
+    </source>
+
+<doc>
+-------------------------------------------------------------------------------------------------------------------
+DEVICE NUMBER
+
+Device number obtained by running
+
+	LimeUtil --find
+
+List numbering begins by 0.
+-------------------------------------------------------------------------------------------------------------------
+DEVICE TYPE
+
+This setting lets you choose from predefined device type list and loads appropriate settings for the selected device.
+Currently supported device types: LimeSDR-USB, LimeSDR-Mini.
+-------------------------------------------------------------------------------------------------------------------
+CHIP MODE
+
+Use this setting to choose between single-input and single-output (SISO)/multiple-input and multiple-output (MIMO) chip modes.
+
+Note: not all devices support MIMO mode.
+-------------------------------------------------------------------------------------------------------------------
+CH0
+
+When in SISO mode select active channel as CH0.
+
+Note: not all devices have more than one channel.
+-------------------------------------------------------------------------------------------------------------------
+LOAD SETTINGS
+
+Enable loading settings from file.
+
+Note: setting must match in LimeSuite Source and Sink for the same device.
+-------------------------------------------------------------------------------------------------------------------
+FILE
+
+Generate .ini file with LimeSuite and select path.
+
+Note: setting must match in LimeSuite Source and Sink for the same device.
+-------------------------------------------------------------------------------------------------------------------
+CENTER FREQUENCY
+
+Set RF center frequency for RX (both channels).
+LimeSDR-USB supports 	[100e3,3800e6] 	Hz.
+LimeSDR-Mini supports 	[10e6,3800e6] 	Hz.
+-------------------------------------------------------------------------------------------------------------------
+SAMPLE RATE
+
+Here you can select sample rate for RX.
+
+LimeSDR-USB sample rate must be no more than 61.44e6 S/s.
+LimeSDR-Mini sample rate must be no more than 30.72e6 S/s.
+
+Note: LimeSDR-Mini supports only the same sample rate for TX and RX.
+-------------------------------------------------------------------------------------------------------------------
+OVERSAMPLE
+
+Here you can select oversampling value for RX. Default value uses highest possible oversampling value.
+
+Note: LimeSDR-Mini supports only the same oversampling value for TX and RX.
+-------------------------------------------------------------------------------------------------------------------
+CALIBRATION
+
+Turn DC offset and IQ imbalance calibration ON/OFF for each channel.
+-------------------------------------------------------------------------------------------------------------------
+CALIBRATION BANDW.
+
+When calibration is turned ON this setting is used to set bandwidth for calibration for each channel. This value should be equal to your signal bandwidth.
+
+Calibration bandwidth range must be [2.5e6,120e6] Hz.
+-------------------------------------------------------------------------------------------------------------------
+LNA PATH
+
+Select active low-noise amplifier path of each channel.
+-------------------------------------------------------------------------------------------------------------------
+ANALOG FILTER
+
+Turn low-pass filter ON/OFF for each channel. When OFF device uses default values.
+-------------------------------------------------------------------------------------------------------------------
+ANALOG FILTER BANDW.
+
+Enter analog filter bandwidth for each channel.
+Analog filter bandwidth range must be [1.5e6,130e6] Hz.
+-------------------------------------------------------------------------------------------------------------------
+DIGITAL FILTER
+
+Turn digital filters (GFIR) ON/OFF for each channel.
+-------------------------------------------------------------------------------------------------------------------
+DIGITAL FILTER BANDW.
+
+Enter digital filter bandwidth for each channel. Bandwidth should not be higher than sample rate.
+-------------------------------------------------------------------------------------------------------------------
+GAIN
+
+Controls combined RX gain settings. Gain range must be [0,70] dB.
+-------------------------------------------------------------------------------------------------------------------
+</doc>
+</block>

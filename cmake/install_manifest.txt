@@ -1,0 +1,16 @@
+/usr/local/lib/cmake/limesdr/limesdrConfig.cmake
+/usr/local/include/limesdr/api.h
+/usr/local/include/limesdr/source.h
+/usr/local/include/limesdr/sink.h
+/usr/local/lib/libgnuradio-limesdr.so
+/usr/local/lib/python2.7/dist-packages/limesdr/_limesdr_swig.so
+/usr/local/lib/python2.7/dist-packages/limesdr/limesdr_swig.py
+/usr/local/lib/python2.7/dist-packages/limesdr/limesdr_swig.pyc
+/usr/local/lib/python2.7/dist-packages/limesdr/limesdr_swig.pyo
+/usr/local/include/limesdr/limesdr/swig/limesdr_swig.i
+/usr/local/include/limesdr/limesdr/swig/limesdr_swig_doc.i
+/usr/local/lib/python2.7/dist-packages/limesdr/__init__.py
+/usr/local/lib/python2.7/dist-packages/limesdr/__init__.pyc
+/usr/local/lib/python2.7/dist-packages/limesdr/__init__.pyo
+/usr/local/share/gnuradio/grc/blocks/limesdr_source.xml
+/usr/local/share/gnuradio/grc/blocks/limesdr_sink.xml

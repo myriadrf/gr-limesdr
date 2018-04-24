@@ -1,0 +1,1 @@
+/usr/bin/c++   -O3 -DNDEBUG   CMakeFiles/limesdr_swig_swig_2d0df.dir/limesdr_swig_swig_2d0df.cpp.o  -o limesdr_swig_swig_2d0df  -L/usr/local/lib/libLimeSuite.so -rdynamic 
