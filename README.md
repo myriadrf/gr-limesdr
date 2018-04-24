@@ -15,7 +15,7 @@ selected device type.
 * SWIG
 * LimeSuite
 
-##Installation process
+## Installation process
 
 cd gr-limesdr/build
 cmake ..
