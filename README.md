@@ -23,7 +23,9 @@ selected device type.
 ## Installation process
 
 <pre>
-cd gr-limesdr/build
+cd gr-limesdr
+mkdir build
+cd build
 cmake ..
 make
 sudo make install
