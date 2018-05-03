@@ -399,15 +399,9 @@ void device_handler::set_samp_rate_dir(int device_number, const int direction, c
 
 void device_handler::set_rf_freq(int device_number, int device_type, bool direction, int channel, float rf_freq)
 {
-    if(device_type == 1 && (rf_freq < 10e6 || rf_freq > 3800e6))
+    if(rf_freq <= 0)
     {
-        std::cout << "ERROR: device_handler::set_rf_freq(): LimeSDR-Mini rf_freq range must be [10e6,3800e6] Hz." << std::endl;
-        close_all_devices();
-        exit(0);
-    }
-    else if(device_type == 2 && (rf_freq < 100e3 || rf_freq > 3800e6))
-    {
-        std::cout << "ERROR: device_handler::set_rf_freq(): LimeSDR-USB rf_freq range must be [100e3,3800e6] Hz." << std::endl;
+        std::cout << "ERROR: device_handler::set_rf_freq(): rf_freq must be more than 0 Hz." << std::endl;
         close_all_devices();
         exit(0);
     }
@@ -727,6 +721,7 @@ void device_handler::set_digital_filter(int device_number, bool direction, int c
   }
   else
   {
+
     if(LMS_SetGFIRLPF(device_handler::getInstance().get_device(device_number),direction,channel,digital_filter,digital_bandw)!=LMS_SUCCESS)
         device_handler::error(device_number);
   }

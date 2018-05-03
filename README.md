@@ -11,6 +11,7 @@ selected device type.
 ## Currently under development
 
 * Callback functions
+* NCO setting
 * Windows OS support
 
 ## Dependencies

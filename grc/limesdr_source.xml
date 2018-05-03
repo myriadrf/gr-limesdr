@@ -30,7 +30,7 @@
 			 $digital_bandw_ch1,
 			 $gain_dB_ch0,
 			 $gain_dB_ch1)</make>
-
+		
     <param>
         <name>Device number</name>
         <key>device_number</key>
@@ -567,8 +567,7 @@
     <check> $chip_mode >= 1 </check>
     <check> 2 >= $chip_mode </check>
 
-    <check> $rf_freq >= 100e3  </check>
-    <check> 3800e6 >= $rf_freq </check>
+    <check> $rf_freq > 0  </check>
 
     <check> $calibr_bandw_ch0 >= 2.5e6 </check>
     <check> 120e6 >= $calibr_bandw_ch0</check>

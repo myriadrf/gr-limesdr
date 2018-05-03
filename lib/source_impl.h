@@ -34,6 +34,12 @@ namespace gr
 	lms_stream_t streamId[2];
 	uint32_t fifosize =  4096*10;
 
+
+
+	int LMS_CH_0 = 0;
+	int LMS_CH_1 = 1;
+	int source_block = 1;
+	
 	struct constant_data
 	{
 	  int device_number;
@@ -41,10 +47,6 @@ namespace gr
 	  int chip_mode;
 	  int channel;
 	} stored;
-
-	int LMS_CH_0 = 0;
-	int LMS_CH_1 = 1;
-	int source_block = 1;
 
     public:
 	source_impl(int device_number,
@@ -79,6 +81,10 @@ namespace gr
 		gr_vector_const_void_star &input_items,
 		gr_vector_void_star &output_items);
 
+	bool start(void);
+
+  bool stop(void);
+	
 	void init_stream(int device_number, int channel);
 
 	inline gr::io_signature::sptr args_to_io_signature(int channel_number);

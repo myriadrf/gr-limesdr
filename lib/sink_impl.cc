@@ -197,46 +197,57 @@ namespace gr
 		device_handler::getInstance().calibrate(stored.device_number,stored.device_type,calibration_ch1,LMS_CH_TX,LMS_CH_1,calibr_bandw_ch1,rf_freq,pa_path_ch1);
 	    }
 	}
-	// 13. Initialize and start stream for channel 0 (if chip_mode is SISO)
-	if(stored.chip_mode == 1) // If SISO configure prefered channel
-	{
-	    this->init_stream(stored.device_number,stored.channel);
-	    if(LMS_StartStream(&streamId[stored.channel]) != LMS_SUCCESS)
-		device_handler::getInstance().error(stored.device_number);
-	}
 
-	// 14. Initialize and start stream for channels 0 & 1 (if chip_mode is MIMO)
-	else if(stored.chip_mode == 2 && stored.device_type == 2)
-	{
-	    this->init_stream(stored.device_number,LMS_CH_0);
-	    this->init_stream(stored.device_number,LMS_CH_1);
-	    if(LMS_StartStream(&streamId[LMS_CH_0]) != LMS_SUCCESS)
-		device_handler::getInstance().error(stored.device_number);
-	    if(LMS_StartStream(&streamId[LMS_CH_1]) != LMS_SUCCESS)
-		device_handler::getInstance().error(stored.device_number);
-	}
 	std::cout << "---------------------------------------------------------------" <<  std::endl;
     }
 
     sink_impl::~sink_impl()
-    {
-	// Stop and destroy stream for channel 0 (if chip_mode is SISO)
-	if(stored.chip_mode == 1)
-	{
-	    LMS_StopStream(&streamId[0]);
-	    LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number), &streamId[0]);
-	}
-	// Stop and destroy stream for channels 0 & 1 (if chip_mode is MIMO)
-	else if(stored.chip_mode == 2)
-	{
-	    LMS_StopStream(&streamId[0]);
-	    LMS_StopStream(&streamId[1]);
-	    LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number), &streamId[0]);
-	    LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number), &streamId[1]);
-	}
-	device_handler::getInstance().close_device(stored.device_number);
-    }
+    {}
 
+		bool sink_impl::start(void)
+		{
+			// Initialize and start stream for channel 0 (if chip_mode is SISO)
+			if(stored.chip_mode == 1) // If SISO configure prefered channel
+			{
+					this->init_stream(stored.device_number,stored.channel);
+					if(LMS_StartStream(&streamId[stored.channel]) != LMS_SUCCESS)
+				device_handler::getInstance().error(stored.device_number);
+			}
+
+			// Initialize and start stream for channels 0 & 1 (if chip_mode is MIMO)
+			else if(stored.chip_mode == 2 && stored.device_type == 2)
+			{
+					this->init_stream(stored.device_number,LMS_CH_0);
+					this->init_stream(stored.device_number,LMS_CH_1);
+					if(LMS_StartStream(&streamId[LMS_CH_0]) != LMS_SUCCESS)
+				device_handler::getInstance().error(stored.device_number);
+					if(LMS_StartStream(&streamId[LMS_CH_1]) != LMS_SUCCESS)
+				device_handler::getInstance().error(stored.device_number);
+			}
+			return true;
+		}
+
+    bool sink_impl::stop(void)
+    {
+			// Stop and destroy stream for channel 0 (if chip_mode is SISO)
+			if(stored.chip_mode == 1)
+			{
+					LMS_StopStream(&streamId[stored.channel]);
+					LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number), &streamId[stored.channel]);
+			}
+			// Stop and destroy stream for channels 0 & 1 (if chip_mode is MIMO)
+			else if(stored.chip_mode == 2)
+			{
+					LMS_StopStream(&streamId[LMS_CH_0]);
+					LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number), &streamId[LMS_CH_0]);
+					LMS_StopStream(&streamId[LMS_CH_1]);
+					LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number), &streamId[LMS_CH_1]);
+			}
+			device_handler::getInstance().close_device(stored.device_number);
+
+      return true;
+    }
+    
     int
     sink_impl::work(int noutput_items,
 		    gr_vector_const_void_star &input_items,
@@ -275,7 +286,7 @@ namespace gr
 	}
     }
 
-    // Setup stream structure
+    // Setup stream
     void sink_impl::init_stream(int device_number, int channel)
     {
 	streamId[channel].channel = channel;
@@ -305,7 +316,7 @@ namespace gr
 	else
 	{
 	    std::cout << "ERROR: sink_impl::args_to_io_signature(): channel_number must be 0 or 1." << std::endl;
-	    exit(-1);
+	    exit(0);
 	}
     }
   }
