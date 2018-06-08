@@ -284,6 +284,7 @@ namespace gr
 	    consume(0,ret0);
 	    consume(1,ret1);
 	}
+    return 0;
     }
 
     // Setup stream
