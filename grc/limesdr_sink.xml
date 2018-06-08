@@ -3,6 +3,7 @@
     <name>LimeSuite Sink (TX)</name>
     <key>limesdr_sink</key>
     <category>LimeSuite</category>
+    <flags>throttle</flags>
     <import>import limesdr</import>
     <make>limesdr.sink($device_number,
 		       $device_type,
