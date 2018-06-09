@@ -206,7 +206,9 @@ namespace gr
     }
 
     source_impl::~source_impl()
-    {}
+    {
+        device_handler::getInstance().close_device(stored.device_number);
+    }
 
 		bool source_impl::start(void)
 		{
@@ -247,8 +249,6 @@ namespace gr
 					LMS_StopStream(&streamId[LMS_CH_1]);
 					LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number), &streamId[LMS_CH_1]);
 			}
-			device_handler::getInstance().close_device(stored.device_number);
-
       return true;
     }
     
