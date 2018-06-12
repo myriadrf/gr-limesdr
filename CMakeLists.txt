@@ -141,8 +141,12 @@ endif()
 ########################################################################
 MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
 
+INCLUDE(FindPkgConfig)
+PKG_CHECK_MODULES(PC_LIMESUITE LimeSuite)
+
 find_path(LIMESUITE_INCLUDE_DIRS 
  NAMES LimeSuite.h
+ HINTS ${PC_LIMESUITE_INCLUDEDIR}/lime
  PATHS ${LIMESUITE_PKG_INCLUDE_DIRS}
        /usr/include/lime
        /usr/local/include/lime
@@ -150,6 +154,7 @@ find_path(LIMESUITE_INCLUDE_DIRS
 
 find_library(LIMESUITE_LIB 
  NAMES LimeSuite limesuite
+ HINTS ${PC_LIMESUITE_LIBDIR}
  PATHS ${LIMESDR_PKG_LIBRARY_DIRS}
        /usr/lib
        /usr/local/lib
