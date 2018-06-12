@@ -287,7 +287,7 @@
     <param>
         <name>CH0:Analog filter</name>
         <key>analog_filter_ch0</key>
-        <value>0</value>
+        <value>1</value>
         <type>enum</type>
         <hide>
 	  #if $file_switch() == 1
@@ -453,7 +453,7 @@
     <param>
         <name>CH1:Analog filter</name>
         <key>analog_filter_ch1</key>
-        <value>0</value>
+        <value>1</value>
         <type>enum</type>
         <hide>
 	  #if $chip_mode() == 1
