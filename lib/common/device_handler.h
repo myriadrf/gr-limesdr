@@ -25,16 +25,18 @@
 #include <math.h>
 #include <cmath>
 #include <vector>
+#include <list>
+#include <mutex>
+#include <string>
 #include <LimeSuite.h>
-#include <lime/LMS7002M_parameters.h>
 
 class device_handler
 {
-private:
-
+private:  
   int open_devices = 0;
-
+  // Read device list once flag
   bool list_read = false;
+  // Calculate open devices to close them all on close_all_devices
   int device_count;
   
   struct device
@@ -62,9 +64,11 @@ private:
   };
   
   //Device list
-  lms_info_str_t* list = new lms_info_str_t[5];
+  lms_info_str_t* list = new lms_info_str_t[20];
   // Device vector. Adds devices from the list
   std::vector<device> device_vector; 
+  // Run close_all_devices once with this flag
+  bool close_flag = false;
   
   device_handler() {};
   device_handler(device_handler const&);
@@ -80,6 +84,8 @@ public:
     return instance;
   }
   ~device_handler();
+
+  mutable std::recursive_mutex block_mutex;
   
 	/**
 	* Print device error and close all devices.
@@ -102,14 +108,14 @@ public:
 	* 
 	* @param   device_type LimeSDR-Mini(1), LimeSDR-USB(2).
 	*/
-	void open_device(int device_number, int device_type);
+	int open_device(std::string serial, int device_type);
 	
 	/**
 	* Disconnect from the device.
 	*
 	* @param   device_number Device number from the list of LMS_GetDeviceList.
 	*/
-	void close_device(int device_number);
+	void close_device(int device_number, int block_type);
 
 	/**
 	* Disconnect from all devices.
@@ -216,53 +222,9 @@ public:
 	* 	   and center frequencies below 30 MHz (NCO).
 	*/
 	void calibrate(int device_number, int device_type, int calibration, int direction, int channel, double bandwidth, float rf_freq, int path);
-	
-	/**
-	* Workaround for LimeSDR-Mini switch bug. Call upon implementation.
-	*
-	* @param   device_number Device number from the list of LMS_GetDeviceList.
-	*/
-	void mini_switch_workaround(int device_number);
-	
-	/**
-	* LNA switch for LimeSDR-Mini.
-	*
-	* @param   device_number Device number from the list of LMS_GetDeviceList.
-	* 
-	* @param   lna_path_mini  LNA switch: LNAH(1),LNAW(3).
-	*/
-	void set_lna_path_mini(int device_number, int lna_path_mini);
-	
-	/**
-	* Set LNA path.
-	*
-	* @param   device_number Device number from the list of LMS_GetDeviceList.
-	* 
-	* @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
-	* 
-	* @param   lna_path  LNA path: no path(0),LNAH(1),LNAL(2),LNAW(3).
-	*/
-	void set_lna_path(int device_number, int channel, int lna_path);
-	
-	/**
-	* PA switch for LimeSDR-Mini.
-	*
-	* @param   device_number Device number from the list of LMS_GetDeviceList.
-	* 
-	* @param   pa_path_mini  PA path: BAND1(1),BAND2(2).
-	*/
-	void set_pa_path_mini(int device_number, int pa_path_mini);
-	
-	/**
-	* Set PA path.
-	*
-	* @param   device_number Device number from the list of LMS_GetDeviceList.
-	* 
-	* @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
-	* 
-	* @param   pa_path  PA path: BAND1(1),BAND2(2).
-	*/
-	void set_pa_path(int device_number, int channel, int pa_path);
+
+
+	void set_antenna(int device_number, int channel, int direction, int antenna);
 	
 	/**
 	* Set analog filters.
@@ -311,6 +273,25 @@ public:
 	* @param   gain_dB        Desired gain: [0,70] RX, [0,60] TX.
 	*/
 	void set_gain(int device_number, bool direction, int channel, unsigned int gain_dB);
+
+	/**
+	* Set NCO (numerically controlled oscillator).
+	* By selecting NCO frequency, phase offset and CMIX mode
+	* configure NCO. When NCO frequency is 0, NCO is off.
+	*
+	* @param   device_number  Device number from the list of LMS_GetDeviceList.
+	* 
+	* @param   direction      Select RX or TX.
+	* 
+	* @param   channel        Channel index.
+	* 
+	* @param   nco_freq       NCO frequency in Hz.
+	* 
+	* @param   nco_pho	  NCO phase offset in deg.
+	* 
+	* @param   cmix_mode      CMIX mode: UPCONVERT(0), DOWNCONVERT(1).
+	*/
+	void set_nco(int device_number, bool direction, int channel, float nco_freq, float nco_pho, int cmix_mode);
 };
 
 

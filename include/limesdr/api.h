@@ -22,7 +22,6 @@
 #define INCLUDED_LIMESDR_API_H
 
 #include <gnuradio/attributes.h>
-#include <LimeSuite.h>
 
 #ifdef gnuradio_limesdr_EXPORTS
 #  define LIMESDR_API __GR_ATTR_EXPORT

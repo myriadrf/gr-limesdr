@@ -22,13 +22,13 @@
 #define INCLUDED_LIMESDR_SINK_H
 
 #include <limesdr/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/block.h>
 
 namespace gr
 {
   namespace limesdr
   {
-    class LIMESDR_API sink : virtual public gr::sync_block
+    class LIMESDR_API sink : virtual public gr::block
     {
     public:
 	typedef boost::shared_ptr<sink> sptr;
@@ -38,6 +38,8 @@ namespace gr
 	* To avoid accidental use of raw pointers, sink's
 	* constructor is private.  limesdr::sink::make is the public
 	* interface for creating new instances.
+	* 
+	* @param serial Device serial number. Cannot be left blank.
 	*
 	* @param device_type LimeSDR-Mini(1), LimeSDR-USB(2).
 	*
@@ -89,9 +91,17 @@ namespace gr
 	*
 	* @param gain_dB_ch1 Input TX gain channel 1 [0,60] dB.
 	*
+	* @param nco_freq_ch0 NCO frequency channel 0 in Hz.
+	*
+	* @param nco_freq_ch1 NCO frequency channel 1 in Hz.
+	* 
+	* @param cmix_mode_ch0 CMIX mode channel 0: UPCONVERT(0), DOWNCONVERT(1).
+	*
+	* @param cmix_mode_ch1 CMIX mode channel 1: UPCONVERT(0), DOWNCONVERT(1).
+	* 
 	* @return a new limesdr sink block object
 	*/
-	static sptr make(int device_number,
+	static sptr make(std::string serial,
 			int device_type,
 			int chip_mode,
 			int channel,
@@ -116,7 +126,23 @@ namespace gr
 			int digital_filter_ch1,
 			double digital_bandw_ch1,
 			int gain_dB_ch0,
-			int gain_dB_ch1);
+			int gain_dB_ch1,
+			float nco_freq_ch0,
+			float nco_freq_ch1,
+			int cmix_mode_ch0,
+			int cmix_mode_ch1);
+	
+	virtual void set_rf_freq(float rf_freq) = 0;
+	
+	virtual void set_pa_path(int pa_path, int channel) = 0;
+	
+	virtual void set_nco(float nco_freq, int cmix_mode, int channel) = 0;
+	
+	virtual void set_analog_filter(int analog_filter, float analog_bandw, int channel) = 0;
+	
+	virtual void set_digital_filter(int digital_filter, float digital_bandw, int channel) = 0;
+	
+	virtual void set_gain(int gain_dB, int channel) = 0;
     };
   }
 }

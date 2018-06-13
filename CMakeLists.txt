@@ -121,7 +121,6 @@ endif(APPLE)
 # components required to the list of GR_REQUIRED_COMPONENTS (in all
 # caps such as FILTER or FFT) and change the version to the minimum
 # API compatible version required.
-find_package(CppUnit)
 find_package(Doxygen)
 
 MESSAGE(STATUS "Configuring GNU Radio C++ Libraries...")
@@ -130,10 +129,6 @@ set(MIN_GR_VERSION "3.7.8")
 find_package(Gnuradio REQUIRED)
 if("${Gnuradio_VERSION}" VERSION_LESS MIN_GR_VERSION)
     MESSAGE(FATAL_ERROR "GnuRadio version required: >=\"" ${MIN_GR_VERSION} "\" found: \"" ${Gnuradio_VERSION} "\"")
-endif()
-
-if(NOT CPPUNIT_FOUND)
-    message(FATAL_ERROR "CppUnit required to compile limesdr")
 endif()
 
 ########################################################################
@@ -178,14 +173,12 @@ include_directories(
     ${CMAKE_BINARY_DIR}/lib
     ${CMAKE_BINARY_DIR}/include
     ${Boost_INCLUDE_DIRS}
-    ${CPPUNIT_INCLUDE_DIRS}
     ${GNURADIO_ALL_INCLUDE_DIRS}
     ${LIMESUITE_INCLUDE_DIRS}
 )
 
 link_directories(
     ${Boost_LIBRARY_DIRS}
-    ${CPPUNIT_LIBRARY_DIRS}
     ${GNURADIO_RUNTIME_LIBRARY_DIRS}
     ${LIMESUITE_LIB}
 )

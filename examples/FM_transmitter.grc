@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.9'?>
+<?grc format='1' created='3.7.12'?>
 <flow_graph>
   <timestamp>Tue Feb 20 16:22:48 2018</timestamp>
   <block>
@@ -10,7 +10,7 @@
     </param>
     <param>
       <key>window_size</key>
-      <value></value>
+      <value>(1000,500)</value>
     </param>
     <param>
       <key>category</key>
@@ -73,12 +73,20 @@
       <value>True</value>
     </param>
     <param>
+      <key>sizing_mode</key>
+      <value>fixed</value>
+    </param>
+    <param>
       <key>thread_safe_setters</key>
       <value></value>
     </param>
     <param>
       <key>title</key>
       <value>FM transmitter</value>
+    </param>
+    <param>
+      <key>placement</key>
+      <value>(0,0)</value>
     </param>
   </block>
   <block>
@@ -105,7 +113,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(216, 199)</value>
+      <value>(200, 200)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -126,6 +134,10 @@
     <param>
       <key>minoutbuf</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>fh</key>
+      <value>-1.0</value>
     </param>
     <param>
       <key>quad_rate</key>
@@ -160,7 +172,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 213)</value>
+      <value>(16, 220)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -206,6 +218,10 @@
       <value>1</value>
     </param>
     <param>
+      <key>cmix_mode_ch0</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>calibr_bandw_ch0</key>
       <value>2.5e6</value>
     </param>
@@ -226,6 +242,10 @@
       <value>60</value>
     </param>
     <param>
+      <key>nco_freq_ch0</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>pa_path_ch0</key>
       <value>1</value>
     </param>
@@ -240,6 +260,10 @@
     <param>
       <key>analog_filter_ch1</key>
       <value>1</value>
+    </param>
+    <param>
+      <key>cmix_mode_ch1</key>
+      <value>0</value>
     </param>
     <param>
       <key>calibr_bandw_ch1</key>
@@ -262,12 +286,12 @@
       <value>0</value>
     </param>
     <param>
-      <key>pa_path_ch1</key>
-      <value>1</value>
+      <key>nco_freq_ch1</key>
+      <value>0</value>
     </param>
     <param>
-      <key>rf_freq</key>
-      <value>446.09375e6</value>
+      <key>pa_path_ch1</key>
+      <value>1</value>
     </param>
     <param>
       <key>chip_mode</key>
@@ -282,8 +306,8 @@
       <value></value>
     </param>
     <param>
-      <key>device_number</key>
-      <value>0</value>
+      <key>serial</key>
+      <value></value>
     </param>
     <param>
       <key>device_type</key>
@@ -299,7 +323,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 19)</value>
+      <value>(696, 20)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -316,6 +340,10 @@
     <param>
       <key>oversample</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>rf_freq</key>
+      <value>446.09375e6</value>
     </param>
     <param>
       <key>samp_rate</key>
@@ -350,7 +378,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 199)</value>
+      <value>(448, 208)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -421,7 +449,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 285)</value>
+      <value>(696, 308)</value>
     </param>
     <param>
       <key>_rotation</key>
