@@ -22,437 +22,439 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "sink_impl.h"
+#include <gnuradio/io_signature.h>
 
-namespace gr
-{
-  namespace limesdr
-  {
-    sink::sptr
-    sink::make(std::string serial,
-	      int device_type,
-	      int chip_mode,
-	      int channel,
-	      int file_switch,
-	      const char *filename,
-	      double rf_freq,
-	      double samp_rate,
-	      size_t oversample,
-	      int calibration_ch0,
-	      double calibr_bandw_ch0,
-	      int calibration_ch1,
-	      double calibr_bandw_ch1,
-	      int pa_path_mini,
-	      int pa_path_ch0,
-	      int pa_path_ch1,
-	      int analog_filter_ch0,
-	      double analog_bandw_ch0,
-	      int analog_filter_ch1,
-	      double analog_bandw_ch1,
-	      int digital_filter_ch0,
-	      double digital_bandw_ch0,
-	      int digital_filter_ch1,
-	      double digital_bandw_ch1,
-	      int gain_dB_ch0,
-	      int gain_dB_ch1,
-	      float nco_freq_ch0,
-	      float nco_freq_ch1,
-	      int cmix_mode_ch0,
-	      int cmix_mode_ch1)
-    {
-	return gnuradio::get_initial_sptr
-	      (new sink_impl(serial,
-			    device_type,
-			    chip_mode,
-			    channel,
-			    file_switch,
-			    filename,
-			    rf_freq,
-			    samp_rate,
-			    oversample,
-			    calibration_ch0,
-			    calibr_bandw_ch0,
-			    calibration_ch1,
-			    calibr_bandw_ch1,
-			    pa_path_mini,
-			    pa_path_ch0,
-			    pa_path_ch1,
-			    analog_filter_ch0,
-			    analog_bandw_ch0,
-			    analog_filter_ch1,
-			    analog_bandw_ch1,
-			    digital_filter_ch0,
-			    digital_bandw_ch0,
-			    digital_filter_ch1,
-			    digital_bandw_ch1,
-			    gain_dB_ch0,
-			    gain_dB_ch1,
-			    nco_freq_ch0,
-			    nco_freq_ch1,
-			    cmix_mode_ch0,
-			    cmix_mode_ch1));
-    }
-
-    sink_impl::sink_impl(std::string serial,
-			int device_type,
-			int chip_mode,
-			int channel,
-			int file_switch,
-			const char *filename,
-			double rf_freq,
-			double samp_rate,
-			size_t oversample,
-			int calibration_ch0,
-			double calibr_bandw_ch0,
-			int calibration_ch1,
-			double calibr_bandw_ch1,
-			int pa_path_mini,
-			int pa_path_ch0,
-			int pa_path_ch1,
-			int analog_filter_ch0,
-			double analog_bandw_ch0,
-			int analog_filter_ch1,
-			double analog_bandw_ch1,
-			int digital_filter_ch0,
-			double digital_bandw_ch0,
-			int digital_filter_ch1,
-			double digital_bandw_ch1,
-			int gain_dB_ch0,
-			int gain_dB_ch1,
-			float nco_freq_ch0,
-			float nco_freq_ch1,
-			int cmix_mode_ch0,
-			int cmix_mode_ch1)
-	: gr::block("sink",
-			args_to_io_signature(chip_mode), // Based on chip_mode SISO/MIMO use appropriate input signature
-			gr::io_signature::make(0, 0, 0))
-    {
-	std::cout << "---------------------------------------------------------------" <<  std::endl;
-	std::cout << "LimeSuite Sink (TX) info" << std::endl;
-	std::cout << std::endl;
-
-	// 1. Store private variables upon implementation to protect from changing them later
-	stored.serial = serial;
-	stored.device_type = device_type;
-	stored.chip_mode = chip_mode;
-	stored.samp_rate = samp_rate;
-
-	if(stored.device_type == 1) // LimeSDR-Mini
-	    stored.channel = LMS_CH_0;
-	else if(stored.device_type == 2) // LimeSDR-USB
-	{
-	    if(stored.chip_mode == 1) // If SISO configure prefered channel
-		stored.channel = channel;
-	    else if(stored.chip_mode == 2) // If MIMO begin configuring channel 0
-		stored.channel = LMS_CH_0;
-	}
-
-	if(channel != 0 && channel != 1)
-	{
-	  std::cout << "ERROR: sink_impl::sink_impl(): CH0 must be either 0 (A) or 1 (B)." << std::endl;
-	  exit(0);
-	}
-	
-	// 2. Open device if not opened
-	stored.device_number = device_handler::getInstance().open_device(stored.serial,stored.device_type);
-
-	// 3. Check where to load settings from (file or block)
-	if(file_switch == 1)
-	{
-	    device_handler::getInstance().settings_from_file(stored.device_number,filename);
-	    device_handler::getInstance().check_blocks(stored.device_number,sink_block,stored.device_type, stored.chip_mode, 0, 0, file_switch,filename);
-	}
-	else
-	{
-	    // 4. Check how many blocks were used and check values between blocks
-	    device_handler::getInstance().check_blocks(stored.device_number,sink_block,stored.device_type, stored.chip_mode, samp_rate, oversample, file_switch, NULL);
-
-	    // 5. Set SISO/MIMO mode
-	    device_handler::getInstance().set_chip_mode(stored.device_number,stored.device_type,stored.chip_mode,stored.channel,LMS_CH_TX);
-
-	    // 6. Set RF frequency
-	    device_handler::getInstance().set_rf_freq(stored.device_number,stored.device_type,LMS_CH_TX,stored.channel,rf_freq);
-
-	    // 7. Set sample rate 
-	    if(stored.device_type == 1) // LimeSDR-Mini can only have the same rates
-	      device_handler::getInstance().set_samp_rate(stored.device_number,samp_rate,oversample);
-	    else if(stored.device_type == 2) // LimeSDR-USB can have separate rates for TX and RX
-	      device_handler::getInstance().set_samp_rate_dir(stored.device_number,LMS_CH_TX,samp_rate,oversample);
-
-	    // 8. Configure analog and digital filters
-	    device_handler::getInstance().set_analog_filter(stored.device_number,LMS_CH_TX,stored.channel,analog_filter_ch0, analog_bandw_ch0);
-	    device_handler::getInstance().set_digital_filter(stored.device_number,LMS_CH_TX,stored.channel,digital_filter_ch0, digital_bandw_ch0);
-
-
-	    // 9. Set PA path
-	    if(stored.device_type == 1) // LimeSDR-Mini
-		device_handler::getInstance().set_antenna(stored.device_number,stored.channel,LMS_CH_TX,pa_path_mini);
-	    else if(stored.device_type == 2) // LimeSDR-USB
-	      device_handler::getInstance().set_antenna(stored.device_number,stored.channel,LMS_CH_TX,pa_path_ch0);
-
-	    // 10. Set GAIN
-	    device_handler::getInstance().set_gain(stored.device_number,LMS_CH_TX,stored.channel,gain_dB_ch0);
-	    
-	    // 11. Perform calibration
-	    device_handler::getInstance().calibrate(stored.device_number,stored.device_type,calibration_ch0,LMS_CH_TX,stored.channel,calibr_bandw_ch0,rf_freq,pa_path_ch0);
-	    
-	    // 12. Set NCO
-	    device_handler::getInstance().set_nco(stored.device_number,LMS_CH_TX,stored.channel,nco_freq_ch0,0,cmix_mode_ch0);
-	    
-	    // 13. Begin configuring device for channel 1 (if chip_mode is MIMO)
-	    if(stored.chip_mode == 2 && stored.device_type == 2)
-	    {
-		device_handler::getInstance().set_antenna(stored.device_number,LMS_CH_1,LMS_CH_TX,pa_path_ch1);
-		device_handler::getInstance().set_analog_filter(stored.device_number,LMS_CH_TX,LMS_CH_1,analog_filter_ch1,analog_bandw_ch1);
-		device_handler::getInstance().set_digital_filter(stored.device_number,LMS_CH_TX,LMS_CH_1,digital_filter_ch1, digital_bandw_ch1);
-		device_handler::getInstance().set_gain(stored.device_number,LMS_CH_TX,LMS_CH_1,gain_dB_ch1);
-		device_handler::getInstance().calibrate(stored.device_number,stored.device_type,calibration_ch1,LMS_CH_TX,LMS_CH_1,calibr_bandw_ch1,rf_freq,pa_path_ch1);
-		device_handler::getInstance().set_nco(stored.device_number,LMS_CH_TX,LMS_CH_1,nco_freq_ch1,0,cmix_mode_ch1);
-	    }
-	}
-	
-	// 14. Initialize stream for channel 0 (if chip_mode is SISO)
-	if(stored.chip_mode == 1)
-	{
-	    this->init_stream(stored.device_number,stored.channel,stored.samp_rate);
-	}
-	
-	// 15. Initialize both channels streams (if chip_mode is MIMO)
-	else if(stored.chip_mode == 2 && stored.device_type == 2)
-	{
-	    this->init_stream(stored.device_number,LMS_CH_0,stored.samp_rate);
-	    this->init_stream(stored.device_number,LMS_CH_1,stored.samp_rate);
-	}
-	std::cout << "---------------------------------------------------------------" <<  std::endl;
-    }
-
-    sink_impl::~sink_impl()
-    {
-	// Stop and destroy stream for channel 0 (if chip_mode is SISO)
-	if(stored.chip_mode == 1)
-	{
-		LMS_StopStream(&streamId[stored.channel]);
-		LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number),&streamId[stored.channel]);
-	}
-	// Stop and destroy stream for channels 0 & 1 (if chip_mode is MIMO)
-	else if(stored.chip_mode == 2)
-	{
-		LMS_StopStream(&streamId[LMS_CH_0]);
-		LMS_StopStream(&streamId[LMS_CH_1]);
-		LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number),&streamId[LMS_CH_0]);
-		LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number),&streamId[LMS_CH_1]);
-	}
-	device_handler::getInstance().close_device(stored.device_number,sink_block);
-    }
-
-    bool sink_impl::start(void)
-    {
-      std::unique_lock<std::recursive_mutex> lock(device_handler::getInstance().block_mutex);
-      // Initialize and start stream for channel 0 (if chip_mode is SISO)
-      if(stored.chip_mode == 1) // If SISO configure prefered channel
-      {
-	LMS_StartStream(&streamId[stored.channel]);
-      }
-
-      // Initialize and start stream for channels 0 & 1 (if chip_mode is MIMO)
-      else if(stored.chip_mode == 2 && stored.device_type == 2)
-      {
-	LMS_StartStream(&streamId[LMS_CH_0]);
-	LMS_StartStream(&streamId[LMS_CH_1]);
-      }
-      std::unique_lock<std::recursive_mutex> unlock(device_handler::getInstance().block_mutex);
-      return true;
-    }
-
-    bool sink_impl::stop(void)
-    {
-      std::unique_lock<std::recursive_mutex> lock(device_handler::getInstance().block_mutex);
-      // Stop stream for channel 0 (if chip_mode is SISO)
-      if(stored.chip_mode == 1)
-      {
-	      LMS_StopStream(&streamId[stored.channel]);
-      }
-      // Stop streams for channels 0 & 1 (if chip_mode is MIMO)
-      else if(stored.chip_mode == 2)
-      {
-	      LMS_StopStream(&streamId[LMS_CH_0]);
-	      LMS_StopStream(&streamId[LMS_CH_1]);
-      }
-      std::unique_lock<std::recursive_mutex> unlock(device_handler::getInstance().block_mutex);
-      return true;
-    }
-        
-    int
-    sink_impl::general_work(int noutput_items,
-			    gr_vector_int &ninput_items,
-			    gr_vector_const_void_star &input_items,
-			    gr_vector_void_star &output_items)
-    {
-     	// Send stream for channel 0 (if chip_mode is SISO)
-	if(stored.chip_mode == 1)
-	{
-	    //Print stream stats to debug
-	    if (stream_analyzer == true && std::time(0)>t)
-	    {
-	      lms_stream_status_t status;
-	      LMS_GetStreamStatus(&streamId[stored.channel], &status);
-	      std::cout << std::endl;
-	      std::cout << "TX rate: " << status.linkRate / 1e6 << " MB/s ";
-	      std::cout << "dropped packets: " << status.droppedPackets << " ";
-	      std::cout << "FIFO: " << 100 * status.fifoFilledCount / status.fifoSize << "% ";
-	      std::cout << "underrun: " << status.underrun << " overrun: " << status.overrun;
-	      std::cout << " FIFO size: " << status.fifoSize << std::endl;
-	      t = std::time(0);
-	    }
-	      
-	    int ret0 = LMS_SendStream(&streamId[stored.channel],
-				    input_items[0],
-				    noutput_items,
-				    NULL, 100);
-	    if(ret0 < 0)
-	    {
-	      return 0;
-	    }
-	    consume(0,ret0);
-	}
-	// Send stream for channels 0 & 1 (if chip_mode is MIMO)
-	else if(stored.chip_mode == 2)
-	{
-	    //Print stream stats to debug
-	    if (stream_analyzer == true && std::time(0)>t)
-	    {
-	      lms_stream_status_t status;
-	      LMS_GetStreamStatus(&streamId[LMS_CH_0], &status);
-	      std::cout << std::endl;
-	      std::cout << "TX rate: " << status.linkRate / 1e6 << " MB/s ";
-	      std::cout << "dropped packets: " << status.droppedPackets << " ";
-	      std::cout << "FIFO: " << 100 * status.fifoFilledCount / status.fifoSize << "% ";
-	      std::cout << "underrun: " << status.underrun << " overrun: " << status.overrun << std::endl;
-	      t = std::time(0);
-	    }
-
-	    int ret0 = LMS_SendStream(&streamId[LMS_CH_0],
-				      input_items[0],
-				      noutput_items,
-				      NULL, 100);
-	    int ret1 = LMS_SendStream(&streamId[LMS_CH_1],
-				      input_items[1],
-				      noutput_items,
-				      NULL, 100);
-	    if(ret0 < 0 || ret1 < 0)
-	    {
-	      return 0;
-	    }
-	    consume(0,ret0);
-	    consume(1,ret1);
-	}
-      return 0;
-    }
-
-    // Setup stream
-    void sink_impl::init_stream(int device_number, int channel, float samp_rate)
-    {
-	streamId[channel].channel = channel;
-	streamId[channel].fifoSize = samp_rate/1e4;
-	streamId[channel].throughputVsLatency = 0.5;
-	streamId[channel].isTx = LMS_CH_TX;
-	streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
-
-	if (LMS_SetupStream(device_handler::getInstance().get_device(device_number),&streamId[channel])!=LMS_SUCCESS)
-	    device_handler::getInstance().error(device_number);
-
-	std::cout << "INFO: sink_impl::init_stream(): sink channel " << channel << " (device nr. " << device_number << ") stream setup done." << std::endl; 
-    }
-
-    // Return io_signature to manage module input count
-    // based on SISO (one input) and MIMO (two inputs) modes
-    inline gr::io_signature::sptr sink_impl::args_to_io_signature(int channel_number)
-    {
-	if (channel_number == 1)
-	{
-	    return gr::io_signature::make(1, 1, sizeof(gr_complex));
-	}
-	else if (channel_number == 2)
-	{
-	    return gr::io_signature::make(2, 2, sizeof(gr_complex));
-	}
-	else
-	{
-	    std::cout << "ERROR: sink_impl::args_to_io_signature(): channel_number must be 0 or 1." << std::endl;
-	    exit(0);
-	}
-    }
-    
-    void sink_impl::set_rf_freq(float rf_freq)
-    {
-	device_handler::getInstance().set_rf_freq(stored.device_number,stored.device_type,LMS_CH_TX,LMS_CH_0,rf_freq);
-    }
-    
-    void sink_impl::set_pa_path(int pa_path, int channel)
-    {
-      if(stored.device_type == 1 && channel == 1)
-      {
-	// IGNORE CHANNEL 1 FOR LIMESDR-MINI
-	std::cout << "sink_impl::set_pa_path(): INFO: Setting bypassed. LimeSDR-Mini does not support channel 1 configuration." << std::endl;
-      }
-      else
-      {
-	device_handler::getInstance().set_antenna(stored.device_number,channel,LMS_CH_TX,pa_path);
-      }
-    }
-    
-    void sink_impl::set_nco(float nco_freq, int cmix_mode, int channel)
-    {
-      if(stored.device_type == 1 && channel == 1)
-      {
-	// IGNORE CHANNEL 1 FOR LIMESDR-MINI
-	std::cout << "sink_impl::set_nco(): INFO: Setting bypassed. LimeSDR-Mini does not support channel 1 configuration." << std::endl;
-      }
-      else
-      {
-	device_handler::getInstance().set_nco(stored.device_number,LMS_CH_TX,channel,nco_freq,0,cmix_mode);
-      }
-    }
-
-    void sink_impl::set_analog_filter(int analog_filter, float analog_bandw, int channel)
-    {
-      if(stored.device_type == 1 && channel == 1)
-      {
-	// IGNORE CHANNEL 1 FOR LIMESDR-MINI
-	std::cout << "sink_impl::set_analog_filter(): INFO: Setting bypassed. LimeSDR-Mini does not support channel 1 configuration." << std::endl;
-      }
-      else
-      {
-	device_handler::getInstance().set_analog_filter(stored.device_number,LMS_CH_TX,channel,analog_filter,analog_bandw);
-      }
-    }
- 
-    void sink_impl::set_digital_filter(int digital_filter, float digital_bandw, int channel)
-    {
-      if(stored.device_type == 1 && channel == 1)
-      {
-	// IGNORE CHANNEL 1 FOR LIMESDR-MINI
-	std::cout << "sink_impl::set_digital_filter(): INFO: Setting bypassed. LimeSDR-Mini does not support channel 1 configuration." << std::endl;
-      }
-      else
-      {
-	device_handler::getInstance().set_digital_filter(stored.device_number,LMS_CH_TX,channel,digital_filter,digital_bandw);
-      }
-    }
-
-    void sink_impl::set_gain(int gain_dB, int channel)
-    {
-      if(stored.device_type == 1 && channel == 1)
-      {
-	// IGNORE CHANNEL 1 FOR LIMESDR-MINI
-	std::cout << "sink_impl::set_gain(): INFO: Setting bypassed. LimeSDR-Mini does not support channel 1 configuration." << std::endl;
-      }
-      else
-      {
-	device_handler::getInstance().set_gain(stored.device_number,LMS_CH_TX,channel,gain_dB);
-      }
-    }
-  }
+namespace gr {
+namespace limesdr {
+sink::sptr sink::make(std::string serial,
+                      int device_type,
+                      int chip_mode,
+                      int channel,
+                      int file_switch,
+                      const char* filename,
+                      double rf_freq,
+                      double samp_rate,
+                      size_t oversample,
+                      int calibration_ch0,
+                      double calibr_bandw_ch0,
+                      int calibration_ch1,
+                      double calibr_bandw_ch1,
+                      int pa_path_mini,
+                      int pa_path_ch0,
+                      int pa_path_ch1,
+                      int analog_filter_ch0,
+                      double analog_bandw_ch0,
+                      int analog_filter_ch1,
+                      double analog_bandw_ch1,
+                      int digital_filter_ch0,
+                      double digital_bandw_ch0,
+                      int digital_filter_ch1,
+                      double digital_bandw_ch1,
+                      int gain_dB_ch0,
+                      int gain_dB_ch1,
+                      float nco_freq_ch0,
+                      float nco_freq_ch1,
+                      int cmix_mode_ch0,
+                      int cmix_mode_ch1) {
+    return gnuradio::get_initial_sptr(new sink_impl(serial,
+                                                    device_type,
+                                                    chip_mode,
+                                                    channel,
+                                                    file_switch,
+                                                    filename,
+                                                    rf_freq,
+                                                    samp_rate,
+                                                    oversample,
+                                                    calibration_ch0,
+                                                    calibr_bandw_ch0,
+                                                    calibration_ch1,
+                                                    calibr_bandw_ch1,
+                                                    pa_path_mini,
+                                                    pa_path_ch0,
+                                                    pa_path_ch1,
+                                                    analog_filter_ch0,
+                                                    analog_bandw_ch0,
+                                                    analog_filter_ch1,
+                                                    analog_bandw_ch1,
+                                                    digital_filter_ch0,
+                                                    digital_bandw_ch0,
+                                                    digital_filter_ch1,
+                                                    digital_bandw_ch1,
+                                                    gain_dB_ch0,
+                                                    gain_dB_ch1,
+                                                    nco_freq_ch0,
+                                                    nco_freq_ch1,
+                                                    cmix_mode_ch0,
+                                                    cmix_mode_ch1));
 }
 
+sink_impl::sink_impl(std::string serial,
+                     int device_type,
+                     int chip_mode,
+                     int channel,
+                     int file_switch,
+                     const char* filename,
+                     double rf_freq,
+                     double samp_rate,
+                     size_t oversample,
+                     int calibration_ch0,
+                     double calibr_bandw_ch0,
+                     int calibration_ch1,
+                     double calibr_bandw_ch1,
+                     int pa_path_mini,
+                     int pa_path_ch0,
+                     int pa_path_ch1,
+                     int analog_filter_ch0,
+                     double analog_bandw_ch0,
+                     int analog_filter_ch1,
+                     double analog_bandw_ch1,
+                     int digital_filter_ch0,
+                     double digital_bandw_ch0,
+                     int digital_filter_ch1,
+                     double digital_bandw_ch1,
+                     int gain_dB_ch0,
+                     int gain_dB_ch1,
+                     float nco_freq_ch0,
+                     float nco_freq_ch1,
+                     int cmix_mode_ch0,
+                     int cmix_mode_ch1)
+    : gr::block("sink",
+                args_to_io_signature(
+                    chip_mode), // Based on chip_mode SISO/MIMO use appropriate input signature
+                gr::io_signature::make(0, 0, 0)) {
+    std::cout << "---------------------------------------------------------------" << std::endl;
+    std::cout << "LimeSuite Sink (TX) info" << std::endl;
+    std::cout << std::endl;
+
+    // 1. Store private variables upon implementation to protect from changing them later
+    stored.serial = serial;
+    stored.device_type = device_type;
+    stored.chip_mode = chip_mode;
+    stored.samp_rate = samp_rate;
+
+    if (stored.device_type == 1) // LimeSDR-Mini
+        stored.channel = LMS_CH_0;
+    else if (stored.device_type == 2) // LimeSDR-USB
+    {
+        if (stored.chip_mode == 1) // If SISO configure prefered channel
+            stored.channel = channel;
+        else if (stored.chip_mode == 2) // If MIMO begin configuring channel 0
+            stored.channel = LMS_CH_0;
+    }
+
+    if (channel != 0 && channel != 1) {
+        std::cout << "ERROR: sink_impl::sink_impl(): CH0 must be either 0 (A) or 1 (B)."
+                  << std::endl;
+        exit(0);
+    }
+
+    // 2. Open device if not opened
+    stored.device_number =
+        device_handler::getInstance().open_device(stored.serial, stored.device_type);
+
+    // 3. Check where to load settings from (file or block)
+    if (file_switch == 1) {
+        device_handler::getInstance().settings_from_file(stored.device_number, filename);
+        device_handler::getInstance().check_blocks(stored.device_number,
+                                                   sink_block,
+                                                   stored.device_type,
+                                                   stored.chip_mode,
+                                                   0,
+                                                   0,
+                                                   file_switch,
+                                                   filename);
+    } else {
+        // 4. Check how many blocks were used and check values between blocks
+        device_handler::getInstance().check_blocks(stored.device_number,
+                                                   sink_block,
+                                                   stored.device_type,
+                                                   stored.chip_mode,
+                                                   samp_rate,
+                                                   oversample,
+                                                   file_switch,
+                                                   NULL);
+
+        // 5. Set SISO/MIMO mode
+        device_handler::getInstance().set_chip_mode(
+            stored.device_number, stored.device_type, stored.chip_mode, stored.channel, LMS_CH_TX);
+
+        // 6. Set RF frequency
+        device_handler::getInstance().set_rf_freq(
+            stored.device_number, stored.device_type, LMS_CH_TX, stored.channel, rf_freq);
+
+        // 7. Set sample rate
+        if (stored.device_type == 1) // LimeSDR-Mini can only have the same rates
+            device_handler::getInstance().set_samp_rate(
+                stored.device_number, samp_rate, oversample);
+        else if (stored.device_type == 2) // LimeSDR-USB can have separate rates for TX and RX
+            device_handler::getInstance().set_samp_rate_dir(
+                stored.device_number, LMS_CH_TX, samp_rate, oversample);
+
+        // 8. Configure analog and digital filters
+        device_handler::getInstance().set_analog_filter(
+            stored.device_number, LMS_CH_TX, stored.channel, analog_filter_ch0, analog_bandw_ch0);
+        device_handler::getInstance().set_digital_filter(
+            stored.device_number, LMS_CH_TX, stored.channel, digital_filter_ch0, digital_bandw_ch0);
+
+
+        // 9. Set PA path
+        if (stored.device_type == 1) // LimeSDR-Mini
+            device_handler::getInstance().set_antenna(
+                stored.device_number, stored.channel, LMS_CH_TX, pa_path_mini);
+        else if (stored.device_type == 2) // LimeSDR-USB
+            device_handler::getInstance().set_antenna(
+                stored.device_number, stored.channel, LMS_CH_TX, pa_path_ch0);
+
+        // 10. Set GAIN
+        device_handler::getInstance().set_gain(
+            stored.device_number, LMS_CH_TX, stored.channel, gain_dB_ch0);
+
+        // 11. Perform calibration
+        device_handler::getInstance().calibrate(stored.device_number,
+                                                stored.device_type,
+                                                calibration_ch0,
+                                                LMS_CH_TX,
+                                                stored.channel,
+                                                calibr_bandw_ch0,
+                                                rf_freq,
+                                                pa_path_ch0);
+
+        // 12. Set NCO
+        device_handler::getInstance().set_nco(
+            stored.device_number, LMS_CH_TX, stored.channel, nco_freq_ch0, 0, cmix_mode_ch0);
+
+        // 13. Begin configuring device for channel 1 (if chip_mode is MIMO)
+        if (stored.chip_mode == 2 && stored.device_type == 2) {
+            device_handler::getInstance().set_antenna(
+                stored.device_number, LMS_CH_1, LMS_CH_TX, pa_path_ch1);
+            device_handler::getInstance().set_analog_filter(
+                stored.device_number, LMS_CH_TX, LMS_CH_1, analog_filter_ch1, analog_bandw_ch1);
+            device_handler::getInstance().set_digital_filter(
+                stored.device_number, LMS_CH_TX, LMS_CH_1, digital_filter_ch1, digital_bandw_ch1);
+            device_handler::getInstance().set_gain(
+                stored.device_number, LMS_CH_TX, LMS_CH_1, gain_dB_ch1);
+            device_handler::getInstance().calibrate(stored.device_number,
+                                                    stored.device_type,
+                                                    calibration_ch1,
+                                                    LMS_CH_TX,
+                                                    LMS_CH_1,
+                                                    calibr_bandw_ch1,
+                                                    rf_freq,
+                                                    pa_path_ch1);
+            device_handler::getInstance().set_nco(
+                stored.device_number, LMS_CH_TX, LMS_CH_1, nco_freq_ch1, 0, cmix_mode_ch1);
+        }
+    }
+
+    // 14. Initialize stream for channel 0 (if chip_mode is SISO)
+    if (stored.chip_mode == 1) {
+        this->init_stream(stored.device_number, stored.channel, stored.samp_rate);
+    }
+
+    // 15. Initialize both channels streams (if chip_mode is MIMO)
+    else if (stored.chip_mode == 2 && stored.device_type == 2) {
+        this->init_stream(stored.device_number, LMS_CH_0, stored.samp_rate);
+        this->init_stream(stored.device_number, LMS_CH_1, stored.samp_rate);
+    }
+    std::cout << "---------------------------------------------------------------" << std::endl;
+}
+
+sink_impl::~sink_impl() {
+    // Stop and destroy stream for channel 0 (if chip_mode is SISO)
+    if (stored.chip_mode == 1) {
+        LMS_StopStream(&streamId[stored.channel]);
+        LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number),
+                          &streamId[stored.channel]);
+    }
+    // Stop and destroy stream for channels 0 & 1 (if chip_mode is MIMO)
+    else if (stored.chip_mode == 2) {
+        LMS_StopStream(&streamId[LMS_CH_0]);
+        LMS_StopStream(&streamId[LMS_CH_1]);
+        LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number),
+                          &streamId[LMS_CH_0]);
+        LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number),
+                          &streamId[LMS_CH_1]);
+    }
+    device_handler::getInstance().close_device(stored.device_number, sink_block);
+}
+
+bool sink_impl::start(void) {
+    std::unique_lock<std::recursive_mutex> lock(device_handler::getInstance().block_mutex);
+    // Initialize and start stream for channel 0 (if chip_mode is SISO)
+    if (stored.chip_mode == 1) // If SISO configure prefered channel
+    {
+        LMS_StartStream(&streamId[stored.channel]);
+    }
+
+    // Initialize and start stream for channels 0 & 1 (if chip_mode is MIMO)
+    else if (stored.chip_mode == 2 && stored.device_type == 2) {
+        LMS_StartStream(&streamId[LMS_CH_0]);
+        LMS_StartStream(&streamId[LMS_CH_1]);
+    }
+    std::unique_lock<std::recursive_mutex> unlock(device_handler::getInstance().block_mutex);
+    return true;
+}
+
+bool sink_impl::stop(void) {
+    std::unique_lock<std::recursive_mutex> lock(device_handler::getInstance().block_mutex);
+    // Stop stream for channel 0 (if chip_mode is SISO)
+    if (stored.chip_mode == 1) {
+        LMS_StopStream(&streamId[stored.channel]);
+    }
+    // Stop streams for channels 0 & 1 (if chip_mode is MIMO)
+    else if (stored.chip_mode == 2) {
+        LMS_StopStream(&streamId[LMS_CH_0]);
+        LMS_StopStream(&streamId[LMS_CH_1]);
+    }
+    std::unique_lock<std::recursive_mutex> unlock(device_handler::getInstance().block_mutex);
+    return true;
+}
+
+int sink_impl::general_work(int noutput_items,
+                            gr_vector_int& ninput_items,
+                            gr_vector_const_void_star& input_items,
+                            gr_vector_void_star& output_items) {
+    // Send stream for channel 0 (if chip_mode is SISO)
+    if (stored.chip_mode == 1) {
+        // Print stream stats to debug
+        if (stream_analyzer == true && std::time(0) > t) {
+            lms_stream_status_t status;
+            LMS_GetStreamStatus(&streamId[stored.channel], &status);
+            std::cout << std::endl;
+            std::cout << "TX rate: " << status.linkRate / 1e6 << " MB/s ";
+            std::cout << "dropped packets: " << status.droppedPackets << " ";
+            std::cout << "FIFO: " << 100 * status.fifoFilledCount / status.fifoSize << "% ";
+            std::cout << "underrun: " << status.underrun << " overrun: " << status.overrun;
+            std::cout << " FIFO size: " << status.fifoSize << std::endl;
+            t = std::time(0);
+        }
+
+        int ret0 =
+            LMS_SendStream(&streamId[stored.channel], input_items[0], noutput_items, NULL, 100);
+        if (ret0 < 0) {
+            return 0;
+        }
+        consume(0, ret0);
+    }
+    // Send stream for channels 0 & 1 (if chip_mode is MIMO)
+    else if (stored.chip_mode == 2) {
+        // Print stream stats to debug
+        if (stream_analyzer == true && std::time(0) > t) {
+            lms_stream_status_t status;
+            LMS_GetStreamStatus(&streamId[LMS_CH_0], &status);
+            std::cout << std::endl;
+            std::cout << "TX rate: " << status.linkRate / 1e6 << " MB/s ";
+            std::cout << "dropped packets: " << status.droppedPackets << " ";
+            std::cout << "FIFO: " << 100 * status.fifoFilledCount / status.fifoSize << "% ";
+            std::cout << "underrun: " << status.underrun << " overrun: " << status.overrun
+                      << std::endl;
+            t = std::time(0);
+        }
+
+        int ret0 = LMS_SendStream(&streamId[LMS_CH_0], input_items[0], noutput_items, NULL, 100);
+        int ret1 = LMS_SendStream(&streamId[LMS_CH_1], input_items[1], noutput_items, NULL, 100);
+        if (ret0 < 0 || ret1 < 0) {
+            return 0;
+        }
+        consume(0, ret0);
+        consume(1, ret1);
+    }
+    return 0;
+}
+
+// Setup stream
+void sink_impl::init_stream(int device_number, int channel, float samp_rate) {
+    streamId[channel].channel = channel;
+    streamId[channel].fifoSize = samp_rate / 1e4;
+    streamId[channel].throughputVsLatency = 0.5;
+    streamId[channel].isTx = LMS_CH_TX;
+    streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
+
+    if (LMS_SetupStream(device_handler::getInstance().get_device(device_number),
+                        &streamId[channel]) != LMS_SUCCESS)
+        device_handler::getInstance().error(device_number);
+
+    std::cout << "INFO: sink_impl::init_stream(): sink channel " << channel << " (device nr. "
+              << device_number << ") stream setup done." << std::endl;
+}
+
+// Return io_signature to manage module input count
+// based on SISO (one input) and MIMO (two inputs) modes
+inline gr::io_signature::sptr sink_impl::args_to_io_signature(int channel_number) {
+    if (channel_number == 1) {
+        return gr::io_signature::make(1, 1, sizeof(gr_complex));
+    } else if (channel_number == 2) {
+        return gr::io_signature::make(2, 2, sizeof(gr_complex));
+    } else {
+        std::cout << "ERROR: sink_impl::args_to_io_signature(): channel_number must be 0 or 1."
+                  << std::endl;
+        exit(0);
+    }
+}
+
+void sink_impl::set_rf_freq(float rf_freq) {
+    device_handler::getInstance().set_rf_freq(
+        stored.device_number, stored.device_type, LMS_CH_TX, LMS_CH_0, rf_freq);
+}
+
+void sink_impl::set_pa_path(int pa_path, int channel) {
+    if (stored.device_type == 1 && channel == 1) {
+        // IGNORE CHANNEL 1 FOR LIMESDR-MINI
+        std::cout << "sink_impl::set_pa_path(): INFO: Setting bypassed. LimeSDR-Mini does not "
+                     "support channel 1 configuration."
+                  << std::endl;
+    } else {
+        device_handler::getInstance().set_antenna(
+            stored.device_number, channel, LMS_CH_TX, pa_path);
+    }
+}
+
+void sink_impl::set_nco(float nco_freq, int cmix_mode, int channel) {
+    if (stored.device_type == 1 && channel == 1) {
+        // IGNORE CHANNEL 1 FOR LIMESDR-MINI
+        std::cout << "sink_impl::set_nco(): INFO: Setting bypassed. LimeSDR-Mini does not support "
+                     "channel 1 configuration."
+                  << std::endl;
+    } else {
+        device_handler::getInstance().set_nco(
+            stored.device_number, LMS_CH_TX, channel, nco_freq, 0, cmix_mode);
+    }
+}
+
+void sink_impl::set_analog_filter(int analog_filter, float analog_bandw, int channel) {
+    if (stored.device_type == 1 && channel == 1) {
+        // IGNORE CHANNEL 1 FOR LIMESDR-MINI
+        std::cout << "sink_impl::set_analog_filter(): INFO: Setting bypassed. LimeSDR-Mini does "
+                     "not support channel 1 configuration."
+                  << std::endl;
+    } else {
+        device_handler::getInstance().set_analog_filter(
+            stored.device_number, LMS_CH_TX, channel, analog_filter, analog_bandw);
+    }
+}
+
+void sink_impl::set_digital_filter(int digital_filter, float digital_bandw, int channel) {
+    if (stored.device_type == 1 && channel == 1) {
+        // IGNORE CHANNEL 1 FOR LIMESDR-MINI
+        std::cout << "sink_impl::set_digital_filter(): INFO: Setting bypassed. LimeSDR-Mini does "
+                     "not support channel 1 configuration."
+                  << std::endl;
+    } else {
+        device_handler::getInstance().set_digital_filter(
+            stored.device_number, LMS_CH_TX, channel, digital_filter, digital_bandw);
+    }
+}
+
+void sink_impl::set_gain(int gain_dB, int channel) {
+    if (stored.device_type == 1 && channel == 1) {
+        // IGNORE CHANNEL 1 FOR LIMESDR-MINI
+        std::cout << "sink_impl::set_gain(): INFO: Setting bypassed. LimeSDR-Mini does not support "
+                     "channel 1 configuration."
+                  << std::endl;
+    } else {
+        device_handler::getInstance().set_gain(stored.device_number, LMS_CH_TX, channel, gain_dB);
+    }
+}
+} // namespace limesdr
+} // namespace gr
