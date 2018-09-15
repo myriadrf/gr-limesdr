@@ -157,18 +157,15 @@ void device_handler::close_device(int device_number, int block_type)
     } 
   }
   // If two blocks used switch one block flag and let other block finish work
-  else
+  // Switch flag when closing device
+  switch(block_type)
   {
-    // Switch flag when closing device
-    switch(block_type)
-    {
-      case 1:
-	device_vector[device_number].source_flag = false;
-	break;
-      case 2:
-	device_vector[device_number].sink_flag = false;
-	break;
-    }     
+    case 1:
+      device_vector[device_number].source_flag = false;
+      break;
+    case 2:
+      device_vector[device_number].sink_flag = false;
+      break;
   }
 }
 
