@@ -150,7 +150,7 @@
         <name>Sample rate</name>
         <key>samp_rate</key>
         <value>samp_rate</value>
-        <type>double</type>
+        <type>float</type>
         <hide>
 	  #if $file_switch() == 1
 	    all

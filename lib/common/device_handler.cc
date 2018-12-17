@@ -89,7 +89,7 @@ int device_handler::open_device(std::string& serial, int device_type) {
         std::string aquired_serial = device_string.substr(first + 7, last);
 
         // If serial is left empty, use first device in list
-        else if (serial.empty() && device_string.find(search_name) != std::string::npos) {
+        if (serial.empty() && device_string.find(search_name) != std::string::npos) {
             device_number = i;
             serial = aquired_serial;
             break;
