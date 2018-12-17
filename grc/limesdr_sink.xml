@@ -7,8 +7,7 @@
     <import>import limesdr</import>
     <make>limesdr.sink($serial,
 		       $device_type,
-		       $chip_mode,
-		       $channel,
+		       $channel_mode,
 		       $file_switch,
 		       $filename,
 		       $rf_freq,
@@ -33,15 +32,14 @@
 		       $gain_dB_ch1,
 		       $nco_freq_ch0,
 		       $nco_freq_ch1,
-		       $cmix_mode_ch0,
-		       $cmix_mode_ch1)</make>
+           $length_tag_name)</make>
 
     <callback>set_rf_freq($rf_freq)</callback>
     <callback>set_pa_path($pa_path_mini,0)</callback>
     <callback>set_pa_path($pa_path_ch0,0)</callback>
     <callback>set_pa_path($pa_path_ch1,1)</callback>
-    <callback>set_nco($nco_freq_ch0,$cmix_mode_ch0,0)</callback>
-    <callback>set_nco($nco_freq_ch1,$cmix_mode_ch1,1)</callback>
+    <callback>set_nco($nco_freq_ch0,0)</callback>
+    <callback>set_nco($nco_freq_ch1,1)</callback>
     <callback>set_analog_filter($analog_filter_ch0,$analog_bandw_ch0,0)</callback>
     <callback>set_analog_filter($analog_filter_ch1,$analog_bandw_ch1,1)</callback>
     <callback>set_digital_filter($digital_filter_ch0,$digital_bandw_ch0,0)</callback>
@@ -80,42 +78,28 @@
     </param>
  
     <param>
-        <name>Chip mode</name>
-        <key>chip_mode</key>
+        <name>Channel</name>
+        <key>channel_mode</key>
         <value>1</value>
         <type>int</type>
-        <hide>none</hide>
-        <option>
-            <name>SISO</name>
-            <key>1</key>
-        </option>
-        <option>
-            <name>MIMO</name>
-            <key>2</key>
-        </option>
-    </param>
- 
-    <param>
-        <name>CH0</name>
-        <key>channel</key>
-        <value>0</value>
-        <type>int</type>
         <hide>
-	  #if $device_type() == 1
-	    all
-	  #else if $chip_mode() == 2
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
+        #if $device_type() == 1
+	        all
+        #else
+          none
+        #end if
+        </hide>
         <option>
             <name>A</name>
-            <key>0</key>
+            <key>1</key>
         </option>
         <option>
             <name>B</name>
-            <key>1</key>
+            <key>2</key>
+        </option>
+        <option>
+            <name>(A+B)MIMO</name>
+            <key>3</key>
         </option>
     </param>
  
@@ -141,12 +125,12 @@
         <value></value>
         <type>file_open</type>
         <hide>
-	  #if $file_switch() == 0
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
+        #if $file_switch() == 0
+          all
+        #else
+          none
+        #end if
+       </hide>
     </param>
   
     <param>
@@ -155,26 +139,26 @@
         <value>100e6</value>
         <type>float</type>
         <hide>
-	  #if $file_switch() == 1
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
+        #if $file_switch() == 1
+          all
+        #else
+          none
+        #end if
+       </hide>
     </param>
  
     <param>
         <name>Sample rate</name>
         <key>samp_rate</key>
         <value>samp_rate</value>
-        <type>float</type>
+        <type>double</type>
         <hide>
-	  #if $file_switch() == 1
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
+        #if $file_switch() == 1
+          all
+        #else
+          none
+        #end if
+        </hide>
     </param>
   
     <param>
@@ -183,12 +167,12 @@
         <value>0</value>
         <type>int</type>
         <hide>
-	  #if $file_switch() == 1
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
+        #if $file_switch() == 1
+          all
+        #else
+          none
+        #end if
+       </hide>
         <option>
             <name>Default</name>
             <key>0</key>
@@ -218,6 +202,13 @@
             <key>32</key>
         </option>
     </param>
+    <param>
+        <name>Length tag name</name>
+        <key>length_tag_name</key>
+        <value></value>
+        <type>string</type>
+        <hide>none</hide>
+    </param>
 
     <param>
         <name>CH0:NCO frequency</name>
@@ -227,33 +218,12 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
+    #else if $channel_mode() == 2 and $device_type() == 2
+      all
 	  #else
 	    none
 	  #end if
 	</hide>
-	<tab>CH0</tab>
-    </param>
-
-    <param>
-        <name>CH0:CMIX mode</name>
-        <key>cmix_mode_ch0</key>
-        <value>0</value>
-        <type>int</type>
-        <hide>
-	  #if $file_switch() == 1
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
-        <option>
-            <name>UPCONVERT</name>
-            <key>0</key>
-        </option>
-        <option>
-            <name>DOWNCONVERT</name>
-            <key>1</key>
-        </option>
 	<tab>CH0</tab>
     </param>
 
@@ -265,6 +235,8 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
+    #else if $channel_mode() == 2 and $device_type() == 2
+      all
 	  #else
 	    none
 	  #end if
@@ -290,6 +262,8 @@
 	  all
 	#else if $file_switch() == 1
 	  all
+  #else if $channel_mode() == 2 and $device_type() == 2
+    all
 	#else
 	  none
 	#end if
@@ -305,6 +279,8 @@
         <hide>
 	  #if $device_type() == 2
 	    all
+    #else if $channel_mode() == 2 and $device_type() == 2
+      all
 	  #else
 	    none
 	  #end if
@@ -330,6 +306,8 @@
 	    all
 	  #else if $file_switch() == 1
 	    all
+    #else if $channel_mode() == 2 and $device_type() == 2
+      all
 	  #else
 	    none
 	  #end if
@@ -353,6 +331,8 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
+    #else if $channel_mode() == 2 and $device_type() == 2
+      all
 	  #else
 	    none
 	  #end if
@@ -378,6 +358,8 @@
 	    all
 	  #else if $file_switch() == 1
 	    all
+    #else if $channel_mode() == 2 and $device_type() == 2
+      all
 	  #else
 	    none
 	  #end if
@@ -393,6 +375,8 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
+    #else if $channel_mode() == 2 and $device_type() == 2
+      all
 	  #else
 	    none
 	  #end if
@@ -418,6 +402,8 @@
 	    all
 	  #else if $file_switch() == 1
 	    all
+    #else if $channel_mode() == 2 and $device_type() == 2
+      all
 	  #else
 	    none
 	  #end if
@@ -433,6 +419,8 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
+    #else if $channel_mode() == 2 and $device_type() == 2
+      all
 	  #else
 	    none
 	  #end if
@@ -446,7 +434,7 @@
         <value>0</value>
         <type>float</type>
         <hide>
-	  #if $chip_mode() == 1
+	  #if $channel_mode() == 1
 	    all
 	  #else if $device_type() == 1
 	    all
@@ -456,33 +444,6 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH1</tab>
-    </param>
-
-    <param>
-        <name>CH1:CMIX mode</name>
-        <key>cmix_mode_ch1</key>
-        <value>0</value>
-        <type>int</type>
-        <hide>
-	  #if $chip_mode() == 1
-	    all
-	  #else if $device_type() == 1
-	    all
-	  #else if $file_switch() == 1
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
-        <option>
-            <name>UPCONVERT</name>
-            <key>0</key>
-        </option>
-        <option>
-            <name>DOWNCONVERT</name>
-            <key>1</key>
-        </option>
 	<tab>CH1</tab>
     </param>
     
@@ -492,7 +453,7 @@
         <value>0</value>
         <type>int</type>
         <hide>
-	  #if $chip_mode() == 1
+	  #if $channel_mode() == 1
 	    all
 	  #else if $device_type() == 1
 	    all
@@ -521,7 +482,7 @@
         <hide>
 	  #if $calibration_ch1() == 0
 	    all
-	  #else if $chip_mode() == 1
+	  #else if $channel_mode() == 1
 	    all
 	  #else if $device_type() == 1
 	    all
@@ -540,7 +501,7 @@
         <value>1</value>
         <type>int</type>
         <hide>
-	  #if $chip_mode() == 1
+	  #if $channel_mode() == 1
 	    all
 	  #else if $device_type() == 1
 	    all
@@ -567,7 +528,7 @@
         <value>1</value>
         <type>int</type>
         <hide>
-	  #if $chip_mode() == 1
+	  #if $channel_mode() == 1
 	    all
 	  #else if $device_type() == 1
 	    all
@@ -596,7 +557,7 @@
         <hide>
 	  #if $analog_filter_ch1() == 0
 	    all
-	  #else if $chip_mode() == 1
+	  #else if $channel_mode() == 1
 	    all
 	  #else if $device_type() == 1
 	    all
@@ -615,7 +576,7 @@
         <value>0</value>
         <type>int</type>
         <hide>
-	  #if $chip_mode() == 1
+	  #if $channel_mode() == 1
 	    all
 	  #else if $device_type() == 1
 	    all
@@ -644,7 +605,7 @@
         <hide>
 	  #if $digital_filter_ch1() == 0
 	    all
-	  #else if $chip_mode() == 1
+	  #else if $channel_mode() == 1
 	    all
 	  #else if $device_type() == 1
 	    all
@@ -663,7 +624,7 @@
         <value>30</value>
         <type>int</type>
         <hide>
-	  #if $chip_mode() == 1
+	  #if $channel_mode() == 1
 	    all
 	  #else if $device_type() == 1
 	    all
@@ -676,12 +637,12 @@
 	<tab>CH1</tab>
     </param>
   
-    <check> $device_type >= $chip_mode </check>
+    <!--<check> $device_type >= $channel_mode-1 </check>-->
     <check> $device_type >= 1 </check>
     <check> 2 >= $device_type </check>
   
-    <check> $chip_mode >= 1 </check>
-    <check> 2 >= $chip_mode </check>
+    <check> $channel_mode >= 1 </check>
+    <check> 3 >= $channel_mode </check>
   
     <check> $rf_freq > 0  </check>
 
@@ -715,7 +676,7 @@
     <sink>
         <name>in</name>
         <type>complex</type>
-        <nports>$chip_mode</nports>
+        <nports>$channel_mode+$device_type - 3</nports>
     </sink>
     
 <doc>
@@ -726,24 +687,18 @@ Device serial number obtained by running
 
 	LimeUtil --find
 
-Cannot be left blank.
+If left blank, the first device is used.
 -------------------------------------------------------------------------------------------------------------------
 DEVICE TYPE
 
 This setting lets you choose from predefined device type list and loads appropriate settings for the selected device.
 Currently supported device types: LimeSDR-USB, LimeSDR-Mini.
 -------------------------------------------------------------------------------------------------------------------
-CHIP MODE
+CHANNEL
 
-Use this setting to choose between single-input and single-output (SISO)/multiple-input and multiple-output (MIMO) chip modes.
+Use this setting to choose between SISO channels or MIMO mode.
 
-Note: not all devices support MIMO mode.
--------------------------------------------------------------------------------------------------------------------
-CH0
-
-When in SISO mode select active channel as CH0.
-
-Note: not all devices have more than one channel.
+Note: not all devices support MIMO mode and have more than one channel.
 -------------------------------------------------------------------------------------------------------------------
 LOAD SETTINGS
 
@@ -765,7 +720,7 @@ LimeSDR-Mini supports	[10e6,3800e6] Hz.
 -------------------------------------------------------------------------------------------------------------------
 SAMPLE RATE
 
-Here you can select sample rate for TX.
+Here you can enter sample rate for TX.
 
 LimeSDR-USB sample rate must be no more than 61.44e6 S/s.
 LimeSDR-Mini sample rate must be no more than 30.72e6 S/s.

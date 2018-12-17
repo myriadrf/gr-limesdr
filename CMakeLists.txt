@@ -124,7 +124,7 @@ endif(APPLE)
 find_package(Doxygen)
 
 MESSAGE(STATUS "Configuring GNU Radio C++ Libraries...")
-set(GR_REQUIRED_COMPONENTS RUNTIME)
+set(GR_REQUIRED_COMPONENTS RUNTIME PMT)
 set(MIN_GR_VERSION "3.7.8")
 find_package(Gnuradio REQUIRED)
 if("${Gnuradio_VERSION}" VERSION_LESS MIN_GR_VERSION)
@@ -135,10 +135,8 @@ endif()
 # Find LimeSuite
 ########################################################################
 MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
-
 INCLUDE(FindPkgConfig)
 PKG_CHECK_MODULES(PC_LIMESUITE LimeSuite)
-
 find_path(LIMESUITE_INCLUDE_DIRS 
  NAMES LimeSuite.h
  HINTS ${PC_LIMESUITE_INCLUDEDIR}/lime
@@ -146,7 +144,6 @@ find_path(LIMESUITE_INCLUDE_DIRS
        /usr/include/lime
        /usr/local/include/lime
 )
-
 find_library(LIMESUITE_LIB 
  NAMES LimeSuite limesuite
  HINTS ${PC_LIMESUITE_LIBDIR}
