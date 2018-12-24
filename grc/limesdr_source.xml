@@ -706,10 +706,10 @@
     <check> 130e6 >= $analog_bandw_ch1 </check>
 
     <check> $digital_bandw_ch0 >= 0 </check>
-    <check> $samp_rate >= $digital_bandw_ch0</check>
+    <check> ($digital_filter_ch0 == 1 and $samp_rate >= $digital_bandw_ch0) or $digital_filter_ch0 == 0 </check>
   
     <check> $digital_bandw_ch1 >= 0 </check>
-    <check> $samp_rate >= $digital_bandw_ch1</check>
+    <check> ($digital_filter_ch1 == 1 and $samp_rate >= $digital_bandw_ch1) or $digital_filter_ch1 == 0 </check>
 
     <check> $gain_dB_ch0 >= 0 </check>
     <check> 70 >= $gain_dB_ch0 </check>
