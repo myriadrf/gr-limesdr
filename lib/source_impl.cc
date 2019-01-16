@@ -32,55 +32,15 @@ source::sptr source::make(std::string serial,
                           int channel_mode,
                           int file_switch,
                           const char* filename,
-                          double rf_freq,
                           double samp_rate,
-                          size_t oversample,
-                          int calibration_ch0,
-                          double calibr_bandw_ch0,
-                          int calibration_ch1,
-                          double calibr_bandw_ch1,
-                          int lna_path_mini,
-                          int lna_path_ch0,
-                          int lna_path_ch1,
-                          int analog_filter_ch0,
-                          double analog_bandw_ch0,
-                          int analog_filter_ch1,
-                          double analog_bandw_ch1,
-                          int digital_filter_ch0,
-                          double digital_bandw_ch0,
-                          int digital_filter_ch1,
-                          double digital_bandw_ch1,
-                          int gain_dB_ch0,
-                          int gain_dB_ch1,
-                          float nco_freq_ch0,
-                          float nco_freq_ch1) {
+                          size_t oversample) {
     return gnuradio::get_initial_sptr(new source_impl(serial,
                                                       device_type,
                                                       channel_mode,
                                                       file_switch,
                                                       filename,
-                                                      rf_freq,
                                                       samp_rate,
-                                                      oversample,
-                                                      calibration_ch0,
-                                                      calibr_bandw_ch0,
-                                                      calibration_ch1,
-                                                      calibr_bandw_ch1,
-                                                      lna_path_mini,
-                                                      lna_path_ch0,
-                                                      lna_path_ch1,
-                                                      analog_filter_ch0,
-                                                      analog_bandw_ch0,
-                                                      analog_filter_ch1,
-                                                      analog_bandw_ch1,
-                                                      digital_filter_ch0,
-                                                      digital_bandw_ch0,
-                                                      digital_filter_ch1,
-                                                      digital_bandw_ch1,
-                                                      gain_dB_ch0,
-                                                      gain_dB_ch1,
-                                                      nco_freq_ch0,
-                                                      nco_freq_ch1));
+                                                      oversample));
 }
 
 source_impl::source_impl(std::string serial,
@@ -88,28 +48,8 @@ source_impl::source_impl(std::string serial,
                          int channel_mode,
                          int file_switch,
                          const char* filename,
-                         double rf_freq,
                          double samp_rate,
-                         size_t oversample,
-                         int calibration_ch0,
-                         double calibr_bandw_ch0,
-                         int calibration_ch1,
-                         double calibr_bandw_ch1,
-                         int lna_path_mini,
-                         int lna_path_ch0,
-                         int lna_path_ch1,
-                         int analog_filter_ch0,
-                         double analog_bandw_ch0,
-                         int analog_filter_ch1,
-                         double analog_bandw_ch1,
-                         int digital_filter_ch0,
-                         double digital_bandw_ch0,
-                         int digital_filter_ch1,
-                         double digital_bandw_ch1,
-                         int gain_dB_ch0,
-                         int gain_dB_ch1,
-                         float nco_freq_ch0,
-                         float nco_freq_ch1)
+                         size_t oversample)
     : gr::block("source",
                 gr::io_signature::make(
                     0, 0, 0), // Based on channel_mode SISO/MIMO use appropriate output signature
@@ -173,84 +113,23 @@ source_impl::source_impl(std::string serial,
                                                     stored.channel,
                                                     LMS_CH_RX);
 
-        // 6. Set RF frequency
-        device_handler::getInstance().set_rf_freq(
-            stored.device_number, stored.device_type, LMS_CH_RX, stored.channel, rf_freq);
-
-
-        // 7. Set sample rate
+        // 6. Set sample rate
         // LimeSDR-Mini or LimeNET-Micro can only have the same rates
         if (stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro)
             device_handler::getInstance().set_samp_rate(
-                stored.device_number, samp_rate, oversample);
+                stored.device_number, stored.device_type, samp_rate, oversample);
         // LimeSDR-USB can have separate rates for TX and RX
         else if (stored.device_type == LimeSDR_USB)
             device_handler::getInstance().set_samp_rate_dir(
                 stored.device_number, LMS_CH_RX, samp_rate, oversample);
-
-        // 8. Configure analog and digital filters
-        device_handler::getInstance().set_analog_filter(
-            stored.device_number, LMS_CH_RX, stored.channel, analog_filter_ch0, analog_bandw_ch0);
-        device_handler::getInstance().set_digital_filter(
-            stored.device_number, LMS_CH_RX, stored.channel, digital_filter_ch0, digital_bandw_ch0);
-
-
-        // 9. Set LNA path
-        if (stored.device_type == LimeSDR_Mini ||
-            stored.device_type == LimeNET_Micro) // LimeSDR-Mini
-            device_handler::getInstance().set_antenna(
-                stored.device_number, stored.channel, LMS_CH_RX, lna_path_mini);
-        else if (stored.device_type == LimeSDR_USB) // LimeSDR-USB
-            device_handler::getInstance().set_antenna(
-                stored.device_number, stored.channel, LMS_CH_RX, lna_path_ch0);
-
-        // 10. Set GAIN
-        device_handler::getInstance().set_gain(
-            stored.device_number, LMS_CH_RX, stored.channel, gain_dB_ch0);
-
-        // 11. Perform calibration
-        device_handler::getInstance().calibrate(stored.device_number,
-                                                stored.device_type,
-                                                calibration_ch0,
-                                                LMS_CH_RX,
-                                                stored.channel,
-                                                calibr_bandw_ch0,
-                                                rf_freq,
-                                                lna_path_ch0);
-
-        // 12. Set NCO
-        device_handler::getInstance().set_nco(
-            stored.device_number, LMS_CH_RX, stored.channel, nco_freq_ch0, 0);
-
-        // 13. Begin configuring device for channel 1 (if channel_mode is MIMO)
-        if (stored.channel_mode == 3 && stored.device_type == LimeSDR_USB) {
-            device_handler::getInstance().set_analog_filter(
-                stored.device_number, LMS_CH_RX, LMS_CH_1, analog_filter_ch1, analog_bandw_ch1);
-            device_handler::getInstance().set_digital_filter(
-                stored.device_number, LMS_CH_RX, LMS_CH_1, digital_filter_ch1, digital_bandw_ch1);
-            device_handler::getInstance().set_antenna(
-                stored.device_number, LMS_CH_1, LMS_CH_RX, lna_path_ch1);
-            device_handler::getInstance().set_gain(
-                stored.device_number, LMS_CH_RX, LMS_CH_1, gain_dB_ch1);
-            device_handler::getInstance().calibrate(stored.device_number,
-                                                    stored.device_type,
-                                                    calibration_ch1,
-                                                    LMS_CH_RX,
-                                                    LMS_CH_1,
-                                                    calibr_bandw_ch1,
-                                                    rf_freq,
-                                                    lna_path_ch1);
-            device_handler::getInstance().set_nco(
-                stored.device_number, LMS_CH_RX, LMS_CH_1, nco_freq_ch1, 0);
-        }
     }
     // device_handler::getInstance().debug_packets(stored.device_number);
-    // 14. Initialize stream for channel 0 (if channel_mode is SISO)
+    // 7. Initialize stream for channel 0 (if channel_mode is SISO)
     if (stored.channel_mode < 3) {
         this->init_stream(stored.device_number, stored.channel, stored.samp_rate);
     }
 
-    // 15. Initialize both channels streams (if channel_mode is MIMO)
+    // 8. Initialize both channels streams (if channel_mode is MIMO)
     else if (stored.channel_mode == 3 && stored.device_type == LimeSDR_USB) {
         this->init_stream(stored.device_number, LMS_CH_0, stored.samp_rate);
         this->init_stream(stored.device_number, LMS_CH_1, stored.samp_rate);
@@ -390,7 +269,7 @@ int source_impl::general_work(int noutput_items,
 // Setup stream
 void source_impl::init_stream(int device_number, int channel, float samp_rate) {
     streamId[channel].channel = channel;
-    streamId[channel].fifoSize = int(samp_rate) / 1e4;
+    streamId[channel].fifoSize = 4e6;
     streamId[channel].throughputVsLatency = 0.5;
     streamId[channel].isTx = LMS_CH_RX;
     streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
@@ -516,6 +395,15 @@ void source_impl::set_gain(int gain_dB, int channel) {
     } else {
         device_handler::getInstance().set_gain(stored.device_number, LMS_CH_RX, channel, gain_dB);
     }
+}
+
+void source_impl::calibrate(int calibrate,int channel, double bandw){
+    device_handler::getInstance().calibrate(stored.device_number,
+                                                stored.device_type,
+                                                calibrate,
+                                                LMS_CH_RX,
+                                                channel,
+                                                bandw);
 }
 } // namespace limesdr
 } // namespace gr

@@ -66,28 +66,8 @@ class sink_impl : public sink {
               int channel_mode,
               int file_switch,
               const char* filename,
-              double rf_freq,
               double samp_rate,
               size_t oversample,
-              int calibration_ch0,
-              double calibr_bandw_ch0,
-              int calibration_ch1,
-              double calibr_bandw_ch1,
-              int pa_path_mini,
-              int pa_path_ch0,
-              int pa_path_ch1,
-              int analog_filter_ch0,
-              double analog_bandw_ch0,
-              int analog_filter_ch1,
-              double analog_bandw_ch1,
-              int digital_filter_ch0,
-              double digital_bandw_ch0,
-              int digital_filter_ch1,
-              double digital_bandw_ch1,
-              int gain_dB_ch0,
-              int gain_dB_ch1,
-              float nco_freq_ch0,
-              float nco_freq_ch1,
               const std::string& length_tag_name);
     ~sink_impl();
 
@@ -115,6 +95,8 @@ class sink_impl : public sink {
     void set_digital_filter(int digital_filter, float digital_bandw, int channel);
 
     void set_gain(int gain_dB, int channel);
+
+    void calibrate(int calibrate,int channel, double bandw);
 };
 } // namespace limesdr
 } // namespace gr

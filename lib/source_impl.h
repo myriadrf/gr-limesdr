@@ -63,28 +63,8 @@ class source_impl : public source {
                 int channel_mode,
                 int file_switch,
                 const char* filename,
-                double rf_freq,
                 double samp_rate,
-                size_t oversample,
-                int calibration_ch0,
-                double calibr_bandw_ch0,
-                int calibration_ch1,
-                double calibr_bandw_ch1,
-                int lna_path_mini,
-                int lna_path_ch0,
-                int lna_path_ch1,
-                int analog_filter_ch0,
-                double analog_bandw_ch0,
-                int analog_filter_ch1,
-                double analog_bandw_ch1,
-                int digital_filter_ch0,
-                double digital_bandw_ch0,
-                int digital_filter_ch1,
-                double digital_bandw_ch1,
-                int gain_dB_ch0,
-                int gain_dB_ch1,
-                float nco_freq_ch0,
-                float nco_freq_ch1);
+                size_t oversample);
     ~source_impl();
 
     int general_work(int noutput_items,
@@ -111,6 +91,8 @@ class source_impl : public source {
     void set_digital_filter(int digital_filter, float digital_bandw, int channel);
 
     void set_gain(int gain_dB, int channel);
+
+    void calibrate(int calibrate,int channel, double bandw);
 };
 } // namespace limesdr
 } // namespace gr

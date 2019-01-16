@@ -5,37 +5,54 @@
     <category>[LimeSuite]</category>
     <flags>throttle</flags>
     <import>import limesdr</import>
-    <make>limesdr.source($serial,
-			 $device_type,
-			 $channel_mode,
-			 $file_switch,
-			 $filename,
-			 $rf_freq,
-			 $samp_rate,
-			 $oversample,
-			 $calibration_ch0,
-			 $calibr_bandw_ch0,
-			 $calibration_ch1,
-			 $calibr_bandw_ch1,
-       #if $device_type() == 1
-			  $lna_path_mini,
-       #else
-        $lna_path_micro,
-       #end if
-			 $lna_path_ch0,
-			 $lna_path_ch1,
-			 $analog_filter_ch0,
-			 $analog_bandw_ch0,
-			 $analog_filter_ch1,
-			 $analog_bandw_ch1,
-			 $digital_filter_ch0,
-			 $digital_bandw_ch0,
-			 $digital_filter_ch1,
-			 $digital_bandw_ch1,
-			 $gain_dB_ch0,
-			 $gain_dB_ch1,
-			 $nco_freq_ch0,
-			 $nco_freq_ch1)</make>
+    <make>limesdr.source($serial, $device_type, $channel_mode,
+			 $file_switch, $filename, $samp_rate, $oversample)
+#if $file_switch() == 0
+self.$(id).set_rf_freq($rf_freq)
+#if $analog_filter_ch0() == 1
+self.$(id).set_analog_filter($analog_filter_ch0,$analog_bandw_ch0,0)
+#end if
+#if $analog_filter_ch1() == 1 and $device_type() == 3 and $channel_mode() > 1
+self.$(id).set_analog_filter($analog_filter_ch1,$analog_bandw_ch1,1)
+#end if
+#if $digital_filter_ch0() == 1 
+self.$(id).set_digital_filter($digital_filter_ch0,$digital_bandw_ch0,0)
+#end if
+#if $digital_filter_ch1() == 1 and $device_type() == 3 and $channel_mode() > 1
+self.$(id).set_digital_filter($digital_filter_ch1,$digital_bandw_ch1,1)
+#end if
+#if $channel_mode() == 1 or $channel_mode() == 3 or $device_type() == 1 or $device_type == 2
+self.$(id).set_gain($gain_dB_ch0,0)
+#end if
+#if $device_type() == 3 and $channel_mode() > 1
+self.$(id).set_gain($gain_dB_ch1,1)
+#end if
+#if $device_type() == 1 and $lna_path_auto() == 0
+self.$(id).set_lna_path($lna_path_mini,0)
+#else if $device_type() == 2 and $lna_path_auto() == 0
+self.$(id).set_lna_path($lna_path_micro,0)
+#else if $device_type() == 3 and $channel_mode() == 1
+self.$(id).set_lna_path($lna_path_ch0,0)
+#else if $device_type() == 3 and $channel_mode() == 2
+self.$(id).set_lna_path($lna_path_ch1,1)
+#else if $device_type() == 3 and $channel_mode() == 3
+self.$(id).set_lna_path($lna_path_ch0,0)
+self.$(id).set_lna_path($lna_path_ch1,1)
+#end if
+#if $calibration_ch0() == 1
+self.$(id).calibrate($calibration_ch0,0,$calibr_bandw_ch0)
+#end if
+#if $calibration_ch1() == 1 and $device_type() == 3 and $channel_mode() > 1
+self.$(id).calibrate($calibration_ch1,1,$calibr_bandw_ch1)
+#end if
+#if $channel_mode() == 1 or $channel_mode() == 3 or $device_type() == 1 or $device_type == 2
+self.$(id).set_nco($nco_freq_ch0,0)
+#end if
+#if $device_type() == 3 and $channel_mode() > 1
+self.$(id).set_nco($nco_freq_ch1,1)
+#end if
+#end if
+       </make>
 
     <callback>set_rf_freq($rf_freq)</callback>
     <callback>set_lna_path($lna_path_mini,0)</callback>
@@ -53,8 +70,8 @@
 		       
     <param_tab_order>
       <tab>General</tab>
-      <tab>CH0</tab>
-      <tab>CH1</tab>
+      <tab>CH_A</tab>
+      <tab>CH_B</tab>
     </param_tab_order>
 
     <param>
@@ -212,7 +229,7 @@
     </param>
 
     <param>
-        <name>CH0:NCO frequency</name>
+        <name>CH_A:NCO frequency</name>
         <key>nco_freq_ch0</key>
         <value>0</value>
         <type>float</type>
@@ -225,11 +242,11 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
     
     <param>
-        <name>CH0:Calibration</name>
+        <name>CH_A:Calibration</name>
         <key>calibration_ch0</key>
         <value>0</value>
         <type>int</type>
@@ -250,18 +267,34 @@
             <name>ON</name>
             <key>1</key>
         </option>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
 
     <param>
-        <name>CH0:Calibration bandw.</name>
+        <name>CH_A:Calibration bandw.</name>
         <key>calibr_bandw_ch0</key>
         <value>10e6</value>
         <type>float</type>
         <hide>
-	  #if $calibration_ch0() == 0
-	    all
-	  #else if $file_switch() == 1
+	#if $calibration_ch0() == 0
+	  all
+	#else if $file_switch() == 1
+	  all
+  #else if $channel_mode() == 2 and $device_type() == 3
+    all
+	#else
+	  none
+	#end if
+	</hide>
+	<tab>CH_A</tab>
+    </param>
+    <param>
+        <name>CH_A:Auto LNA path</name>
+        <key>lna_path_auto</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>
+	  #if $device_type() == 3
 	    all
     #else if $channel_mode() == 2 and $device_type() == 3
       all
@@ -269,19 +302,24 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH0</tab>
+        <option>
+            <name>YES</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>NO</name>
+            <key>0</key>
+        </option>
+	<tab>CH_A</tab>
     </param>
-
     <param>
-        <name>CH0:LNA path</name>
+        <name>CH_A:LNA path</name>
         <key>lna_path_mini</key>
         <value>3</value>
         <type>int</type>
         <hide>
-	  #if $device_type() == 2 or $device_type() == 3
+	  #if $device_type() == 2 or $device_type() == 3 or $lna_path_auto() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 3
-      all
 	  #else
 	    none
 	  #end if
@@ -294,19 +332,17 @@
             <name>W</name>
             <key>3</key>
         </option>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
 
     <param>
-        <name>CH0:LNA path</name>
+        <name>CH_A:LNA path</name>
         <key>lna_path_micro</key>
         <value>1</value>
         <type>int</type>
         <hide>
-	  #if $device_type() == 3 or $device_type() == 1
+	  #if $device_type() == 3 or $device_type() == 1 or $lna_path_auto() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 3
-      all
 	  #else
 	    none
 	  #end if
@@ -319,12 +355,12 @@
             <name>L</name>
             <key>2</key>
         </option>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
     
 
     <param>
-        <name>CH0:LNA path</name>
+        <name>CH_A:LNA path</name>
         <key>lna_path_ch0</key>
         <value>2</value>
         <type>int</type>
@@ -351,12 +387,12 @@
             <name>W</name>
             <key>3</key>
         </option>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
     
 
     <param>
-        <name>CH0:Analog filter</name>
+        <name>CH_A:Analog filter</name>
         <key>analog_filter_ch0</key>
         <value>1</value>
         <type>int</type>
@@ -377,11 +413,11 @@
             <name>ON</name>
             <key>1</key>
         </option>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
 
     <param>
-        <name>CH0:Analog filter bandw.</name>
+        <name>CH_A:Analog filter bandw.</name>
         <key>analog_bandw_ch0</key>
         <value>5e6</value>
         <type>float</type>
@@ -396,11 +432,11 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
 
     <param>
-        <name>CH0:Digital filter</name>
+        <name>CH_A:Digital filter</name>
         <key>digital_filter_ch0</key>
         <value>0</value>
         <type>int</type>
@@ -421,11 +457,11 @@
             <name>ON</name>
             <key>1</key>
         </option>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
 
     <param>
-        <name>CH0:Digital filter bandw.</name>
+        <name>CH_A:Digital filter bandw.</name>
         <key>digital_bandw_ch0</key>
         <value>0</value>
         <type>float</type>
@@ -440,11 +476,11 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
 
     <param>
-        <name>CH0:Gain,dB</name>
+        <name>CH_A:Gain,dB</name>
         <key>gain_dB_ch0</key>
         <value>30</value>
         <type>int</type>
@@ -457,11 +493,11 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH0</tab>
+	<tab>CH_A</tab>
     </param>
     
     <param>
-        <name>CH1:NCO frequency</name>
+        <name>CH_B:NCO frequency</name>
         <key>nco_freq_ch1</key>
         <value>0</value>
         <type>float</type>
@@ -476,11 +512,11 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH1</tab>
+	<tab>CH_B</tab>
     </param>
     
     <param>
-        <name>CH1:Calibration</name>
+        <name>CH_B:Calibration</name>
         <key>calibration_ch1</key>
         <value>0</value>
         <type>int</type>
@@ -503,11 +539,11 @@
             <name>ON</name>
             <key>1</key>
         </option>
-	<tab>CH1</tab>
+	<tab>CH_B</tab>
     </param>
 
     <param>
-        <name>CH1:Calibration bandw.</name>
+        <name>CH_B:Calibration bandw.</name>
         <key>calibr_bandw_ch1</key>
         <value>10e6</value>
         <type>float</type>
@@ -524,11 +560,11 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH1</tab>
+	<tab>CH_B</tab>
     </param>
 
     <param>
-        <name>CH1:LNA path</name>
+        <name>CH_B:LNA path</name>
         <key>lna_path_ch1</key>
         <value>2</value>
         <type>int</type>
@@ -555,11 +591,11 @@
             <name>W</name>
             <key>3</key>
         </option>
-	<tab>CH1</tab>
+	<tab>CH_B</tab>
     </param>
 
     <param>
-        <name>CH1:Analog filter</name>
+        <name>CH_B:Analog filter</name>
         <key>analog_filter_ch1</key>
         <value>1</value>
         <type>int</type>
@@ -582,11 +618,11 @@
             <name>ON</name>
             <key>1</key>
         </option>
-	<tab>CH1</tab>
+	<tab>CH_B</tab>
     </param>
 
     <param>
-        <name>CH1:Analog filter bandw.</name>
+        <name>CH_B:Analog filter bandw.</name>
         <key>analog_bandw_ch1</key>
         <value>5e6</value>
         <type>float</type>
@@ -603,11 +639,11 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH1</tab>
+	<tab>CH_B</tab>
     </param>
 
     <param>
-        <name>CH1:Digital filter</name>
+        <name>CH_B:Digital filter</name>
         <key>digital_filter_ch1</key>
         <value>0</value>
         <type>int</type>
@@ -630,11 +666,11 @@
             <name>ON</name>
             <key>1</key>
         </option>
-	<tab>CH1</tab>
+	<tab>CH_B</tab>
     </param>
 
     <param>
-        <name>CH1:Digital filter bandw.</name>
+        <name>CH_B:Digital filter bandw.</name>
         <key>digital_bandw_ch1</key>
         <value>0</value>
         <type>float</type>
@@ -651,11 +687,11 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH1</tab>
+	<tab>CH_B</tab>
     </param>
 
     <param>
-        <name>CH1:Gain,dB</name>
+        <name>CH_B:Gain,dB</name>
         <key>gain_dB_ch1</key>
         <value>30</value>
         <type>int</type>
@@ -670,7 +706,7 @@
 	    none
 	  #end if
 	</hide>
-	<tab>CH1</tab>
+	<tab>CH_B</tab>
     </param>
 
     <!--<check> $device_type >= $channel_mode-1 </check>-->
@@ -728,7 +764,7 @@ If left blank, the first device is used.
 DEVICE TYPE
 
 This setting lets you choose from predefined device type list and loads appropriate settings for the selected device.
-Currently supported device types: LimeSDR-USB, LimeSDR-Mini.
+Currently supported device types: LimeSDR-USB, LimeSDR-Mini, LimeNET-Micro.
 -------------------------------------------------------------------------------------------------------------------
 CHANNEL
 
@@ -752,7 +788,8 @@ RF FREQUENCY
 
 Set RF center frequency for RX (both channels).
 LimeSDR-USB supports 	[100e3,3800e6] 	Hz.
-LimeSDR-Mini supports 	[10e6,3800e6] 	Hz.
+LimeSDR-Mini supports 	[10e6,3500e6] 	Hz.
+LimeSDR-Micro supports 	[10e6,3500e6] 	Hz.
 -------------------------------------------------------------------------------------------------------------------
 SAMPLE RATE
 
@@ -760,14 +797,15 @@ Here you can enter sample rate for RX.
 
 LimeSDR-USB sample rate must be no more than 61.44e6 S/s.
 LimeSDR-Mini sample rate must be no more than 30.72e6 S/s.
+LimeSDR-Micro sample rate must be no more than 10e6 S/s.
 
-Note: LimeSDR-Mini supports only the same sample rate for TX and RX.
+Note: LimeSDR-Mini and LimeSDR-Micro supports only the same sample rate for TX and RX.
 -------------------------------------------------------------------------------------------------------------------
 OVERSAMPLE
 
 Here you can select oversampling value for RX. Default value uses highest possible oversampling value.
 
-Note: LimeSDR-Mini supports only the same oversampling value for TX and RX.
+Note: LimeSDR-Mini and LimeSDR-Micro supports only the same oversampling value for TX and RX.
 -------------------------------------------------------------------------------------------------------------------
 NCO FREQUENCY
 

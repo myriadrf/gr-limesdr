@@ -111,7 +111,7 @@ class device_handler {
      *
      * @param   serial Device serial from the list of LMS_GetDeviceList.
      *
-     * @param   device_type LimeSDR-Mini(1), LimeSDR-USB(2).
+     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
      */
     int open_device(std::string& serial, int device_type);
 
@@ -136,7 +136,7 @@ class device_handler {
      *
      * @param   block_type Source block(1), Sink block(2).
      *
-     * @param   device_type LimeSDR-Mini(1), LimeSDR-USB(2).
+     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
      *
      * @param   chip_mode SISO(1), MIMO(2).
      *
@@ -172,7 +172,7 @@ class device_handler {
      *
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
-     * @param   device_type LimeSDR-Mini(1), LimeSDR-USB(2).
+     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
      *
      * @param   chip_mode SISO(1), MIMO(2).
      *
@@ -188,11 +188,13 @@ class device_handler {
      *
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
+     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
+     *
      * @param   rate  Sample rate in S/s.
      *
      * @param   oversample  Oversampling value (0 (default),1,2,4,8,16,32).
      */
-    void set_samp_rate(int device_number, double& rate, size_t oversample);
+    void set_samp_rate(int device_number, int device_type, double& rate, size_t oversample);
 
     /**
      * Set sample rate for both channels (RX and TX separately).
@@ -212,7 +214,7 @@ class device_handler {
      *
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
-     * @param   device_type LimeSDR-Mini(1), LimeSDR-USB(2).
+     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
      *
      * @param   direction  Direction of samples RX(LMS_CH_RX), TX(LMS_CH_TX).
      *
@@ -228,7 +230,7 @@ class device_handler {
      *
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
-     * @param   device_type LimeSDR-Mini(1), LimeSDR-USB(2).
+     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
      *
      * @param   calibration Turn calibration: OFF(0),ON(1).
      *
@@ -238,21 +240,13 @@ class device_handler {
      *
      * @param   bandwidth Set calibration bandwidth in Hz.
      *
-     * @param   rf_freq Pass RF frequency in Hz for calibration.
-     *
-     * @param   path Pass path for calibration.
-     *
-     * @note    rf_freq and path are necessary in order to perform calibration for LNAL (matching)
-     * 	   and center frequencies below 30 MHz (NCO).
      */
     void calibrate(int device_number,
                    int device_type,
                    int calibration,
                    int direction,
                    int channel,
-                   double bandwidth,
-                   float rf_freq,
-                   int path);
+                   double bandwidth);
 
 
     void set_antenna(int device_number, int channel, int direction, int antenna);

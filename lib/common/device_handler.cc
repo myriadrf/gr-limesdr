@@ -349,21 +349,18 @@ void device_handler::set_chip_mode(
     }
 }
 
-void device_handler::set_samp_rate(int device_number, double& rate, size_t oversample) {
+void device_handler::set_samp_rate(int device_number,
+                                   int device_type,
+                                   double& rate,
+                                   size_t oversample) {
     if (oversample == 0 || oversample == 1 || oversample == 2 || oversample == 4 ||
         oversample == 8 || oversample == 16 || oversample == 32) {
-        if (rate > 30.72e6) {
-            std::cout << "ERROR: device_handler::set_samp_rate(): samp_rate cannot be "
-                         "more than 30.72e6 S/s."
-                      << std::endl;
-            close_all_devices();
-            exit(0);
-        } else {
-            if (LMS_SetSampleRate(device_handler::getInstance().get_device(device_number),
-                                  rate,
-                                  oversample) != LMS_SUCCESS)
-                device_handler::getInstance().error(device_number);
-        }
+
+        if (LMS_SetSampleRate(device_handler::getInstance().get_device(device_number),
+                              rate,
+                              oversample) != LMS_SUCCESS)
+            device_handler::getInstance().error(device_number);
+
         double host_value;
         double rf_value;
         if (LMS_GetSampleRate(device_handler::getInstance().get_device(device_number),
@@ -450,11 +447,14 @@ void device_handler::calibrate(int device_number,
                                int calibration,
                                int direction,
                                int channel,
-                               double bandwidth,
-                               float rf_freq,
-                               int path) {
+                               double bandwidth) {
     if (calibration == 1) {
         std::cout << "INFO: device_handler::calibrate(): ";
+        int path = LMS_GetAntenna(
+            device_handler::getInstance().get_device(device_number), direction, channel);
+        float_type rf_freq = 0;
+        LMS_GetLOFrequency(
+            device_handler::getInstance().get_device(device_number), direction, channel, &rf_freq);
         if (rf_freq < 31e6 ||
             (device_type == LimeSDR_USB && path == 2 && direction == LMS_CH_RX)) // Workaround
         {
@@ -518,32 +518,18 @@ void device_handler::set_analog_filter(
     if (analog_filter == 1) {
         if (channel == 0 || channel == 1) {
             if (direction == LMS_CH_TX || direction == LMS_CH_RX) {
-                if ((analog_bandw < 5e6 || analog_bandw > 130e6) && direction == LMS_CH_TX) {
-                    std::cout << "WARNING: device_handler::set_analog_filter(): analog_bandw TX "
-                                 "value must be [5e6,130e6]."
-                              << std::endl;
-                    // close_all_devices();
-                } else if ((analog_bandw < 1.5e6 || analog_bandw > 130e6) &&
-                           direction == LMS_CH_RX) {
-                    std::cout << "WARNING: device_handler::set_analog_filter(): analog_bandw RX "
-                                 "value must be [1.5e6,130e6]."
-                              << std::endl;
-                    // close_all_devices();
-                } else {
-                    std::cout << "INFO: device_handler::set_analog_filter(): ";
-                    LMS_SetLPFBW(device_handler::getInstance().get_device(device_number),
-                                 direction,
-                                 channel,
-                                 analog_bandw);
+                std::cout << "INFO: device_handler::set_analog_filter(): ";
+                LMS_SetLPFBW(device_handler::getInstance().get_device(device_number),
+                             direction,
+                             channel,
+                             analog_bandw);
 
-                    double analog_value;
-                    LMS_GetLPFBW(device_handler::getInstance().get_device(device_number),
-                                 direction,
-                                 channel,
-                                 &analog_value);
-                    std::cout << "configured bandwidth: " << analog_value / 1e6 << " MHz."
-                              << std::endl;
-                }
+                double analog_value;
+                LMS_GetLPFBW(device_handler::getInstance().get_device(device_number),
+                             direction,
+                             channel,
+                             &analog_value);
+                std::cout << "configured bandwidth: " << analog_value / 1e6 << " MHz." << std::endl;
             } else {
                 std::cout << "ERROR: device_handler::set_analog_filter(): direction must be "
                              "0(LMS_CH_RX) or 1(LMS_CH_TX)."
