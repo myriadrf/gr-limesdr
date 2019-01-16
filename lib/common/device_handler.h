@@ -30,6 +30,13 @@
 #include <string>
 #include <vector>
 
+#define LMS_CH_0 0
+#define LMS_CH_1 1
+
+#define LimeSDR_Mini 1
+#define LimeNET_Micro 2
+#define LimeSDR_USB 3
+
 class device_handler {
     private:
     int open_devices = 0;
@@ -37,6 +44,8 @@ class device_handler {
     bool list_read = false;
     // Calculate open devices to close them all on close_all_devices
     int device_count;
+
+    std::string device_string[2] = {"LimeSDR Mini", "LimeNET-Micro"};
 
     struct device {
         // Device address
@@ -72,8 +81,6 @@ class device_handler {
     device_handler(device_handler const&);
     void operator=(device_handler const&);
 
-    int LMS_CH_0 = 0;
-    int LMS_CH_1 = 1;
 
     public:
     static device_handler& getInstance() {
@@ -83,6 +90,7 @@ class device_handler {
     ~device_handler();
 
     mutable std::recursive_mutex block_mutex;
+
 
     /**
      * Print device error and close all devices.

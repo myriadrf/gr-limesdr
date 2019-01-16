@@ -129,14 +129,12 @@ sink_impl::sink_impl(std::string serial,
     stored.channel_mode = channel_mode;
     stored.samp_rate = samp_rate;
 
-    if (stored.device_type == 1) // LimeSDR-Mini
-    {
+    if (stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro) {
         stored.channel = LMS_CH_0;
         stored.channel_mode = 1;
-    } else if (stored.device_type == 2) // LimeSDR-USB
-    {
+    } else if (stored.device_type == LimeSDR_USB) {
         if (stored.channel_mode < 3)                  // If SISO configure prefered channel
-            stored.channel = stored.channel_mode - 1; // Channel is chip mode - 1
+            stored.channel = stored.channel_mode - 1; // Channel is channel_mode - 1
         else if (stored.channel_mode == 3)            // If MIMO begin configuring channel 0
             stored.channel = LMS_CH_0;
     }
@@ -185,10 +183,12 @@ sink_impl::sink_impl(std::string serial,
             stored.device_number, stored.device_type, LMS_CH_TX, stored.channel, rf_freq);
 
         // 7. Set sample rate
-        if (stored.device_type == 1) // LimeSDR-Mini can only have the same rates
+        // LimeSDR-Mini and LimeNET-Micro can only have the same rates
+        if (stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro)
             device_handler::getInstance().set_samp_rate(
                 stored.device_number, samp_rate, oversample);
-        else if (stored.device_type == 2) // LimeSDR-USB can have separate rates for TX and RX
+        // LimeSDR-USB can have separate rates for TX and RX
+        else if (stored.device_type == LimeSDR_USB)
             device_handler::getInstance().set_samp_rate_dir(
                 stored.device_number, LMS_CH_TX, samp_rate, oversample);
 
@@ -200,10 +200,11 @@ sink_impl::sink_impl(std::string serial,
 
 
         // 9. Set PA path
-        if (stored.device_type == 1) // LimeSDR-Mini
+        if (stored.device_type == LimeSDR_Mini ||
+            stored.device_type == LimeNET_Micro) // LimeSDR-Mini
             device_handler::getInstance().set_antenna(
                 stored.device_number, stored.channel, LMS_CH_TX, pa_path_mini);
-        else if (stored.device_type == 2) // LimeSDR-USB
+        else if (stored.device_type == LimeSDR_USB) // LimeSDR-USB
             device_handler::getInstance().set_antenna(
                 stored.device_number, stored.channel, LMS_CH_TX, pa_path_ch0);
 
@@ -226,7 +227,7 @@ sink_impl::sink_impl(std::string serial,
             stored.device_number, LMS_CH_TX, stored.channel, nco_freq_ch0, 0);
 
         // 13. Begin configuring device for channel 1 (if channel_mode is MIMO)
-        if (stored.channel_mode == 3 && stored.device_type == 2) {
+        if (stored.channel_mode == 3 && stored.device_type == LimeSDR_USB) {
             device_handler::getInstance().set_antenna(
                 stored.device_number, LMS_CH_1, LMS_CH_TX, pa_path_ch1);
             device_handler::getInstance().set_analog_filter(
@@ -254,7 +255,7 @@ sink_impl::sink_impl(std::string serial,
     }
 
     // 15. Initialize both channels streams (if channel_mode is MIMO)
-    else if (stored.channel_mode == 3 && stored.device_type == 2) {
+    else if (stored.channel_mode == 3 && stored.device_type == LimeSDR_USB) {
         this->init_stream(stored.device_number, LMS_CH_0, stored.samp_rate);
         this->init_stream(stored.device_number, LMS_CH_1, stored.samp_rate);
     }
@@ -295,7 +296,7 @@ bool sink_impl::start(void) {
         LMS_StartStream(&streamId[stored.channel]);
     }
     // Initialize and start stream for channels 0 & 1 (if channel_mode is MIMO)
-    else if (stored.channel_mode == 3 && stored.device_type == 2) {
+    else if (stored.channel_mode == 3 && stored.device_type == LimeSDR_USB) {
         LMS_StartStream(&streamId[LMS_CH_0]);
         LMS_StartStream(&streamId[LMS_CH_1]);
     }
@@ -322,19 +323,19 @@ int sink_impl::general_work(int noutput_items,
                             gr_vector_int& ninput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items) {
-    // std::cout << "Got to work" << std::endl;
     // Init number of items to be sent and timestamps
     nitems_send = noutput_items;
     int current_sample = nitems_read(0);
     tx_meta.waitForTimestamp = false;
     tx_meta.flushPartialPacket = false;
-
     // Check if channel 0 has any tags
     this->work_tags(noutput_items);
 
     // If length tag has been found burst_length should be higher than 0
     if (burst_length > 0) {
         nitems_send = std::min<long>(burst_length, nitems_send);
+        // Make sure to wait for timestamp
+        tx_meta.waitForTimestamp = true;
         // Check if it is the end of the burst
         if (burst_length - (long)nitems_send == 0) {
             tx_meta.flushPartialPacket = true;
@@ -347,14 +348,11 @@ int sink_impl::general_work(int noutput_items,
         if (stream_analyzer == true) {
             this->print_stream_stats(stored.channel);
         }
-        // std::cout << "Timestamp " << tx_meta[0].timestamp  << std::endl;
-        // std::cout << "Nitems: " << nitems_send << std::endl;
         ret[0] =
             LMS_SendStream(&streamId[stored.channel], input_items[0], nitems_send, &tx_meta, 100);
         if (ret[0] < 0) {
             return 0;
-        } // else
-          // std::cout << "Sent: " << ret[0] << std::endl;
+        }
         burst_length -= ret[0];
         tx_meta.timestamp += ret[0];
         consume(0, ret[0]);
@@ -365,13 +363,12 @@ int sink_impl::general_work(int noutput_items,
         if (stream_analyzer == true) {
             this->print_stream_stats(LMS_CH_0);
         }
-        // Send data
         ret[0] = LMS_SendStream(&streamId[LMS_CH_0], input_items[0], nitems_send, &tx_meta, 100);
         ret[1] = LMS_SendStream(&streamId[LMS_CH_1], input_items[1], nitems_send, &tx_meta, 100);
+        // Send data
         if (ret[0] < 0 || ret[1] < 0) {
             return 0;
         }
-
         burst_length -= ret[0];
         tx_meta.timestamp += ret[0];
         consume(0, ret[0]);
@@ -380,7 +377,6 @@ int sink_impl::general_work(int noutput_items,
     return 0;
 }
 void sink_impl::work_tags(int noutput_items) {
-
     static uint64_t last_timestamp = 0;
     std::vector<tag_t> tags;
     int current_sample = nitems_read(0);
@@ -419,7 +415,7 @@ void sink_impl::work_tags(int noutput_items) {
                 if (cTag.offset == current_sample) {
                     // Found length tag in the middle of the burst
                     if (burst_length > 0 && ret[0] > 0)
-                        std::cout << "INFO: Length tag has been preemted" << std::endl;
+                        std::cout << "Warning: Length tag has been preemted" << std::endl;
                     burst_length = pmt::to_long(cTag.value);
                 } else {
                     nitems_send = cTag.offset - current_sample;
@@ -464,9 +460,9 @@ void sink_impl::init_stream(int device_number, int channel, float samp_rate) {
 // Return io_signature to manage module input count
 // based on SISO (one input) and MIMO (two inputs) modes
 inline gr::io_signature::sptr sink_impl::args_to_io_signature(int channel_number, int device_type) {
-    if (channel_number < 3 || device_type == 1) {
+    if (channel_number < 3 || device_type == LimeSDR_Mini || device_type == LimeNET_Micro) {
         return gr::io_signature::make(1, 1, sizeof(gr_complex));
-    } else if (channel_number == 3 && device_type == 2) {
+    } else if (channel_number == 3 && device_type == LimeSDR_USB) {
         return gr::io_signature::make(2, 2, sizeof(gr_complex));
     } else {
         std::cout << "ERROR: sink_impl::args_to_io_signature(): channel_number must be 1,2 or 3."
@@ -481,11 +477,12 @@ void sink_impl::set_rf_freq(float rf_freq) {
 }
 
 void sink_impl::set_pa_path(int pa_path, int channel) {
-    if (stored.device_type == 1 && channel == 1) {
+    if ((stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro) &&
+        channel == 1) {
         // IGNORE CHANNEL 1 FOR LIMESDR-MINI
-        std::cout << "sink_impl::set_pa_path(): INFO: Setting bypassed. LimeSDR-Mini does not "
-                     "support channel 1 configuration."
-                  << std::endl;
+        std::cout << "sink_impl::set_pa_path(): INFO: Setting bypassed. "
+                  << device_string[stored.device_type - 1]
+                  << " does not support channel 1 configuration." << std::endl;
     } else {
         device_handler::getInstance().set_antenna(
             stored.device_number, channel, LMS_CH_TX, pa_path);
@@ -493,11 +490,12 @@ void sink_impl::set_pa_path(int pa_path, int channel) {
 }
 
 void sink_impl::set_nco(float nco_freq, int channel) {
-    if (stored.device_type == 1 && channel == 1) {
-        // IGNORE CHANNEL 1 FOR LIMESDR-MINI
-        std::cout << "sink_impl::set_nco(): INFO: Setting bypassed. LimeSDR-Mini does not support "
-                     "channel 1 configuration."
-                  << std::endl;
+    if ((stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro) &&
+        channel == 1) {
+        // IGNORE CHANNEL 1 FOR LIMESDR-MINI or LimeNET-Micro
+        std::cout << "sink_impl::set_nco(): INFO: Setting bypassed. "
+                  << device_string[stored.device_type - 1]
+                  << " does not support channel 1 configuration." << std::endl;
     } else {
         device_handler::getInstance().set_nco(
             stored.device_number, LMS_CH_TX, channel, nco_freq, 0);
@@ -505,11 +503,12 @@ void sink_impl::set_nco(float nco_freq, int channel) {
 }
 
 void sink_impl::set_analog_filter(int analog_filter, float analog_bandw, int channel) {
-    if (stored.device_type == 1 && channel == 1) {
+    if ((stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro) &&
+        channel == 1) {
         // IGNORE CHANNEL 1 FOR LIMESDR-MINI
-        std::cout << "sink_impl::set_analog_filter(): INFO: Setting bypassed. LimeSDR-Mini does "
-                     "not support channel 1 configuration."
-                  << std::endl;
+        std::cout << "sink_impl::set_analog_filter(): INFO: Setting bypassed. "
+                  << device_string[stored.device_type - 1]
+                  << " does not support channel 1 configuration." << std::endl;
     } else {
         device_handler::getInstance().set_analog_filter(
             stored.device_number, LMS_CH_TX, channel, analog_filter, analog_bandw);
@@ -517,11 +516,12 @@ void sink_impl::set_analog_filter(int analog_filter, float analog_bandw, int cha
 }
 
 void sink_impl::set_digital_filter(int digital_filter, float digital_bandw, int channel) {
-    if (stored.device_type == 1 && channel == 1) {
+    if ((stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro) &&
+        channel == 1) {
         // IGNORE CHANNEL 1 FOR LIMESDR-MINI
-        std::cout << "sink_impl::set_digital_filter(): INFO: Setting bypassed. LimeSDR-Mini does "
-                     "not support channel 1 configuration."
-                  << std::endl;
+        std::cout << "sink_impl::set_digital_filter(): INFO: Setting bypassed. "
+                  << device_string[stored.device_type - 1]
+                  << " does not support channel 1 configuration." << std::endl;
     } else {
         device_handler::getInstance().set_digital_filter(
             stored.device_number, LMS_CH_TX, channel, digital_filter, digital_bandw);
@@ -529,11 +529,12 @@ void sink_impl::set_digital_filter(int digital_filter, float digital_bandw, int 
 }
 
 void sink_impl::set_gain(int gain_dB, int channel) {
-    if (stored.device_type == 1 && channel == 1) {
+    if ((stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro) &&
+        channel == 1) {
         // IGNORE CHANNEL 1 FOR LIMESDR-MINI
-        std::cout << "sink_impl::set_gain(): INFO: Setting bypassed. LimeSDR-Mini does not support "
-                     "channel 1 configuration."
-                  << std::endl;
+        std::cout << "sink_impl::set_gain(): INFO: Setting bypassed. "
+                  << device_string[stored.device_type - 1]
+                  << " does not support channel 1 configuration." << std::endl;
     } else {
         device_handler::getInstance().set_gain(stored.device_number, LMS_CH_TX, channel, gain_dB);
     }

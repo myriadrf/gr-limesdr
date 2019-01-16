@@ -35,8 +35,6 @@ class sink_impl : public sink {
 
     bool stream_analyzer = false;
 
-    int LMS_CH_0 = 0;
-    int LMS_CH_1 = 1;
     int sink_block = 2;
 
     pmt::pmt_t LENGTH_TAG;
@@ -44,6 +42,8 @@ class sink_impl : public sink {
     long burst_length = 0;
     int nitems_send = 0;
     int ret[2] = {0};
+
+    std::string device_string[2] = {"LimeSDR Mini", "LimeNET-Micro"};
 
     struct constant_data {
         std::string serial;

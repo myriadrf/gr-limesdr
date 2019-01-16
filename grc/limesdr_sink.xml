@@ -73,6 +73,10 @@
         </option>
         <option>
             <name>LimeSDR-USB</name>
+            <key>3</key>
+        </option>
+        <option>
+            <name>LimeNET-Micro</name>
             <key>2</key>
         </option>
     </param>
@@ -83,7 +87,7 @@
         <value>1</value>
         <type>int</type>
         <hide>
-        #if $device_type() == 1
+        #if $device_type() == 1 or $device_type() == 2
 	        all
         #else
           none
@@ -218,7 +222,7 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 2
+    #else if $channel_mode() == 2 and $device_type() == 3
       all
 	  #else
 	    none
@@ -235,7 +239,7 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 2
+    #else if $channel_mode() == 2 and $device_type() == 3
       all
 	  #else
 	    none
@@ -262,7 +266,7 @@
 	  all
 	#else if $file_switch() == 1
 	  all
-  #else if $channel_mode() == 2 and $device_type() == 2
+  #else if $channel_mode() == 2 and $device_type() == 3
     all
 	#else
 	  none
@@ -277,9 +281,9 @@
         <value>1</value>
         <type>int</type>
         <hide>
-	  #if $device_type() == 2
+	  #if $device_type() == 3
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 2
+    #else if $channel_mode() == 2 and $device_type() == 3
       all
 	  #else
 	    none
@@ -302,11 +306,11 @@
         <value>1</value>
         <type>int</type>
         <hide>
-	  #if $device_type() == 1
+	  #if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 2
+    #else if $channel_mode() == 2 and $device_type() == 3
       all
 	  #else
 	    none
@@ -331,7 +335,7 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 2
+    #else if $channel_mode() == 2 and $device_type() == 3
       all
 	  #else
 	    none
@@ -358,7 +362,7 @@
 	    all
 	  #else if $file_switch() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 2
+    #else if $channel_mode() == 2 and $device_type() == 3
       all
 	  #else
 	    none
@@ -375,7 +379,7 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 2
+    #else if $channel_mode() == 2 and $device_type() == 3
       all
 	  #else
 	    none
@@ -402,7 +406,7 @@
 	    all
 	  #else if $file_switch() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 2
+    #else if $channel_mode() == 2 and $device_type() == 3
       all
 	  #else
 	    none
@@ -419,7 +423,7 @@
         <hide>
 	  #if $file_switch() == 1
 	    all
-    #else if $channel_mode() == 2 and $device_type() == 2
+    #else if $channel_mode() == 2 and $device_type() == 3
       all
 	  #else
 	    none
@@ -436,7 +440,7 @@
         <hide>
 	  #if $channel_mode() == 1
 	    all
-	  #else if $device_type() == 1
+	  #else if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
@@ -455,7 +459,7 @@
         <hide>
 	  #if $channel_mode() == 1
 	    all
-	  #else if $device_type() == 1
+	  #else if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
@@ -484,7 +488,7 @@
 	    all
 	  #else if $channel_mode() == 1
 	    all
-	  #else if $device_type() == 1
+	  #else if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
@@ -503,7 +507,7 @@
         <hide>
 	  #if $channel_mode() == 1
 	    all
-	  #else if $device_type() == 1
+	  #else if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
@@ -530,7 +534,7 @@
         <hide>
 	  #if $channel_mode() == 1
 	    all
-	  #else if $device_type() == 1
+	  #else if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
@@ -559,7 +563,7 @@
 	    all
 	  #else if $channel_mode() == 1
 	    all
-	  #else if $device_type() == 1
+	  #else if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
@@ -578,7 +582,7 @@
         <hide>
 	  #if $channel_mode() == 1
 	    all
-	  #else if $device_type() == 1
+	  #else if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
@@ -607,7 +611,7 @@
 	    all
 	  #else if $channel_mode() == 1
 	    all
-	  #else if $device_type() == 1
+	  #else if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
@@ -626,7 +630,7 @@
         <hide>
 	  #if $channel_mode() == 1
 	    all
-	  #else if $device_type() == 1
+	  #else if $device_type() == 1 or $device_type() == 2
 	    all
 	  #else if $file_switch() == 1
 	    all
@@ -639,7 +643,7 @@
   
     <!--<check> $device_type >= $channel_mode-1 </check>-->
     <check> $device_type >= 1 </check>
-    <check> 2 >= $device_type </check>
+    <check> 3 >= $device_type </check>
   
     <check> $channel_mode >= 1 </check>
     <check> 3 >= $channel_mode </check>
@@ -659,10 +663,10 @@
     <check> 130e6 >= $analog_bandw_ch1</check>
  
     <check> $digital_bandw_ch0 >= 0 </check>
-    <check> $samp_rate >= $digital_bandw_ch0</check>
+    <check> ($digital_filter_ch0 == 1 and $samp_rate >= $digital_bandw_ch0) or $digital_filter_ch0 == 0 </check>
   
     <check> $digital_bandw_ch1 >= 0 </check>
-    <check> $samp_rate >= $digital_bandw_ch1</check>
+    <check> ($digital_filter_ch1 == 1 and $samp_rate >= $digital_bandw_ch1) or $digital_filter_ch1 == 0 </check>
   
     <check> $gain_dB_ch0 >= 0 </check>
     <check> 60 >= $gain_dB_ch0 </check>
@@ -676,7 +680,7 @@
     <sink>
         <name>in</name>
         <type>complex</type>
-        <nports>$channel_mode+$device_type - 3</nports>
+        <nports>$channel_mode+$device_type - 4</nports>
     </sink>
     
 <doc>
