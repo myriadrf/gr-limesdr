@@ -82,7 +82,7 @@ class sink_impl : public sink {
 
     void init_stream(int device_number, int channel, float samp_rate);
 
-    void set_rf_freq(float rf_freq);
+    double set_center_freq(double freq, size_t chan = 0);
 
     void set_pa_path(int pa_path, int channel);
 
@@ -92,7 +92,7 @@ class sink_impl : public sink {
 
     void set_digital_filter(int digital_filter, float digital_bandw, int channel);
 
-    void set_gain(int gain_dB, int channel);
+    uint32_t set_gain(uint32_t gain_dB, int channel = 0);
 
     double set_sample_rate(double rate);
 

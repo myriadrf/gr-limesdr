@@ -207,8 +207,10 @@ class device_handler {
      * @param   channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
      * @param   rf_freq  RF frequency in Hz.
+     * 
+     * @return  returns RF frequency in Hz
      */
-    void
+    double
     set_rf_freq(int device_number, int device_type, bool direction, int channel, float rf_freq);
 
     /**
@@ -285,7 +287,7 @@ class device_handler {
      *
      * @param   gain_dB        Desired gain: [0,70] RX, [0,60] TX.
      */
-    void set_gain(int device_number, bool direction, int channel, unsigned int gain_dB);
+    uint32_t set_gain(int device_number, bool direction, int channel, uint32_t gain_dB);
 
     /**
      * Set NCO (numerically controlled oscillator).

@@ -319,9 +319,9 @@ inline gr::io_signature::sptr sink_impl::args_to_io_signature(int channel_number
     }
 }
 
-void sink_impl::set_rf_freq(float rf_freq) {
-    device_handler::getInstance().set_rf_freq(
-        stored.device_number, stored.device_type, LMS_CH_TX, LMS_CH_0, rf_freq);
+double sink_impl::set_center_freq(double freq, size_t chan){
+    return device_handler::getInstance().set_rf_freq(
+        stored.device_number, stored.device_type, LMS_CH_TX, LMS_CH_0, freq);
 }
 
 void sink_impl::set_pa_path(int pa_path, int channel) {
@@ -376,7 +376,7 @@ void sink_impl::set_digital_filter(int digital_filter, float digital_bandw, int 
     }
 }
 
-void sink_impl::set_gain(int gain_dB, int channel) {
+uint32_t sink_impl::set_gain(uint32_t gain_dB, int channel) {
     if ((stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro) &&
         channel == 1) {
         // IGNORE CHANNEL 1 FOR LIMESDR-MINI
@@ -384,7 +384,7 @@ void sink_impl::set_gain(int gain_dB, int channel) {
                   << device_string[stored.device_type - 1]
                   << " does not support channel 1 configuration." << std::endl;
     } else {
-        device_handler::getInstance().set_gain(stored.device_number, LMS_CH_TX, channel, gain_dB);
+        return device_handler::getInstance().set_gain(stored.device_number, LMS_CH_TX, channel, gain_dB);
     }
 }
 void sink_impl::calibrate(int calibrate, int channel, double bandw) {

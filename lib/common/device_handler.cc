@@ -364,7 +364,7 @@ void device_handler::set_oversampling(int device_number, int oversample) {
     }
 }
 
-void device_handler::set_rf_freq(
+double device_handler::set_rf_freq(
     int device_number, int device_type, bool direction, int channel, float rf_freq) {
     if (rf_freq <= 0) {
         std::cout << "ERROR: device_handler::set_rf_freq(): rf_freq must be more than 0 Hz."
@@ -380,6 +380,7 @@ void device_handler::set_rf_freq(
         std::string s_dir[2] = {"RX", "TX"};
         std::cout << "INFO: device_handler::set_rf_freq(): RF frequency set [" << s_dir[direction]
                   << "]: " << value / 1e6 << " MHz." << std::endl;
+        return value;
     }
 }
 
@@ -534,10 +535,10 @@ void device_handler::set_digital_filter(
     }
 }
 
-void device_handler::set_gain(int device_number,
+uint32_t device_handler::set_gain(int device_number,
                               bool direction,
                               int channel,
-                              unsigned int gain_dB) {
+                              uint32_t gain_dB) {
     if ((direction == LMS_CH_RX && gain_dB >= 0 && gain_dB <= 70) ||
         (direction == LMS_CH_TX && gain_dB >= 0 && gain_dB <= 60)) {
         if (LMS_SetGaindB(device_handler::getInstance().get_device(device_number),
@@ -555,6 +556,7 @@ void device_handler::set_gain(int device_number,
                       &gain_value);
         std::cout << "INFO: device_handler::set_gain(): set gain [" << s_dir[direction] << "] CH"
                   << channel << ": " << gain_value << " dB." << std::endl;
+        return gain_value;
     } else {
         std::cout << "ERROR: device_handler::set_gain(): valid RX gain range [0, 70], TX gain "
                      "range [0, 60]."
