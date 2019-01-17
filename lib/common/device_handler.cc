@@ -265,15 +265,13 @@ void device_handler::check_blocks(int device_number,
         if ((device_vector[device_number].source_file_switch == 0) &&
             (device_vector[device_number].sink_file_switch == 0)) {
             if ((device_vector[device_number].source_sample_rate !=
-                 device_vector[device_number].sink_sample_rate) &&
-                (device_type == LimeSDR_Mini || device_type == LimeNET_Micro)) {
+                 device_vector[device_number].sink_sample_rate)) {
                 std::cout << "ERROR: device_handler::check_blocks(): sample_rate must match in "
                              "LimeSuite Source (RX) and LimeSuite Sink (TX) when using "
                           << device_string[device_type - 1] << std::endl;
                 close_all_devices();
             } else if ((device_vector[device_number].source_oversample !=
-                        device_vector[device_number].sink_oversample) &&
-                       (device_type == LimeSDR_Mini || device_type == LimeNET_Micro)) {
+                        device_vector[device_number].sink_oversample)) {
                 std::cout << "ERROR: device_handler::check_blocks(): oversample must match in "
                              "LimeSuite Source (RX) and LimeSuite Sink (TX) when using "
                           << device_string[device_type - 1] << std::endl;
@@ -349,10 +347,7 @@ void device_handler::set_chip_mode(
     }
 }
 
-void device_handler::set_samp_rate(int device_number,
-                                   int device_type,
-                                   double& rate,
-                                   size_t oversample) {
+void device_handler::set_samp_rate(int device_number, double& rate, size_t oversample) {
     if (oversample == 0 || oversample == 1 || oversample == 2 || oversample == 4 ||
         oversample == 8 || oversample == 16 || oversample == 32) {
 
@@ -376,47 +371,6 @@ void device_handler::set_samp_rate(int device_number,
         rate = host_value; // Get the real rate back;
     } else {
         std::cout << "ERROR: device_handler::set_samp_rate(): valid oversample values are: "
-                     "0,1,2,4,8,16,32."
-                  << std::endl;
-        close_all_devices();
-    }
-}
-
-void device_handler::set_samp_rate_dir(int device_number,
-                                       const int direction,
-                                       double& rate,
-                                       size_t oversample) {
-    if (oversample == 0 || oversample == 1 || oversample == 2 || oversample == 4 ||
-        oversample == 8 || oversample == 16 || oversample == 32) {
-        if (rate > 61.44e6) {
-            std::cout << "ERROR: device_handler::set_samp_rate(): samp_rate cannot be more "
-                         "than 61.44e6 S/s."
-                      << std::endl;
-            close_all_devices();
-        } else {
-            if (LMS_SetSampleRateDir(device_handler::getInstance().get_device(device_number),
-                                     direction,
-                                     rate,
-                                     oversample) != LMS_SUCCESS)
-                device_handler::getInstance().error(device_number);
-        }
-        double host_value;
-        double rf_value;
-        if (LMS_GetSampleRate(device_handler::getInstance().get_device(device_number),
-                              direction,
-                              LMS_CH_0,
-                              &host_value,
-                              &rf_value))
-            device_handler::getInstance().error(device_number);
-
-        std::string s_dir[2] = {"RX", "TX"};
-        std::cout << "INFO: device_handler::set_samp_rate_dir(): set [" << s_dir[direction]
-                  << "] sampling rate: " << host_value / 1e6 << " MS/s." << std::endl;
-        std::cout << "INFO: device_handler::set_samp_rate_dir(): set [" << s_dir[direction]
-                  << "] oversampling: " << rf_value / host_value << std::endl;
-        rate = host_value; // Get the real rate
-    } else {
-        std::cout << "ERROR: device_handler::set_samp_rate_dir() valid oversample values are: "
                      "0,1,2,4,8,16,32."
                   << std::endl;
         close_all_devices();

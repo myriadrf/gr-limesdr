@@ -43,7 +43,7 @@ class sink_impl : public sink {
     int nitems_send = 0;
     int ret[2] = {0};
 
-    std::string device_string[2] = {"LimeSDR Mini", "LimeNET-Micro"};
+    std::string device_string[3] = {"LimeSDR-Mini", "LimeNET-Micro", "LimeSDR-USB"};
 
     struct constant_data {
         std::string serial;
@@ -96,7 +96,7 @@ class sink_impl : public sink {
 
     void set_gain(int gain_dB, int channel);
 
-    void calibrate(int calibrate,int channel, double bandw);
+    void calibrate(int calibrate, int channel, double bandw);
 };
 } // namespace limesdr
 } // namespace gr

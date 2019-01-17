@@ -119,14 +119,7 @@ sink_impl::sink_impl(std::string serial,
                                                     LMS_CH_TX);
 
         // 7. Set sample rate
-        // LimeSDR-Mini and LimeNET-Micro can only have the same rates
-        if (stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro)
-            device_handler::getInstance().set_samp_rate(
-                stored.device_number, stored.device_type, samp_rate, oversample);
-        // LimeSDR-USB can have separate rates for TX and RX
-        else if (stored.device_type == LimeSDR_USB)
-            device_handler::getInstance().set_samp_rate_dir(
-                stored.device_number, LMS_CH_TX, samp_rate, oversample);
+        device_handler::getInstance().set_samp_rate(stored.device_number, samp_rate, oversample);
     }
     // device_handler::getInstance().debug_packets(stored.device_number);
     // 14. Initialize stream for channel 0 (if channel_mode is SISO)
@@ -324,7 +317,7 @@ void sink_impl::print_stream_stats(int channel) {
 // Setup stream
 void sink_impl::init_stream(int device_number, int channel, float samp_rate) {
     streamId[channel].channel = channel;
-    streamId[channel].fifoSize = 4e6;
+    streamId[channel].fifoSize = int(samp_rate) / 10;
     streamId[channel].throughputVsLatency = 0.5;
     streamId[channel].isTx = LMS_CH_TX;
     streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
@@ -419,13 +412,9 @@ void sink_impl::set_gain(int gain_dB, int channel) {
         device_handler::getInstance().set_gain(stored.device_number, LMS_CH_TX, channel, gain_dB);
     }
 }
-void sink_impl::calibrate(int calibrate,int channel, double bandw){
-    device_handler::getInstance().calibrate(stored.device_number,
-                                                stored.device_type,
-                                                calibrate,
-                                                LMS_CH_TX,
-                                                channel,
-                                                bandw);
+void sink_impl::calibrate(int calibrate, int channel, double bandw) {
+    device_handler::getInstance().calibrate(
+        stored.device_number, stored.device_type, calibrate, LMS_CH_TX, channel, bandw);
 }
 } // namespace limesdr
 } // namespace gr

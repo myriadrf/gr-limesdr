@@ -45,7 +45,7 @@ class device_handler {
     // Calculate open devices to close them all on close_all_devices
     int device_count;
 
-    std::string device_string[2] = {"LimeSDR Mini", "LimeNET-Micro"};
+    std::string device_string[3] = {"LimeSDR-Mini", "LimeNET-Micro", "LimeSDR-USB"};
 
     struct device {
         // Device address
@@ -188,26 +188,11 @@ class device_handler {
      *
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
-     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
-     *
      * @param   rate  Sample rate in S/s.
      *
      * @param   oversample  Oversampling value (0 (default),1,2,4,8,16,32).
      */
-    void set_samp_rate(int device_number, int device_type, double& rate, size_t oversample);
-
-    /**
-     * Set sample rate for both channels (RX and TX separately).
-     *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
-     *
-     * @param   direction  Direction of samples RX(LMS_CH_RX), TX(LMS_CH_RX).
-     *
-     * @param   rate  Sample rate in S/s.
-     *
-     * @param   oversample  Oversampling value (0 (default),1,2,4,8,16,32).
-     */
-    void set_samp_rate_dir(int device_number, const int direction, double& rate, size_t oversample);
+    void set_samp_rate(int device_number, double& rate, size_t oversample);
 
     /**
      * Set RF frequency of both channels (RX and TX separately).

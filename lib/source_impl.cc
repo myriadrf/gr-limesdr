@@ -34,13 +34,8 @@ source::sptr source::make(std::string serial,
                           const char* filename,
                           double samp_rate,
                           size_t oversample) {
-    return gnuradio::get_initial_sptr(new source_impl(serial,
-                                                      device_type,
-                                                      channel_mode,
-                                                      file_switch,
-                                                      filename,
-                                                      samp_rate,
-                                                      oversample));
+    return gnuradio::get_initial_sptr(new source_impl(
+        serial, device_type, channel_mode, file_switch, filename, samp_rate, oversample));
 }
 
 source_impl::source_impl(std::string serial,
@@ -114,14 +109,7 @@ source_impl::source_impl(std::string serial,
                                                     LMS_CH_RX);
 
         // 6. Set sample rate
-        // LimeSDR-Mini or LimeNET-Micro can only have the same rates
-        if (stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro)
-            device_handler::getInstance().set_samp_rate(
-                stored.device_number, stored.device_type, samp_rate, oversample);
-        // LimeSDR-USB can have separate rates for TX and RX
-        else if (stored.device_type == LimeSDR_USB)
-            device_handler::getInstance().set_samp_rate_dir(
-                stored.device_number, LMS_CH_RX, samp_rate, oversample);
+        device_handler::getInstance().set_samp_rate(stored.device_number, samp_rate, oversample);
     }
     // device_handler::getInstance().debug_packets(stored.device_number);
     // 7. Initialize stream for channel 0 (if channel_mode is SISO)
@@ -269,7 +257,7 @@ int source_impl::general_work(int noutput_items,
 // Setup stream
 void source_impl::init_stream(int device_number, int channel, float samp_rate) {
     streamId[channel].channel = channel;
-    streamId[channel].fifoSize = 4e6;
+    streamId[channel].fifoSize = int(samp_rate) / 10;
     streamId[channel].throughputVsLatency = 0.5;
     streamId[channel].isTx = LMS_CH_RX;
     streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
@@ -397,13 +385,9 @@ void source_impl::set_gain(int gain_dB, int channel) {
     }
 }
 
-void source_impl::calibrate(int calibrate,int channel, double bandw){
-    device_handler::getInstance().calibrate(stored.device_number,
-                                                stored.device_type,
-                                                calibrate,
-                                                LMS_CH_RX,
-                                                channel,
-                                                bandw);
+void source_impl::calibrate(int calibrate, int channel, double bandw) {
+    device_handler::getInstance().calibrate(
+        stored.device_number, stored.device_type, calibrate, LMS_CH_RX, channel, bandw);
 }
 } // namespace limesdr
 } // namespace gr
