@@ -140,10 +140,6 @@ class device_handler {
      *
      * @param   chip_mode SISO(1), MIMO(2).
      *
-     * @param   sample_rate  Sample rate in Hz.
-     *
-     * @param   oversample  Oversampling value (0 (default),1,2,4,8,16,32).
-     *
      * @param   file_switch  Load settings from file: NO(0),YES(1).
      *
      * @param   filename  Path to file if file switch is turned on.
@@ -152,8 +148,6 @@ class device_handler {
                       int block_type,
                       int device_type,
                       int chip_mode,
-                      double sample_rate,
-                      size_t oversample,
                       int file_switch,
                       const char* filename);
 
@@ -189,10 +183,17 @@ class device_handler {
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
      * @param   rate  Sample rate in S/s.
+     */
+    void set_samp_rate(int device_number, double& rate);
+
+    /**
+     * Set oversampling value for both channels
+     *
+     * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
      * @param   oversample  Oversampling value (0 (default),1,2,4,8,16,32).
      */
-    void set_samp_rate(int device_number, double& rate, size_t oversample);
+    void set_oversampling(int device_number, int oversample);
 
     /**
      * Set RF frequency of both channels (RX and TX separately).

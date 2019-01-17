@@ -48,7 +48,7 @@ class source_impl : public source {
         int device_type;
         int channel_mode;
         int channel;
-        double samp_rate;
+        double samp_rate = 1e6;
     } stored;
 
     std::chrono::high_resolution_clock::time_point t1, t2;
@@ -62,9 +62,7 @@ class source_impl : public source {
                 int device_type,
                 int channel_mode,
                 int file_switch,
-                const char* filename,
-                double samp_rate,
-                size_t oversample);
+                const char* filename);
     ~source_impl();
 
     int general_work(int noutput_items,
@@ -91,6 +89,10 @@ class source_impl : public source {
     void set_digital_filter(int digital_filter, float digital_bandw, int channel);
 
     void set_gain(int gain_dB, int channel);
+
+    double set_sample_rate(double rate);
+
+    void set_oversampling(int oversample);
 
     void calibrate(int calibrate, int channel, double bandw);
 };

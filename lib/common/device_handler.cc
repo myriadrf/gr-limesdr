@@ -177,8 +177,6 @@ void device_handler::check_blocks(int device_number,
                                   int block_type,
                                   int device_type,
                                   int chip_mode,
-                                  double sample_rate,
-                                  size_t oversample,
                                   int file_switch,
                                   const char* filename) {
     // Get each block settings
@@ -194,10 +192,7 @@ void device_handler::check_blocks(int device_number,
             device_vector[device_number].source_device_type = device_type;
             device_vector[device_number].source_chip_mode = chip_mode;
             device_vector[device_number].source_file_switch = file_switch;
-            if (file_switch == 0) {
-                device_vector[device_number].source_sample_rate = sample_rate;
-                device_vector[device_number].source_oversample = oversample;
-            } else {
+            if (file_switch == 1) {
                 device_vector[device_number].source_filename = filename;
             }
         }
@@ -214,10 +209,7 @@ void device_handler::check_blocks(int device_number,
             device_vector[device_number].sink_device_type = device_type;
             device_vector[device_number].sink_chip_mode = chip_mode;
             device_vector[device_number].sink_file_switch = file_switch;
-            if (file_switch == 0) {
-                device_vector[device_number].sink_sample_rate = sample_rate;
-                device_vector[device_number].sink_oversample = oversample;
-            } else {
+            if (file_switch == 1) {
                 device_vector[device_number].sink_filename = filename;
             }
         }
@@ -258,25 +250,6 @@ void device_handler::check_blocks(int device_number,
                          "LimeSuite Source (RX) and LimeSuite Sink (TX)."
                       << std::endl;
             close_all_devices();
-        }
-
-        // When file_switch is 0 check LimeSDR-Mini or LimeNET-Micro sample_rate and oversample
-        // match throughout the blocks with the same serial
-        if ((device_vector[device_number].source_file_switch == 0) &&
-            (device_vector[device_number].sink_file_switch == 0)) {
-            if ((device_vector[device_number].source_sample_rate !=
-                 device_vector[device_number].sink_sample_rate)) {
-                std::cout << "ERROR: device_handler::check_blocks(): sample_rate must match in "
-                             "LimeSuite Source (RX) and LimeSuite Sink (TX) when using "
-                          << device_string[device_type - 1] << std::endl;
-                close_all_devices();
-            } else if ((device_vector[device_number].source_oversample !=
-                        device_vector[device_number].sink_oversample)) {
-                std::cout << "ERROR: device_handler::check_blocks(): oversample must match in "
-                             "LimeSuite Source (RX) and LimeSuite Sink (TX) when using "
-                          << device_string[device_type - 1] << std::endl;
-                close_all_devices();
-            }
         }
 
         // When file_switch is 1 check filename match throughout the blocks with the same serial
@@ -347,15 +320,26 @@ void device_handler::set_chip_mode(
     }
 }
 
-void device_handler::set_samp_rate(int device_number, double& rate, size_t oversample) {
+void device_handler::set_samp_rate(int device_number, double& rate) {
+    if (LMS_SetSampleRate(device_handler::getInstance().get_device(device_number), rate, 0) !=
+        LMS_SUCCESS)
+        device_handler::getInstance().error(device_number);
+    double host_value;
+    double rf_value;
+    if (LMS_GetSampleRate(device_handler::getInstance().get_device(device_number),
+                          LMS_CH_RX,
+                          LMS_CH_0,
+                          &host_value,
+                          &rf_value))
+        device_handler::getInstance().error(device_number);
+    std::cout << "INFO: device_handler::set_samp_rate(): set sampling rate: " << host_value / 1e6
+              << " MS/s." << std::endl;
+    rate = host_value; // Get the real rate back;
+}
+
+void device_handler::set_oversampling(int device_number, int oversample) {
     if (oversample == 0 || oversample == 1 || oversample == 2 || oversample == 4 ||
         oversample == 8 || oversample == 16 || oversample == 32) {
-
-        if (LMS_SetSampleRate(device_handler::getInstance().get_device(device_number),
-                              rate,
-                              oversample) != LMS_SUCCESS)
-            device_handler::getInstance().error(device_number);
-
         double host_value;
         double rf_value;
         if (LMS_GetSampleRate(device_handler::getInstance().get_device(device_number),
@@ -364,11 +348,14 @@ void device_handler::set_samp_rate(int device_number, double& rate, size_t overs
                               &host_value,
                               &rf_value))
             device_handler::getInstance().error(device_number);
-        std::cout << "INFO: device_handler::set_samp_rate(): set sampling rate: "
-                  << host_value / 1e6 << " MS/s." << std::endl;
-        std::cout << "INFO: device_handler::set_samp_rate(): set oversampling: "
-                  << rf_value / host_value << std::endl;
-        rate = host_value; // Get the real rate back;
+
+        if (LMS_SetSampleRate(device_handler::getInstance().get_device(device_number),
+                              rf_value,
+                              oversample) != LMS_SUCCESS)
+            device_handler::getInstance().error(device_number);
+
+        std::cout << "INFO: device_handler::set_samp_rate(): set oversampling: " << oversample
+                  << std::endl;
     } else {
         std::cout << "ERROR: device_handler::set_samp_rate(): valid oversample values are: "
                      "0,1,2,4,8,16,32."

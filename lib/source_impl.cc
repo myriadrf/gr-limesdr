@@ -27,24 +27,14 @@
 
 namespace gr {
 namespace limesdr {
-source::sptr source::make(std::string serial,
-                          int device_type,
-                          int channel_mode,
-                          int file_switch,
-                          const char* filename,
-                          double samp_rate,
-                          size_t oversample) {
-    return gnuradio::get_initial_sptr(new source_impl(
-        serial, device_type, channel_mode, file_switch, filename, samp_rate, oversample));
+source::sptr source::make(
+    std::string serial, int device_type, int channel_mode, int file_switch, const char* filename) {
+    return gnuradio::get_initial_sptr(
+        new source_impl(serial, device_type, channel_mode, file_switch, filename));
 }
 
-source_impl::source_impl(std::string serial,
-                         int device_type,
-                         int channel_mode,
-                         int file_switch,
-                         const char* filename,
-                         double samp_rate,
-                         size_t oversample)
+source_impl::source_impl(
+    std::string serial, int device_type, int channel_mode, int file_switch, const char* filename)
     : gr::block("source",
                 gr::io_signature::make(
                     0, 0, 0), // Based on channel_mode SISO/MIMO use appropriate output signature
@@ -57,7 +47,6 @@ source_impl::source_impl(std::string serial,
     stored.serial = serial;
     stored.device_type = device_type;
     stored.channel_mode = channel_mode;
-    stored.samp_rate = samp_rate;
 
     if (stored.device_type == LimeSDR_Mini || stored.device_type == LimeNET_Micro) {
         stored.channel = LMS_CH_0;
@@ -86,8 +75,6 @@ source_impl::source_impl(std::string serial,
                                                    source_block,
                                                    stored.device_type,
                                                    stored.channel_mode,
-                                                   0,
-                                                   0,
                                                    file_switch,
                                                    filename);
     } else {
@@ -96,8 +83,6 @@ source_impl::source_impl(std::string serial,
                                                    source_block,
                                                    stored.device_type,
                                                    stored.channel_mode,
-                                                   samp_rate,
-                                                   oversample,
                                                    file_switch,
                                                    NULL);
 
@@ -107,20 +92,6 @@ source_impl::source_impl(std::string serial,
                                                     stored.channel_mode,
                                                     stored.channel,
                                                     LMS_CH_RX);
-
-        // 6. Set sample rate
-        device_handler::getInstance().set_samp_rate(stored.device_number, samp_rate, oversample);
-    }
-    // device_handler::getInstance().debug_packets(stored.device_number);
-    // 7. Initialize stream for channel 0 (if channel_mode is SISO)
-    if (stored.channel_mode < 3) {
-        this->init_stream(stored.device_number, stored.channel, stored.samp_rate);
-    }
-
-    // 8. Initialize both channels streams (if channel_mode is MIMO)
-    else if (stored.channel_mode == 3 && stored.device_type == LimeSDR_USB) {
-        this->init_stream(stored.device_number, LMS_CH_0, stored.samp_rate);
-        this->init_stream(stored.device_number, LMS_CH_1, stored.samp_rate);
     }
     std::cout << "---------------------------------------------------------------" << std::endl;
 }
@@ -146,16 +117,20 @@ source_impl::~source_impl() {
 
 bool source_impl::start(void) {
     std::unique_lock<std::recursive_mutex> lock(device_handler::getInstance().block_mutex);
-
     // Initialize and start stream for channel 0 (if channel_mode is SISO)
     if (stored.channel_mode < 3) // If SISO configure prefered channel
     {
+        this->init_stream(stored.device_number, stored.channel, stored.samp_rate);
         if (LMS_StartStream(&streamId[stored.channel]) != LMS_SUCCESS)
             device_handler::getInstance().error(stored.device_number);
     }
 
     // Initialize and start stream for channels 0 & 1 (if channel_mode is MIMO)
     else if (stored.channel_mode == 3 && stored.device_type == LimeSDR_USB) {
+
+        this->init_stream(stored.device_number, LMS_CH_0, stored.samp_rate);
+        this->init_stream(stored.device_number, LMS_CH_1, stored.samp_rate);
+
         if (LMS_StartStream(&streamId[LMS_CH_0]) != LMS_SUCCESS)
             device_handler::getInstance().error(stored.device_number);
         if (LMS_StartStream(&streamId[LMS_CH_1]) != LMS_SUCCESS)
@@ -388,6 +363,16 @@ void source_impl::set_gain(int gain_dB, int channel) {
 void source_impl::calibrate(int calibrate, int channel, double bandw) {
     device_handler::getInstance().calibrate(
         stored.device_number, stored.device_type, calibrate, LMS_CH_RX, channel, bandw);
+}
+
+double source_impl::set_sample_rate(double rate) {
+    device_handler::getInstance().set_samp_rate(stored.device_number, rate);
+    stored.samp_rate = rate;
+    return rate;
+}
+
+void source_impl::set_oversampling(int oversample) {
+    device_handler::getInstance().set_oversampling(stored.device_number, oversample);
 }
 } // namespace limesdr
 } // namespace gr

@@ -5,9 +5,12 @@
     <category>[LimeSuite]</category>
     <flags>throttle</flags>
     <import>import limesdr</import>
-    <make>limesdr.source($serial, $device_type, $channel_mode,
-			 $file_switch, $filename, $samp_rate, $oversample)
+    <make>limesdr.source($serial, $device_type, $channel_mode, $file_switch, $filename)
 #if $file_switch() == 0
+self.$(id).set_sample_rate($samp_rate)
+#if $oversample() > 0
+self.$(id).set_sample_rate($oversample)
+#end if
 self.$(id).set_rf_freq($rf_freq)
 #if $analog_filter_ch0() == 1
 self.$(id).set_analog_filter($analog_filter_ch0,$analog_bandw_ch0,0)

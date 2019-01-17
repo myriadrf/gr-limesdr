@@ -47,19 +47,13 @@ class LIMESDR_API source : virtual public gr::block {
      *
      * @param filename Path to file if file switch is turned on.
      *
-     * @param samp_rate sample rate in S/s.
-     *
-     * @param oversample oversample value. Valid values are: 0(default),1,2,4,8,16,32.
-     *
      * @return a new limesdr source block object
      */
     static sptr make(std::string serial,
                      int device_type,
                      int channel_mode,
                      int file_switch,
-                     const char* filename,
-                     double samp_rate,
-                     size_t oversample);
+                     const char* filename);
 
     virtual void set_rf_freq(float rf_freq) = 0;
 
@@ -72,6 +66,10 @@ class LIMESDR_API source : virtual public gr::block {
     virtual void set_digital_filter(int digital_filter, float digital_bandw, int channel) = 0;
 
     virtual void set_gain(int gain_dB, int channel) = 0;
+
+    virtual double set_sample_rate(double rate) = 0;
+
+    virtual void set_oversampling(int oversample) = 0;
     
     virtual void calibrate(int calibrate, int channel, double bandw) = 0;
 };
