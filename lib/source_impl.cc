@@ -232,7 +232,7 @@ int source_impl::general_work(int noutput_items,
 // Setup stream
 void source_impl::init_stream(int device_number, int channel, float samp_rate) {
     streamId[channel].channel = channel;
-    streamId[channel].fifoSize = int(samp_rate) / 10;
+    streamId[channel].fifoSize = 6e6;
     streamId[channel].throughputVsLatency = 0.5;
     streamId[channel].isTx = LMS_CH_RX;
     streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
