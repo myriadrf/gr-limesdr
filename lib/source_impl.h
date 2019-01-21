@@ -70,6 +70,7 @@ class source_impl : public source {
     inline gr::io_signature::sptr args_to_io_signature(int channel_mode);
 
     void init_stream(int device_number, int channel);
+    void release_stream(int device_number, lms_stream_t *stream);
 
     double set_center_freq(double freq, size_t chan = 0);
 
