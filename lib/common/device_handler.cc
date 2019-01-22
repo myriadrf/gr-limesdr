@@ -346,9 +346,8 @@ void device_handler::set_antenna(int device_number, int channel, int direction, 
               << std::endl;
 }
 
-void device_handler::set_analog_filter(
-    int device_number, bool direction, int channel, int analog_filter, float analog_bandw) {
-    if (analog_filter == 1) {
+double device_handler::set_analog_filter(
+    int device_number, bool direction, int channel, double analog_bandw) {
         if (channel == 0 || channel == 1) {
             if (direction == LMS_CH_TX || direction == LMS_CH_RX) {
                 std::cout << "INFO: device_handler::set_analog_filter(): ";
@@ -362,7 +361,7 @@ void device_handler::set_analog_filter(
                              direction,
                              channel,
                              &analog_value);
-                std::cout << "configured bandwidth: " << analog_value / 1e6 << " MHz." << std::endl;
+                return analog_value;
             } else {
                 std::cout << "ERROR: device_handler::set_analog_filter(): direction must be "
                              "0(LMS_CH_RX) or 1(LMS_CH_TX)."
@@ -374,55 +373,32 @@ void device_handler::set_analog_filter(
                       << std::endl;
             close_all_devices();
         }
-    } else if (analog_filter == 0) {
-
-        std::string s_dir[2] = {"RX", "TX"};
-        std::cout << "INFO: device_handler::set_analog_filter(): analog filter channel " << channel
-                  << " [" << s_dir[direction] << "]: disabled (maximum value set)." << std::endl;
-        LMS_SetLPF(
-            device_handler::getInstance().get_device(device_number), direction, channel, false);
-    } else {
-        std::cout << "ERROR: device_handler::set_analog_filter(): analog_filter must be either "
-                     "enabled (1) or disabled (0). Disabling analog_filter due to incorrect "
-                     "parameters."
-                  << std::endl;
-        LMS_SetLPF(
-            device_handler::getInstance().get_device(device_number), direction, channel, false);
-    }
 }
 
-void device_handler::set_digital_filter(
-    int device_number, bool direction, int channel, int digital_filter, float digital_bandw) {
-    if (digital_filter != 0 && digital_filter != 1) {
-        std::cout << "ERROR: device_handler::set_digital_filter(): digital_filter must be either "
-                     "enabled (1) or disabled (0). Disabling digital_filter due to incorrect "
-                     "parameters."
-                  << std::endl;
-        LMS_SetGFIRLPF(device_handler::getInstance().get_device(device_number),
-                       direction,
-                       channel,
-                       0,
-                       digital_bandw);
-    } else if (digital_bandw <= 0 && digital_filter != 0) {
-        std::cout
-            << "WARNING: device_handler::set_digital_filter(): digital_bandw must be more than 0."
-            << std::endl;
-        // close_all_devices();
-    } else {
-        if (digital_filter == 1)
+double device_handler::set_digital_filter(
+    int device_number, bool direction, int channel, double digital_bandw) {
+    if (channel == 0 || channel == 1) {
+        if (direction == LMS_CH_TX || direction == LMS_CH_RX) {
             LMS_SetGFIRLPF(device_handler::getInstance().get_device(device_number),
                            direction,
                            channel,
-                           digital_filter,
+                           1,
                            digital_bandw);
-
-        std::string s_dir[2] = {"RX", "TX"};
-        std::cout << "INFO: device_handler::set_digital_filter(): digital filter channel "
-                  << channel << " [" << s_dir[direction] << "]: ";
-        if (digital_filter)
+            std::string s_dir[2] = {"RX", "TX"};
+            std::cout << "INFO: device_handler::set_digital_filter(): digital filter channel "
+                    << channel << " [" << s_dir[direction] << "]: ";
             std::cout << digital_bandw / 1e6 << " MHz." << std::endl;
-        else
-            std::cout << "disabled" << std::endl;
+            return digital_bandw;
+        } else {
+                std::cout << "ERROR: device_handler::set_digital_filter(): direction must be "
+                             "0(LMS_CH_RX) or 1(LMS_CH_TX)."
+                          << std::endl;
+                close_all_devices();
+        }
+    } else {
+        std::cout << "ERROR: device_handler::set_digital_filter(): channel must be 0 or 1."
+                    << std::endl;
+        close_all_devices();
     }
 }
 

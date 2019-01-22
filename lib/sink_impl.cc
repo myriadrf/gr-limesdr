@@ -168,13 +168,11 @@ int sink_impl::general_work(int noutput_items,
         if (stream_analyzer == true) {
             this->print_stream_stats(stored.channel_mode);
         }
-        std::cout << "Nitems to send: " << nitems_send << std::endl;
         ret[0] = LMS_SendStream(
             &streamId[stored.channel_mode], input_items[0], nitems_send, &tx_meta, 100);
         if (ret[0] < 0) {
             return 0;
         }
-        std::cout << "Sent: " << ret[0] << std::endl;
         burst_length -= ret[0];
         tx_meta.timestamp += ret[0];
         consume(0, ret[0]);
@@ -298,29 +296,29 @@ double sink_impl::set_center_freq(double freq, size_t chan) {
         stored.device_number, LMS_CH_TX, LMS_CH_0, freq);
 }
 
-void sink_impl::set_pa_path(int pa_path, int channel) {
-    device_handler::getInstance().set_antenna(stored.device_number, channel, LMS_CH_TX, pa_path);
+void sink_impl::set_antenna(int antenna, int channel) {
+    device_handler::getInstance().set_antenna(stored.device_number, channel, LMS_CH_TX, antenna);
 }
 
 void sink_impl::set_nco(float nco_freq, int channel) {
     device_handler::getInstance().set_nco(stored.device_number, LMS_CH_TX, channel, nco_freq);
 }
 
-void sink_impl::set_analog_filter(int analog_filter, float analog_bandw, int channel) {
-    device_handler::getInstance().set_analog_filter(
-        stored.device_number, LMS_CH_TX, channel, analog_filter, analog_bandw);
+double sink_impl::set_bandwidth(double analog_bandw, int channel) {
+   return device_handler::getInstance().set_analog_filter(
+        stored.device_number, LMS_CH_TX, channel,analog_bandw);
 }
 
-void sink_impl::set_digital_filter(int digital_filter, float digital_bandw, int channel) {
+void sink_impl::set_digital_filter(double digital_bandw, int channel) {
     device_handler::getInstance().set_digital_filter(
-        stored.device_number, LMS_CH_TX, channel, digital_filter, digital_bandw);
+        stored.device_number, LMS_CH_TX, channel, digital_bandw);
 }
 
 uint32_t sink_impl::set_gain(uint32_t gain_dB, int channel) {
     return device_handler::getInstance().set_gain(
         stored.device_number, LMS_CH_TX, channel, gain_dB);
 }
-void sink_impl::calibrate(int calibrate, int channel, double bandw) {
+void sink_impl::calibrate(double bandw, int channel) {
     device_handler::getInstance().calibrate(stored.device_number, LMS_CH_TX, channel, bandw);
 }
 

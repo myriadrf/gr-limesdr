@@ -53,13 +53,13 @@ class LIMESDR_API sink : virtual public gr::block {
 
     virtual double set_center_freq(double freq, size_t chan = 0) = 0;
 
-    virtual void set_pa_path(int pa_path, int channel) = 0;
+    virtual void set_antenna(int antenna, int channel = 0) = 0;
 
     virtual void set_nco(float nco_freq, int channel) = 0;
 
-    virtual void set_analog_filter(int analog_filter, float analog_bandw, int channel) = 0;
+    virtual double set_bandwidth(double analog_bandw, int channel = 0) = 0;
 
-    virtual void set_digital_filter(int digital_filter, float digital_bandw, int channel) = 0;
+    virtual void set_digital_filter(double digital_bandw, int channel) = 0;
 
     virtual uint32_t set_gain(uint32_t gain_dB, int channel = 0) = 0;
 
@@ -67,7 +67,7 @@ class LIMESDR_API sink : virtual public gr::block {
 
     virtual void set_oversampling(int oversample) = 0;
 
-    virtual void calibrate(int calibrate, int channel, double bandw) = 0;
+    virtual void calibrate(double bandw, int channel = 0) = 0;   
 };
 } // namespace limesdr
 } // namespace gr

@@ -72,13 +72,13 @@ class source_impl : public source {
 
     double set_center_freq(double freq, size_t chan = 0);
 
-    void set_lna_path(int lna_path, int channel);
+    void set_antenna(int antenna, int channel = 0);
 
-    void set_nco(float nco_freq, int channel);
+    void set_nco(float nco_freq, int channel = 0);
 
-    void set_analog_filter(int analog_filter, float analog_bandw, int channel);
+    double set_bandwidth(double analog_bandw, int channel = 0);
 
-    void set_digital_filter(int digital_filter, float digital_bandw, int channel);
+    void set_digital_filter(double digital_bandw, int channel = 0);
 
     uint32_t set_gain(uint32_t gain_dB, int channel = 0);
 
@@ -86,7 +86,7 @@ class source_impl : public source {
 
     void set_oversampling(int oversample);
 
-    void calibrate(int calibrate, int channel, double bandw);
+    void calibrate(double bandw, int channel = 0);
 };
 } // namespace limesdr
 } // namespace gr

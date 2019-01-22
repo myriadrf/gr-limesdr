@@ -261,9 +261,9 @@ inline gr::io_signature::sptr source_impl::args_to_io_signature(int channel_numb
     }
 }
 double source_impl::set_center_freq(double freq, size_t chan) {
+    add_tag = true;
     return device_handler::getInstance().set_rf_freq(
         stored.device_number, LMS_CH_RX, LMS_CH_0, freq);
-    add_tag = true;
 }
 
 void source_impl::set_nco(float nco_freq, int channel) {
@@ -271,20 +271,19 @@ void source_impl::set_nco(float nco_freq, int channel) {
     add_tag = true;
 }
 
-void source_impl::set_lna_path(int lna_path, int channel) {
-
-    device_handler::getInstance().set_antenna(stored.device_number, channel, LMS_CH_RX, lna_path);
+void source_impl::set_antenna(int antenna, int channel) {
+    device_handler::getInstance().set_antenna(stored.device_number, channel, LMS_CH_RX, antenna);
 }
 
-void source_impl::set_analog_filter(int analog_filter, float analog_bandw, int channel) {
-    device_handler::getInstance().set_analog_filter(
-        stored.device_number, LMS_CH_RX, channel, analog_filter, analog_bandw);
+double source_impl::set_bandwidth(double analog_bandw, int channel) {
     add_tag = true;
+    device_handler::getInstance().set_analog_filter(
+        stored.device_number, LMS_CH_RX, channel, analog_bandw);
 }
 
-void source_impl::set_digital_filter(int digital_filter, float digital_bandw, int channel) {
+void source_impl::set_digital_filter(double digital_bandw, int channel) {
     device_handler::getInstance().set_digital_filter(
-        stored.device_number, LMS_CH_RX, channel, digital_filter, digital_bandw);
+        stored.device_number, LMS_CH_RX, channel, digital_bandw);
     add_tag = true;
 }
 
@@ -293,7 +292,7 @@ uint32_t source_impl::set_gain(uint32_t gain_dB, int channel) {
         stored.device_number, LMS_CH_RX, channel, gain_dB);
 }
 
-void source_impl::calibrate(int calibrate, int channel, double bandw) {
+void source_impl::calibrate(double bandw, int channel) {
     device_handler::getInstance().calibrate(stored.device_number, LMS_CH_RX, channel, bandw);
 }
 

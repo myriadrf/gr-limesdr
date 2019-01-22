@@ -209,12 +209,10 @@ class device_handler {
      *
      * @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
-     * @param   analog_filter  Turn analog filter: OFF(0),ON(1).
-     *
      * @param   analog_bandw  Channel filter bandwidth in Hz.
      */
-    void set_analog_filter(
-        int device_number, bool direction, int channel, int analog_filter, float analog_bandw);
+    double set_analog_filter(
+        int device_number, bool direction, int channel, double analog_bandw);
 
     /**
      * Set digital filters (GFIR).
@@ -225,12 +223,10 @@ class device_handler {
      *
      * @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
-     * @param   digital_filter  Turn digital filter: OFF(0),ON(1).
-     *
      * @param   digital_bandw  Channel filter bandwidth in Hz.
      */
-    void set_digital_filter(
-        int device_number, bool direction, int channel, int digital_filter, float digital_bandw);
+    double set_digital_filter(
+        int device_number, bool direction, int channel, double digital_bandw);
 
     /**
      * Set the combined gain value in dB

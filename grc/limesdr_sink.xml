@@ -12,17 +12,17 @@ self.$(id).set_sample_rate($samp_rate)
 self.$(id).set_oversampling($oversample)
 #end if
 self.$(id).set_center_freq($rf_freq, 0)
-#if $analog_filter_ch0() == 1
-self.$(id).set_analog_filter($analog_filter_ch0,$analog_bandw_ch0,0)
+#if $analog_bandw_ch0() > 0
+self.$(id).set_bandwidth($analog_bandw_ch0,0)
 #end if
-#if $analog_filter_ch1() == 1 and $channel_mode() > 0
-self.$(id).set_analog_filter($analog_filter_ch1,$analog_bandw_ch1,1)
+#if $analog_bandw_ch1() > 0 and $channel_mode() > 0
+self.$(id).set_bandwidth($analog_bandw_ch1,1)
 #end if
-#if $digital_filter_ch0() == 1 and $digital_bandw_ch0() > 0
-self.$(id).set_digital_filter($digital_filter_ch0,$digital_bandw_ch0,0)
+#if $digital_bandw_ch0() > 0
+self.$(id).set_digital_filter($digital_bandw_ch0,0)
 #end if
-#if $digital_filter_ch1() == 1 and $channel_mode() > 0
-self.$(id).set_digital_filter($digital_filter_ch1,$digital_bandw_ch1,1)
+#if $digital_bandw_ch1() > 0 and $channel_mode() > 0
+self.$(id).set_digital_filter($digital_bandw_ch1,1)
 #end if
 #if $channel_mode() == 0 or $channel_mode() == 2
 self.$(id).set_gain($gain_dB_ch0,0)
@@ -31,16 +31,16 @@ self.$(id).set_gain($gain_dB_ch0,0)
 self.$(id).set_gain($gain_dB_ch1,1)
 #end if
 #if $channel_mode() == 0 or $channel_mode() == 2
-self.$(id).set_pa_path($pa_path_ch0,0)
+self.$(id).set_antenna($pa_path_ch0,0)
 #end if
 #if $channel_mode() > 0
-self.$(id).set_pa_path($pa_path_ch1,1)
+self.$(id).set_antenna($pa_path_ch1,1)
 #end if
-#if $calibration_ch0() == 1
-self.$(id).calibrate($calibration_ch0,0,$calibr_bandw_ch0)
+#if $calibr_bandw_ch0() > 0
+self.$(id).calibrate($calibr_bandw_ch0, 0)
 #end if
-#if $calibration_ch1() == 1 and $channel_mode() > 0
-self.$(id).calibrate($calibration_ch1,1,$calibr_bandw_ch1)
+#if $calibr_bandw_ch1() > 0 and $channel_mode() > 0
+self.$(id).calibrate($calibr_bandw_ch1, 1)
 #end if
 #if $channel_mode() == 1 or $channel_mode() == 2
 self.$(id).set_nco($nco_freq_ch0,0)
@@ -52,14 +52,14 @@ self.$(id).set_nco($nco_freq_ch1,1)
     </make>
 
     <callback>set_center_freq($rf_freq, 0)</callback>
-    <callback>set_pa_path($pa_path_ch0,0)</callback>
-    <callback>set_pa_path($pa_path_ch1,1)</callback>
+    <callback>set_antenna($pa_path_ch0,0)</callback>
+    <callback>set_antenna($pa_path_ch1,1)</callback>
     <callback>set_nco($nco_freq_ch0,0)</callback>
     <callback>set_nco($nco_freq_ch1,1)</callback>
-    <callback>set_analog_filter($analog_filter_ch0,$analog_bandw_ch0,0)</callback>
-    <callback>set_analog_filter($analog_filter_ch1,$analog_bandw_ch1,1)</callback>
-    <callback>set_digital_filter($digital_filter_ch0,$digital_bandw_ch0,0)</callback>
-    <callback>set_digital_filter($digital_filter_ch1,$digital_bandw_ch1,1)</callback>
+    <callback>set_bandwidth($analog_bandw_ch0,0)</callback>
+    <callback>set_bandwidth($analog_bandw_ch1,1)</callback>
+    <callback>set_digital_filter($digital_bandw_ch0,0)</callback>
+    <callback>set_digital_filter($digital_bandw_ch1,1)</callback>
     <callback>set_gain($gain_dB_ch0,0)</callback>
     <callback>set_gain($gain_dB_ch1,1)</callback>
     
@@ -186,57 +186,30 @@ self.$(id).set_nco($nco_freq_ch1,1)
         <value>0</value>
         <type>float</type>
         <hide>
-	  #if $filename() != ""
-	    all
-    #else if $channel_mode() == 1
-      all
-	  #else
-	    none
-	  #end if
-	</hide>
-	<tab>CH_A</tab>
-    </param>
-
-    <param>
-        <name>CH_A:Calibration</name>
-        <key>calibration_ch0</key>
-        <value>0</value>
-        <type>int</type>
-        <hide>
-	  #if $filename() != ""
-	    all
-    #else if $channel_mode() == 1
-      all
-	  #else
-	    none
-	  #end if
-	</hide>
-        <option>
-            <name>OFF</name>
-            <key>0</key>
-        </option>
-        <option>
-            <name>ON</name>
-            <key>1</key>
-        </option>
-	<tab>CH_A</tab>
+        #if $filename() != ""
+          all
+        #else if $channel_mode() == 1
+          all
+        #else
+          none
+        #end if
+    </hide>
+    <tab>CH_A</tab>
     </param>
     
     <param>
       <name>CH_A:Calibration bandw.</name>
       <key>calibr_bandw_ch0</key>
-      <value>10e6</value>
+      <value>0</value>
       <type>float</type>
       <hide>
-	#if $calibration_ch0() == 0
-	  all
-	#else if $filename() != ""
-	  all
-  #else if $channel_mode() == 1
-    all
-	#else
-	  none
-	#end if
+      #if $filename() != ""
+        all
+      #else if $channel_mode() == 1
+        all
+      #else
+        none
+      #end if
       </hide>
       <tab>CH_A</tab>
     </param>
@@ -247,14 +220,14 @@ self.$(id).set_nco($nco_freq_ch1,1)
         <value>0</value>
         <type>int</type>
         <hide>
-	  #if $filename() != ""
-	    all
-    #else if $channel_mode() == 1
-      all
-	  #else
-	    none
-	  #end if
-	</hide>
+        #if $filename() != ""
+          all
+        #else if $channel_mode() == 1
+          all
+        #else
+          none
+        #end if
+        </hide>
         <option>
             <name>Auto(Default)</name>
             <key>0</key>
@@ -269,41 +242,14 @@ self.$(id).set_nco($nco_freq_ch1,1)
         </option>
 	<tab>CH_A</tab>
     </param>
- 
-    <param>
-        <name>CH_A:Analog filter</name>
-        <key>analog_filter_ch0</key>
-        <value>1</value>
-        <type>int</type>
-        <hide>
-	  #if $filename() != ""
-	    all
-    #else if $channel_mode() == 1
-      all
-	  #else
-	    none
-	  #end if
-	</hide>
-        <option>
-            <name>OFF</name>
-            <key>0</key>
-        </option>
-        <option>
-            <name>ON</name>
-            <key>1</key>
-        </option>
-	<tab>CH_A</tab>
-    </param>
   
     <param>
         <name>CH_A:Analog filter bandw.</name>
         <key>analog_bandw_ch0</key>
-        <value>5e6</value>
+        <value>0</value>
         <type>float</type>
         <hide>
-	  #if $analog_filter_ch0() == 0
-	    all
-	  #else if $filename() != ""
+	  #if $filename() != ""
 	    all
     #else if $channel_mode() == 1
       all
@@ -314,30 +260,6 @@ self.$(id).set_nco($nco_freq_ch1,1)
 	<tab>CH_A</tab>
     </param>
   
-    <param>
-        <name>CH_A:Digital filter</name>
-        <key>digital_filter_ch0</key>
-        <value>0</value>
-        <type>int</type>
-        <hide>
-	  #if $filename() != ""
-	    all
-    #else if $channel_mode() == 1
-      all
-	  #else
-	    none
-	  #end if
-	</hide>
-        <option>
-            <name>OFF</name>
-            <key>0</key>
-        </option>
-        <option>
-            <name>ON</name>
-            <key>1</key>
-        </option>
-	<tab>CH_A</tab>
-    </param>
  
     <param>
         <name>CH_A:Digital filter bandw.</name>
@@ -345,9 +267,7 @@ self.$(id).set_nco($nco_freq_ch1,1)
         <value>0</value>
         <type>float</type>
         <hide>
-	  #if $digital_filter_ch0() == 0
-	    all
-	  #else if $filename() != ""
+	  #if $filename() != ""
 	    all
     #else if $channel_mode() == 1
       all
@@ -391,41 +311,14 @@ self.$(id).set_nco($nco_freq_ch1,1)
 	</hide>
 	<tab>CH_B</tab>
     </param>
-    
-    <param>
-        <name>CH_B:Calibration</name>
-        <key>calibration_ch1</key>
-        <value>0</value>
-        <type>int</type>
-        <hide>
-	  #if $channel_mode() == 0
-	    all
-	  #else if $filename() != ""
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
-        <option>
-            <name>OFF</name>
-            <key>0</key>
-        </option>
-        <option>
-            <name>ON</name>
-            <key>1</key>
-        </option>
-	<tab>CH_B</tab>
-    </param>
   
     <param>
         <name>CH_B:Calibration bandw.</name>
         <key>calibr_bandw_ch1</key>
-        <value>10e6</value>
+        <value>0</value>
         <type>float</type>
         <hide>
-	  #if $calibration_ch1() == 0
-	    all
-	  #else if $channel_mode() == 0
+	  #if $channel_mode() == 0
 	    all
 	  #else if $filename() != ""
 	    all
@@ -462,54 +355,10 @@ self.$(id).set_nco($nco_freq_ch1,1)
     </param>
   
     <param>
-        <name>CH_B:Analog filter</name>
-        <key>analog_filter_ch1</key>
-        <value>1</value>
-        <type>int</type>
-        <hide>
-	  #if $channel_mode() == 0
-	    all
-	  #else if $filename() != ""
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
-        <option>
-            <name>OFF</name>
-            <key>0</key>
-        </option>
-        <option>
-            <name>ON</name>
-            <key>1</key>
-        </option>
-	<tab>CH_B</tab>
-    </param>
-  
-    <param>
         <name>CH_B:Analog filter bandw.</name>
         <key>analog_bandw_ch1</key>
-        <value>5e6</value>
-        <type>float</type>
-        <hide>
-	  #if $analog_filter_ch1() == 0
-	    all
-	  #else if $channel_mode() == 0
-	    all
-	  #else if $filename() != ""
-	    all
-	  #else
-	    none
-	  #end if
-	</hide>
-	<tab>CH_B</tab>
-    </param>
-  
-    <param>
-        <name>CH_B:Digital filter</name>
-        <key>digital_filter_ch1</key>
         <value>0</value>
-        <type>int</type>
+        <type>float</type>
         <hide>
 	  #if $channel_mode() == 0
 	    all
@@ -519,14 +368,6 @@ self.$(id).set_nco($nco_freq_ch1,1)
 	    none
 	  #end if
 	</hide>
-        <option>
-            <name>OFF</name>
-            <key>0</key>
-        </option>
-        <option>
-            <name>ON</name>
-            <key>1</key>
-        </option>
 	<tab>CH_B</tab>
     </param>
   
@@ -536,9 +377,7 @@ self.$(id).set_nco($nco_freq_ch1,1)
         <value>0</value>
         <type>float</type>
         <hide>
-	  #if $digital_filter_ch1() == 0
-	    all
-	  #else if $channel_mode() == 0
+	  #if $channel_mode() == 0
 	    all
 	  #else if $filename() != ""
 	    all
@@ -572,23 +411,23 @@ self.$(id).set_nco($nco_freq_ch1,1)
   
     <check> $rf_freq > 0  </check>
 
-    <check> $calibr_bandw_ch0 >= 2.5e6 </check>
+    <check> $calibr_bandw_ch0 >= 2.5e6 or $calibr_bandw_ch0 == 0</check>
     <check> 120e6 >= $calibr_bandw_ch0</check>
   
-    <check> $calibr_bandw_ch1 >= 2.5e6 </check>
+    <check> $calibr_bandw_ch1 >= 2.5e6 or $calibr_bandw_ch1 == 0 </check>
     <check> 120e6 >= $calibr_bandw_ch1</check>
   
-    <check> $analog_bandw_ch0 >= 5e6 </check>
+    <check> $analog_bandw_ch0 >= 5e6 or $analog_bandw_ch0 == 0 </check>
     <check> 130e6 >= $analog_bandw_ch0</check>
   
-    <check> $analog_bandw_ch1 >= 5e6 </check>
+    <check> $analog_bandw_ch1 >= 5e6 or $analog_bandw_ch1 == 0</check>
     <check> 130e6 >= $analog_bandw_ch1</check>
  
     <check> $digital_bandw_ch0 >= 0 </check>
-    <check> ($digital_filter_ch0 == 1 and $samp_rate >= $digital_bandw_ch0) or $digital_filter_ch0 == 0 </check>
+    <check> $samp_rate >= $digital_bandw_ch0 or $digital_bandw_ch0 == 0 </check>
   
     <check> $digital_bandw_ch1 >= 0 </check>
-    <check> ($digital_filter_ch1 == 1 and $samp_rate >= $digital_bandw_ch1) or $digital_filter_ch1 == 0 </check>
+    <check> $samp_rate >= $digital_bandw_ch1 or $digital_bandw_ch1 == 0 </check>
   
     <check> $gain_dB_ch0 >= 0 </check>
     <check> 60 >= $gain_dB_ch0 </check>
