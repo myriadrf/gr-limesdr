@@ -43,14 +43,10 @@ class sink_impl : public sink {
     int nitems_send = 0;
     int ret[2] = {0};
 
-    std::string device_string[3] = {"LimeSDR-Mini", "LimeNET-Micro", "LimeSDR-USB"};
-
     struct constant_data {
         std::string serial;
         int device_number;
-        int device_type;
         int channel_mode;
-        int channel;
         double samp_rate = 1e6;
     } stored;
 
@@ -62,10 +58,8 @@ class sink_impl : public sink {
 
     public:
     sink_impl(std::string serial,
-              int device_type,
               int channel_mode,
-              int file_switch,
-              const char* filename,
+              const std::string& filename,
               const std::string& length_tag_name);
     ~sink_impl();
 
@@ -78,7 +72,7 @@ class sink_impl : public sink {
 
     bool stop(void);
 
-    inline gr::io_signature::sptr args_to_io_signature(int channel_number, int device_number);
+    inline gr::io_signature::sptr args_to_io_signature(int channel_number);
 
     void init_stream(int device_number, int channel, float samp_rate);
 

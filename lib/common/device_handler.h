@@ -45,8 +45,6 @@ class device_handler {
     // Calculate open devices to close them all on close_all_devices
     int device_count;
 
-    std::string device_string[3] = {"LimeSDR-Mini", "LimeNET-Micro", "LimeSDR-USB"};
-
     struct device {
         // Device address
         lms_device_t* address = NULL;
@@ -55,19 +53,10 @@ class device_handler {
         // shared settings and blocks usage
         bool source_flag = false;
         bool sink_flag = false;
-        bool mini_switch_workaround_flag = false;
-        int source_device_type = -1;
-        int sink_device_type = -1;
         int source_chip_mode = -1;
         int sink_chip_mode = -1;
-        double source_sample_rate = -1;
-        double sink_sample_rate = -1;
-        size_t source_oversample = -1;
-        size_t sink_oversample = -1;
-        int source_file_switch = -1;
-        int sink_file_switch = -1;
-        const char* source_filename = NULL;
-        const char* sink_filename = NULL;
+        std::string source_filename;
+        std::string sink_filename;
     };
 
     // Device list
@@ -110,10 +99,8 @@ class device_handler {
      * Connect to the device and create singletone.
      *
      * @param   serial Device serial from the list of LMS_GetDeviceList.
-     *
-     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
      */
-    int open_device(std::string& serial, int device_type);
+    int open_device(std::string& serial);
 
     /**
      * Disconnect from the device.
@@ -136,20 +123,12 @@ class device_handler {
      *
      * @param   block_type Source block(1), Sink block(2).
      *
-     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
-     *
      * @param   chip_mode SISO(1), MIMO(2).
-     *
-     * @param   file_switch  Load settings from file: NO(0),YES(1).
      *
      * @param   filename  Path to file if file switch is turned on.
      */
-    void check_blocks(int device_number,
-                      int block_type,
-                      int device_type,
-                      int chip_mode,
-                      int file_switch,
-                      const char* filename);
+    void
+    check_blocks(int device_number, int block_type, int chip_mode, const std::string& filename);
 
     /**
      * Load settings from .ini file.
@@ -158,24 +137,18 @@ class device_handler {
      *
      * @param   filename Path to file if file switch is turned on.
      */
-    void settings_from_file(int device_number, const char* filename);
+    void settings_from_file(int device_number, const std::string& filename);
 
     /**
      * Set chip mode (single-input single-output/multiple-input multiple-output)
-     * and check if the device supports it.
      *
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
-     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
-     *
-     * @param   chip_mode SISO(1), MIMO(2).
-     *
-     * @param   channel selection: A(LMS_CH_0),B(LMS_CH_1).
+     * @param   chip_mode  Channel A(0), Channel B(1), MIMO(2)
      *
      * @param   direction  Direction of samples RX(LMS_CH_RX), TX(LMS_CH_RX).
      */
-    void
-    set_chip_mode(int device_number, int device_type, int chip_mode, int channel, bool direction);
+    void set_chip_mode(int device_number, int chip_mode, bool direction);
 
     /**
      * Set the same sample rate for both channels.
@@ -200,27 +173,20 @@ class device_handler {
      *
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
-     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
-     *
      * @param   direction  Direction of samples RX(LMS_CH_RX), TX(LMS_CH_TX).
      *
      * @param   channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
      * @param   rf_freq  RF frequency in Hz.
-     * 
+     *
      * @return  returns RF frequency in Hz
      */
-    double
-    set_rf_freq(int device_number, int device_type, bool direction, int channel, float rf_freq);
+    double set_rf_freq(int device_number, bool direction, int channel, float rf_freq);
 
     /**
      * Perform device calibration.
      *
      * @param   device_number Device number from the list of LMS_GetDeviceList.
-     *
-     * @param   device_type LimeSDR-Mini(1), LimeNET-Micro(2) LimeSDR-USB(3).
-     *
-     * @param   calibration Turn calibration: OFF(0),ON(1).
      *
      * @param   direction  Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_RX).
      *
@@ -229,12 +195,7 @@ class device_handler {
      * @param   bandwidth Set calibration bandwidth in Hz.
      *
      */
-    void calibrate(int device_number,
-                   int device_type,
-                   int calibration,
-                   int direction,
-                   int channel,
-                   double bandwidth);
+    void calibrate(int device_number, int direction, int channel, double bandwidth);
 
 
     void set_antenna(int device_number, int channel, int direction, int antenna);
@@ -301,10 +262,8 @@ class device_handler {
      * @param   channel        Channel index.
      *
      * @param   nco_freq       NCO frequency in Hz.
-     *
-     * @param   nco_pho	  NCO phase offset in deg.
      */
-    void set_nco(int device_number, bool direction, int channel, float nco_freq, float nco_pho);
+    void set_nco(int device_number, bool direction, int channel, float nco_freq);
 
     void disable_DC_corrections(int device_number);
 };

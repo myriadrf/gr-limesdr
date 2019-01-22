@@ -40,14 +40,10 @@ class source_impl : public source {
     bool add_tag = false;
     uint32_t pktLoss = 0;
 
-    std::string device_string[3] = {"LimeSDR-Mini", "LimeNET-Micro", "LimeSDR-USB"};
-
     struct constant_data {
         std::string serial;
         int device_number;
-        int device_type;
         int channel_mode;
-        int channel;
         double samp_rate = 1e6;
     } stored;
 
@@ -58,11 +54,7 @@ class source_impl : public source {
     int add_time_tag(int channel, lms_stream_meta_t meta);
 
     public:
-    source_impl(std::string serial,
-                int device_type,
-                int channel_mode,
-                int file_switch,
-                const char* filename);
+    source_impl(std::string serial, int channel_mode, const std::string& filename);
     ~source_impl();
 
     int general_work(int noutput_items,
@@ -74,7 +66,7 @@ class source_impl : public source {
 
     bool stop(void);
 
-    inline gr::io_signature::sptr args_to_io_signature(int channel_number, int device_number);
+    inline gr::io_signature::sptr args_to_io_signature(int channel_mode);
 
     void init_stream(int device_number, int channel, float samp_rate);
 

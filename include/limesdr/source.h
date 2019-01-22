@@ -39,21 +39,13 @@ class LIMESDR_API source : virtual public gr::block {
      *
      * @param serial Device serial number. Cannot be left blank.
      *
-     * @param device_type LimeSDR-Mini(1),LimeSDR-USB(2).
-     *
      * @param channel_mode Channel and mode selection A(1), B(2), (A+B)MIMO(3).
-     *
-     * @param file_switch Load settings from file: NO(0),YES(1).
      *
      * @param filename Path to file if file switch is turned on.
      *
      * @return a new limesdr source block object
      */
-    static sptr make(std::string serial,
-                     int device_type,
-                     int channel_mode,
-                     int file_switch,
-                     const char* filename);
+    static sptr make(std::string serial, int channel_mode, const std::string& filename);
 
     virtual double set_center_freq(double freq, size_t chan = 0) = 0;
 
@@ -70,7 +62,7 @@ class LIMESDR_API source : virtual public gr::block {
     virtual double set_sample_rate(double rate) = 0;
 
     virtual void set_oversampling(int oversample) = 0;
-    
+
     virtual void calibrate(int calibrate, int channel, double bandw) = 0;
 };
 } // namespace limesdr

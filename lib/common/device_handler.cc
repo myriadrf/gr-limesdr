@@ -33,7 +33,7 @@ lms_device_t* device_handler::get_device(int device_number) {
     return this->device_vector[device_number].address;
 }
 
-int device_handler::open_device(std::string& serial, int device_type) {
+int device_handler::open_device(std::string& serial) {
 
     int device_number;
     std::string search_name;
@@ -58,51 +58,31 @@ int device_handler::open_device(std::string& serial, int device_type) {
         list_read = true;
     }
 
-    // Set device string search parameters
-    if (device_type == LimeSDR_Mini) {
-        search_name = "LimeSDR Mini";
-    } else if (device_type == LimeSDR_USB) {
-        search_name = "LimeSDR-USB";
-    } else if (device_type == LimeNET_Micro) {
-        search_name = "LimeNET-Micro";
-    } else {
-        std::cout << "ERROR: device_handler::open_device(): wrong device_type." << std::endl;
-        close_all_devices();
-    }
-
     if (serial.empty()) {
-        std::cout
-            << "INFO: device_handler::open_device(): no serial number. Using first " << search_name
-            << " in the list. Use \"LimeUtil --find\" in terminal to find prefered device serial."
-            << std::endl;
+        std::cout << "INFO: device_handler::open_device(): no serial number. Using first device in "
+                     "the list. Use \"LimeUtil --find\" in terminal to find prefered device serial."
+                  << std::endl;
         std::cout << "##################" << std::endl;
     }
 
-    // Identify device by device type and serial number
+    // Identify device by serial number
     for (int i = 0; i < device_count; i++) {
         std::string device_string(list[i]);
         unsigned first = device_string.find("serial=");
         std::string aquired_serial = device_string.substr(first + 7, std::string::npos);
 
         // If serial is left empty, use first device in list
-        if (serial.empty() || device_string.find(search_name) != std::string::npos) {
+        if (serial.empty()) {
             device_number = i;
             serial = aquired_serial;
-        }
-        // If device_type and serial match found acquire device number
-        else if (device_string.find(search_name) != std::string::npos && aquired_serial == serial) {
+            break;
+        } else if (aquired_serial == serial) {
             device_number = i;
             break;
         }
         // If program was unable to find device in list print error and stop program
-        else if ((i == device_count - 1 && aquired_serial != serial) ||
-                 (device_string.find(search_name) == std::string::npos &&
-                  aquired_serial == serial)) {
-            if (serial.empty())
-                std::cout << "Unable to find " << search_name << std::endl;
-            else
-                std::cout << "Unable to find " << search_name << " with device serial " << serial
-                          << "." << std::endl;
+        else if (i == device_count - 1 && (aquired_serial != serial)) {
+            std::cout << "Unable to find LMS device with serial " << serial << "." << std::endl;
             std::cout << "##################" << std::endl;
             close_all_devices();
         }
@@ -174,10 +154,8 @@ void device_handler::close_all_devices() {
 
 void device_handler::check_blocks(int device_number,
                                   int block_type,
-                                  int device_type,
                                   int chip_mode,
-                                  int file_switch,
-                                  const char* filename) {
+                                  const std::string& filename) {
     // Get each block settings
     switch (block_type) {
     case 1: // Source block
@@ -188,12 +166,8 @@ void device_handler::check_blocks(int device_number,
             close_all_devices();
         } else {
             device_vector[device_number].source_flag = true;
-            device_vector[device_number].source_device_type = device_type;
             device_vector[device_number].source_chip_mode = chip_mode;
-            device_vector[device_number].source_file_switch = file_switch;
-            if (file_switch == 1) {
-                device_vector[device_number].source_filename = filename;
-            }
+            device_vector[device_number].source_filename = filename;
         }
         break;
 
@@ -205,12 +179,8 @@ void device_handler::check_blocks(int device_number,
             close_all_devices();
         } else {
             device_vector[device_number].sink_flag = true;
-            device_vector[device_number].sink_device_type = device_type;
             device_vector[device_number].sink_chip_mode = chip_mode;
-            device_vector[device_number].sink_file_switch = file_switch;
-            if (file_switch == 1) {
-                device_vector[device_number].sink_filename = filename;
-            }
+            device_vector[device_number].sink_filename = filename;
         }
         break;
 
@@ -222,15 +192,6 @@ void device_handler::check_blocks(int device_number,
 
     // Check block settings which must match
     if (device_vector[device_number].source_flag && device_vector[device_number].sink_flag) {
-        // Device_type must match in blocks with the same serial
-        if (device_vector[device_number].source_device_type !=
-            device_vector[device_number].sink_device_type) {
-            std::cout << "ERROR: device_handler::check_blocks(): device_type mismatch in LimeSuite "
-                         "Source (RX) and LimeSuite Sink (TX) blocks."
-                      << std::endl;
-            close_all_devices();
-        }
-
         // Chip_mode must match in blocks with the same serial
         if (device_vector[device_number].source_chip_mode !=
             device_vector[device_number].sink_chip_mode) {
@@ -242,20 +203,9 @@ void device_handler::check_blocks(int device_number,
             close_all_devices();
         }
 
-        // File_switch must match in blocks with the same serial
-        if (device_vector[device_number].source_file_switch !=
-            device_vector[device_number].sink_file_switch) {
-            std::cout << "ERROR: device_handler::check_blocks(): file_switch must match in "
-                         "LimeSuite Source (RX) and LimeSuite Sink (TX)."
-                      << std::endl;
-            close_all_devices();
-        }
-
         // When file_switch is 1 check filename match throughout the blocks with the same serial
         if (device_vector[device_number].source_filename !=
-                device_vector[device_number].sink_filename &&
-            (device_vector[device_number].source_file_switch == 1) &&
-            (device_vector[device_number].sink_file_switch == 1)) {
+            device_vector[device_number].sink_filename) {
             std::cout << "ERROR: device_handler::check_blocks(): file must match in LimeSuite "
                          "Source (RX) and LimeSuite Sink (TX)."
                       << std::endl;
@@ -264,8 +214,8 @@ void device_handler::check_blocks(int device_number,
     }
 }
 
-void device_handler::settings_from_file(int device_number, const char* filename) {
-    if (LMS_LoadConfig(device_handler::getInstance().get_device(device_number), filename))
+void device_handler::settings_from_file(int device_number, const std::string& filename) {
+    if (LMS_LoadConfig(device_handler::getInstance().get_device(device_number), filename.c_str()))
         device_handler::getInstance().error(device_number);
 
     // Set LimeSDR-Mini switches based on .ini file
@@ -286,36 +236,28 @@ void device_handler::settings_from_file(int device_number, const char* filename)
                    antenna_ch0_rx);
 }
 
-void device_handler::set_chip_mode(
-    int device_number, int device_type, int chip_mode, int channel, bool direction) {
-    if ((device_type == LimeSDR_Mini || device_type == LimeNET_Micro) && chip_mode >= 3) {
-        std::cout << "ERROR: device_handler::set_chip_mode():" << device_string[device_type - 1];
-        std::cout << " supports only SISO mode." << std::endl;
-        close_all_devices();
-        exit(0);
-    } else {
-        if (chip_mode < 3) {
-            if (LMS_EnableChannel(device_handler::getInstance().get_device(device_number),
-                                  direction,
-                                  channel,
-                                  true) != LMS_SUCCESS)
-                device_handler::getInstance().error(device_number);
-            std::cout << "INFO: device_handler::set_chip_mode(): SISO mode set for device number "
-                      << device_number << "." << std::endl;
-        } else if (chip_mode == 3) {
-            if (LMS_EnableChannel(device_handler::getInstance().get_device(device_number),
-                                  direction,
-                                  LMS_CH_0,
-                                  true) != LMS_SUCCESS)
-                device_handler::getInstance().error(device_number);
-            if (LMS_EnableChannel(device_handler::getInstance().get_device(device_number),
-                                  direction,
-                                  LMS_CH_1,
-                                  true) != LMS_SUCCESS)
-                device_handler::getInstance().error(device_number);
-            std::cout << "INFO: device_handler::set_chip_mode(): MIMO mode set for device number "
-                      << device_number << "." << std::endl;
-        }
+void device_handler::set_chip_mode(int device_number, int chip_mode, bool direction) {
+    if (chip_mode < 2) {
+        if (LMS_EnableChannel(device_handler::getInstance().get_device(device_number),
+                              direction,
+                              chip_mode,
+                              true) != LMS_SUCCESS)
+            device_handler::getInstance().error(device_number);
+        std::cout << "INFO: device_handler::set_chip_mode(): SISO mode set for device number "
+                  << device_number << "." << std::endl;
+    } else if (chip_mode == 2) {
+        if (LMS_EnableChannel(device_handler::getInstance().get_device(device_number),
+                              direction,
+                              LMS_CH_0,
+                              true) != LMS_SUCCESS)
+            device_handler::getInstance().error(device_number);
+        if (LMS_EnableChannel(device_handler::getInstance().get_device(device_number),
+                              direction,
+                              LMS_CH_1,
+                              true) != LMS_SUCCESS)
+            device_handler::getInstance().error(device_number);
+        std::cout << "INFO: device_handler::set_chip_mode(): MIMO mode set for device number "
+                  << device_number << "." << std::endl;
     }
 }
 
@@ -363,8 +305,7 @@ void device_handler::set_oversampling(int device_number, int oversample) {
     }
 }
 
-double device_handler::set_rf_freq(
-    int device_number, int device_type, bool direction, int channel, float rf_freq) {
+double device_handler::set_rf_freq(int device_number, bool direction, int channel, float rf_freq) {
     if (rf_freq <= 0) {
         std::cout << "ERROR: device_handler::set_rf_freq(): rf_freq must be more than 0 Hz."
                   << std::endl;
@@ -383,70 +324,21 @@ double device_handler::set_rf_freq(
     }
 }
 
-void device_handler::calibrate(int device_number,
-                               int device_type,
-                               int calibration,
-                               int direction,
-                               int channel,
-                               double bandwidth) {
-    if (calibration == 1) {
-        std::cout << "INFO: device_handler::calibrate(): ";
-        int path = LMS_GetAntenna(
-            device_handler::getInstance().get_device(device_number), direction, channel);
-        float_type rf_freq = 0;
-        LMS_GetLOFrequency(
-            device_handler::getInstance().get_device(device_number), direction, channel, &rf_freq);
-        if (rf_freq < 31e6 ||
-            (device_type == LimeSDR_USB && path == 2 && direction == LMS_CH_RX)) // Workaround
-        {
-            float workaround_freq = 50e6; // Lower than 31 MHz center frequency workaround
-
-            if (device_type == LimeSDR_USB && path == 2 &&
-                direction == LMS_CH_RX) // LNAL matching workaround [LimeSDR-USB]
-                workaround_freq = 200e6;
-            else if (device_type == LimeSDR_Mini &&
-                     direction == LMS_CH_RX) // RX workaround [LimeSDR-Mini]
-                workaround_freq = 100e6;
-
-            LMS_SetLOFrequency(device_handler::getInstance().get_device(device_number),
-                               LMS_CH_RX,
-                               channel,
-                               workaround_freq);
-            LMS_Calibrate(device_handler::getInstance().get_device(device_number),
-                          LMS_CH_RX,
-                          channel,
-                          bandwidth,
-                          0);
-            LMS_SetLOFrequency(device_handler::getInstance().get_device(device_number),
-                               LMS_CH_RX,
-                               channel,
-                               rf_freq);
-        } else { // Normal calibration
-            LMS_Calibrate(device_handler::getInstance().get_device(device_number),
-                          direction,
-                          channel,
-                          bandwidth,
-                          0);
-        }
-    } else if (calibration == 0) {
-        std::string s_dir[2] = {"RX", "TX"};
-        std::cout << "INFO: device_handler::calibrate(): calibration channel " << channel << " ["
-                  << s_dir[direction] << "]: disabled." << std::endl;
-    } else {
-        std::cout << "ERROR: device_handler::calibrate(): calibration must be either enabled (1) "
-                     "or disabled (0). Disabling calibration due to incorrect parameters."
-                  << std::endl;
-    }
+void device_handler::calibrate(int device_number, int direction, int channel, double bandwidth) {
+    std::cout << "INFO: device_handler::calibrate(): ";
+    LMS_Calibrate(
+        device_handler::getInstance().get_device(device_number), direction, channel, bandwidth, 0);
 }
 
 void device_handler::set_antenna(int device_number, int channel, int direction, int antenna) {
-    LMS_SetAntenna(
-        device_handler::getInstance().get_device(device_number), direction, channel, antenna);
+    if (antenna != 0) // Skip this if antenna is set to Auto
+        LMS_SetAntenna(
+            device_handler::getInstance().get_device(device_number), direction, channel, antenna);
     int antenna_value =
         LMS_GetAntenna(device_handler::getInstance().get_device(device_number), direction, channel);
 
-    std::string s_antenna[2][4] = {{"NONE", "LNAH", "LNAL", "LNAW"},
-                                   {"NONE", "BAND1", "BAND2", "NONE"}};
+    std::string s_antenna[2][4] = {{"Auto(NONE)", "LNAH", "LNAL", "LNAW"},
+                                   {"Auto(NONE)", "BAND1", "BAND2", "NONE"}};
     std::string s_dir[2] = {"RX", "TX"};
 
     std::cout << "INFO: device_handler::set_antenna(): channel " << channel << " antenna set ["
@@ -534,10 +426,8 @@ void device_handler::set_digital_filter(
     }
 }
 
-uint32_t device_handler::set_gain(int device_number,
-                              bool direction,
-                              int channel,
-                              uint32_t gain_dB) {
+uint32_t
+device_handler::set_gain(int device_number, bool direction, int channel, uint32_t gain_dB) {
     if ((direction == LMS_CH_RX && gain_dB >= 0 && gain_dB <= 70) ||
         (direction == LMS_CH_TX && gain_dB >= 0 && gain_dB <= 60)) {
         if (LMS_SetGaindB(device_handler::getInstance().get_device(device_number),
@@ -564,8 +454,7 @@ uint32_t device_handler::set_gain(int device_number,
     }
 }
 
-void device_handler::set_nco(
-    int device_number, bool direction, int channel, float nco_freq, float nco_pho) {
+void device_handler::set_nco(int device_number, bool direction, int channel, float nco_freq) {
     if (nco_freq == 0) {
         LMS_SetNCOIndex(
             device_handler::getInstance().get_device(device_number), direction, channel, -1, 0);
@@ -583,7 +472,7 @@ void device_handler::set_nco(
                             direction,
                             channel,
                             freq_value_in,
-                            nco_pho);
+                            0);
         LMS_SetNCOIndex(device_handler::getInstance().get_device(device_number),
                         direction,
                         channel,
