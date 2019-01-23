@@ -64,6 +64,8 @@ class LIMESDR_API source : virtual public gr::block {
     virtual void set_oversampling(int oversample) = 0;
 
     virtual void calibrate(double bandw, int channel = 0) = 0;
+
+    virtual void set_buffer_size(uint32_t size) = 0;
 };
 } // namespace limesdr
 } // namespace gr

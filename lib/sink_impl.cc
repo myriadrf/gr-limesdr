@@ -75,7 +75,6 @@ sink_impl::sink_impl(std::string serial,
         device_handler::getInstance().set_chip_mode(
             stored.device_number, stored.channel_mode, LMS_CH_TX);
     }
-    std::cout << "---------------------------------------------------------------" << std::endl;
 }
 
 sink_impl::~sink_impl() {
@@ -109,13 +108,13 @@ bool sink_impl::start(void) {
     // Initialize and start stream for channel 0 (if channel_mode is SISO)
     if (stored.channel_mode < 2) // If SISO configure prefered channel
     {
-        this->init_stream(stored.device_number, stored.channel_mode, stored.samp_rate);
+        this->init_stream(stored.device_number, stored.channel_mode);
         LMS_StartStream(&streamId[stored.channel_mode]);
     }
     // Initialize and start stream for channels 0 & 1 (if channel_mode is MIMO)
     else if (stored.channel_mode == 2) {
-        this->init_stream(stored.device_number, LMS_CH_0, stored.samp_rate);
-        this->init_stream(stored.device_number, LMS_CH_1, stored.samp_rate);
+        this->init_stream(stored.device_number, LMS_CH_0);
+        this->init_stream(stored.device_number, LMS_CH_1);
 
         LMS_StartStream(&streamId[LMS_CH_0]);
         LMS_StartStream(&streamId[LMS_CH_1]);
@@ -136,6 +135,7 @@ bool sink_impl::stop(void) {
         LMS_StopStream(&streamId[LMS_CH_1]);
     }
     std::unique_lock<std::recursive_mutex> unlock(device_handler::getInstance().block_mutex);
+    device_handler::getInstance().close_device(stored.device_number, sink_block);
     return true;
 }
 
@@ -197,7 +197,6 @@ int sink_impl::general_work(int noutput_items,
     return 0;
 }
 void sink_impl::work_tags(int noutput_items) {
-    static uint64_t last_timestamp = 0;
     std::vector<tag_t> tags;
     int current_sample = nitems_read(0);
     get_tags_in_range(tags, 0, current_sample, current_sample + noutput_items);
@@ -217,14 +216,8 @@ void sink_impl::work_tags(int noutput_items) {
                     u_rate * secs + llround(secs * f_rate + fracs * stored.samp_rate);
 
                 if (cTag.offset == current_sample) {
-                    if (timestamp - last_timestamp < 1020 && timestamp - last_timestamp != 0) {
-                        std::cout << "ERROR: Timestamps must be at least 1020 samples apart"
-                                  << std::endl;
-                        continue;
-                    }
                     tx_meta.waitForTimestamp = true;
                     tx_meta.timestamp = timestamp;
-                    last_timestamp = timestamp;
                 } else {
                     nitems_send = cTag.offset - current_sample;
                     break;
@@ -262,9 +255,10 @@ void sink_impl::print_stream_stats(int channel) {
     }
 }
 // Setup stream
-void sink_impl::init_stream(int device_number, int channel, float samp_rate) {
+void sink_impl::init_stream(int device_number, int channel) {
     streamId[channel].channel = channel;
-    streamId[channel].fifoSize = 6e6;
+    streamId[channel].fifoSize =
+        (stored.FIFO_size == 0) ? (int)stored.samp_rate / 10 : stored.FIFO_size;
     streamId[channel].throughputVsLatency = 0.5;
     streamId[channel].isTx = LMS_CH_TX;
     streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
@@ -285,7 +279,7 @@ inline gr::io_signature::sptr sink_impl::args_to_io_signature(int channel_number
     } else if (channel_number == 2) {
         return gr::io_signature::make(2, 2, sizeof(gr_complex));
     } else {
-        std::cout << "ERROR: sink_impl::args_to_io_signature(): channel_number must be 1,2 or 3."
+        std::cout << "ERROR: sink_impl::args_to_io_signature(): channel_number must be 0,1 or 2."
                   << std::endl;
         exit(0);
     }
@@ -305,8 +299,8 @@ void sink_impl::set_nco(float nco_freq, int channel) {
 }
 
 double sink_impl::set_bandwidth(double analog_bandw, int channel) {
-   return device_handler::getInstance().set_analog_filter(
-        stored.device_number, LMS_CH_TX, channel,analog_bandw);
+    return device_handler::getInstance().set_analog_filter(
+        stored.device_number, LMS_CH_TX, channel, analog_bandw);
 }
 
 void sink_impl::set_digital_filter(double digital_bandw, int channel) {
@@ -327,6 +321,8 @@ double sink_impl::set_sample_rate(double rate) {
     stored.samp_rate = rate;
     return rate;
 }
+
+void sink_impl::set_buffer_size(uint32_t size) { stored.FIFO_size = size; }
 
 void sink_impl::set_oversampling(int oversample) {
     device_handler::getInstance().set_oversampling(stored.device_number, oversample);

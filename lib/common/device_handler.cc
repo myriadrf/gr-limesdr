@@ -237,14 +237,15 @@ void device_handler::settings_from_file(int device_number, const std::string& fi
 }
 
 void device_handler::set_chip_mode(int device_number, int chip_mode, bool direction) {
+    std::cout << "INFO: device_handler::set_chip_mode(): ";
     if (chip_mode < 2) {
+
         if (LMS_EnableChannel(device_handler::getInstance().get_device(device_number),
                               direction,
                               chip_mode,
                               true) != LMS_SUCCESS)
             device_handler::getInstance().error(device_number);
-        std::cout << "INFO: device_handler::set_chip_mode(): SISO mode set for device number "
-                  << device_number << "." << std::endl;
+        std::cout << "SISO mode set for device number " << device_number << "." << std::endl;
     } else if (chip_mode == 2) {
         if (LMS_EnableChannel(device_handler::getInstance().get_device(device_number),
                               direction,
@@ -256,12 +257,12 @@ void device_handler::set_chip_mode(int device_number, int chip_mode, bool direct
                               LMS_CH_1,
                               true) != LMS_SUCCESS)
             device_handler::getInstance().error(device_number);
-        std::cout << "INFO: device_handler::set_chip_mode(): MIMO mode set for device number "
-                  << device_number << "." << std::endl;
+        std::cout << "MIMO mode set for device number " << device_number << "." << std::endl;
     }
 }
 
 void device_handler::set_samp_rate(int device_number, double& rate) {
+    std::cout << "INFO: device_handler::set_samp_rate(): ";
     if (LMS_SetSampleRate(device_handler::getInstance().get_device(device_number), rate, 0) !=
         LMS_SUCCESS)
         device_handler::getInstance().error(device_number);
@@ -273,14 +274,14 @@ void device_handler::set_samp_rate(int device_number, double& rate) {
                           &host_value,
                           &rf_value))
         device_handler::getInstance().error(device_number);
-    std::cout << "INFO: device_handler::set_samp_rate(): set sampling rate: " << host_value / 1e6
-              << " MS/s." << std::endl;
+    std::cout << "set sampling rate: " << host_value / 1e6 << " MS/s." << std::endl;
     rate = host_value; // Get the real rate back;
 }
 
 void device_handler::set_oversampling(int device_number, int oversample) {
     if (oversample == 0 || oversample == 1 || oversample == 2 || oversample == 4 ||
         oversample == 8 || oversample == 16 || oversample == 32) {
+        std::cout << "INFO: device_handler::set_samp_rate(): ";
         double host_value;
         double rf_value;
         if (LMS_GetSampleRate(device_handler::getInstance().get_device(device_number),
@@ -295,8 +296,7 @@ void device_handler::set_oversampling(int device_number, int oversample) {
                               oversample) != LMS_SUCCESS)
             device_handler::getInstance().error(device_number);
 
-        std::cout << "INFO: device_handler::set_samp_rate(): set oversampling: " << oversample
-                  << std::endl;
+        std::cout << "set oversampling: " << oversample << std::endl;
     } else {
         std::cout << "ERROR: device_handler::set_samp_rate(): valid oversample values are: "
                      "0,1,2,4,8,16,32."
@@ -311,26 +311,50 @@ double device_handler::set_rf_freq(int device_number, bool direction, int channe
                   << std::endl;
         close_all_devices();
     } else {
-        int status = LMS_SetLOFrequency(
-            device_handler::getInstance().get_device(device_number), direction, channel, rf_freq);
+        std::cout << "INFO: device_handler::set_rf_freq(): ";
+        if (LMS_SetLOFrequency(device_handler::getInstance().get_device(device_number),
+                               direction,
+                               channel,
+                               rf_freq) != LMS_SUCCESS)
+            device_handler::getInstance().error(device_number);
+
         double value = 0;
         LMS_GetLOFrequency(
             device_handler::getInstance().get_device(device_number), direction, channel, &value);
 
         std::string s_dir[2] = {"RX", "TX"};
-        std::cout << "INFO: device_handler::set_rf_freq(): RF frequency set [" << s_dir[direction]
-                  << "]: " << value / 1e6 << " MHz." << std::endl;
+        std::cout << "RF frequency set [" << s_dir[direction] << "]: " << value / 1e6 << " MHz."
+                  << std::endl;
         return value;
     }
 }
 
 void device_handler::calibrate(int device_number, int direction, int channel, double bandwidth) {
     std::cout << "INFO: device_handler::calibrate(): ";
-    LMS_Calibrate(
-        device_handler::getInstance().get_device(device_number), direction, channel, bandwidth, 0);
+    double rf_freq = 0;
+    LMS_GetLOFrequency(
+        device_handler::getInstance().get_device(device_number), direction, channel, &rf_freq);
+    if (rf_freq > 31e6) // Normal calibration
+        LMS_Calibrate(device_handler::getInstance().get_device(device_number),
+                      direction,
+                      channel,
+                      bandwidth,
+                      0);
+    else { // Workaround
+        LMS_SetLOFrequency(
+            device_handler::getInstance().get_device(device_number), direction, channel, 50e6);
+        LMS_Calibrate(device_handler::getInstance().get_device(device_number),
+                      direction,
+                      channel,
+                      bandwidth,
+                      0);
+        LMS_SetLOFrequency(
+            device_handler::getInstance().get_device(device_number), direction, channel, rf_freq);
+    }
 }
 
 void device_handler::set_antenna(int device_number, int channel, int direction, int antenna) {
+    std::cout << "INFO: device_handler::set_antenna(): ";
     if (antenna != 0) // Skip this if antenna is set to Auto
         LMS_SetAntenna(
             device_handler::getInstance().get_device(device_number), direction, channel, antenna);
@@ -341,63 +365,66 @@ void device_handler::set_antenna(int device_number, int channel, int direction, 
                                    {"Auto(NONE)", "BAND1", "BAND2", "NONE"}};
     std::string s_dir[2] = {"RX", "TX"};
 
-    std::cout << "INFO: device_handler::set_antenna(): channel " << channel << " antenna set ["
-              << s_dir[direction] << "]: " << s_antenna[direction][antenna_value] << "."
-              << std::endl;
+    std::cout << "channel " << channel << " antenna set [" << s_dir[direction]
+              << "]: " << s_antenna[direction][antenna_value] << "." << std::endl;
 }
 
-double device_handler::set_analog_filter(
-    int device_number, bool direction, int channel, double analog_bandw) {
-        if (channel == 0 || channel == 1) {
-            if (direction == LMS_CH_TX || direction == LMS_CH_RX) {
-                std::cout << "INFO: device_handler::set_analog_filter(): ";
-                LMS_SetLPFBW(device_handler::getInstance().get_device(device_number),
-                             direction,
-                             channel,
-                             analog_bandw);
+double device_handler::set_analog_filter(int device_number,
+                                         bool direction,
+                                         int channel,
+                                         double analog_bandw) {
+    if (channel == 0 || channel == 1) {
+        if (direction == LMS_CH_TX || direction == LMS_CH_RX) {
+            std::cout << "INFO: device_handler::set_analog_filter(): ";
+            LMS_SetLPFBW(device_handler::getInstance().get_device(device_number),
+                         direction,
+                         channel,
+                         analog_bandw);
 
-                double analog_value;
-                LMS_GetLPFBW(device_handler::getInstance().get_device(device_number),
-                             direction,
-                             channel,
-                             &analog_value);
-                return analog_value;
-            } else {
-                std::cout << "ERROR: device_handler::set_analog_filter(): direction must be "
-                             "0(LMS_CH_RX) or 1(LMS_CH_TX)."
-                          << std::endl;
-                close_all_devices();
-            }
+            double analog_value;
+            LMS_GetLPFBW(device_handler::getInstance().get_device(device_number),
+                         direction,
+                         channel,
+                         &analog_value);
+            return analog_value;
         } else {
-            std::cout << "ERROR: device_handler::set_analog_filter(): channel must be 0 or 1."
+            std::cout << "ERROR: device_handler::set_analog_filter(): direction must be "
+                         "0(LMS_CH_RX) or 1(LMS_CH_TX)."
                       << std::endl;
             close_all_devices();
         }
+    } else {
+        std::cout << "ERROR: device_handler::set_analog_filter(): channel must be 0 or 1."
+                  << std::endl;
+        close_all_devices();
+    }
 }
 
-double device_handler::set_digital_filter(
-    int device_number, bool direction, int channel, double digital_bandw) {
+double device_handler::set_digital_filter(int device_number,
+                                          bool direction,
+                                          int channel,
+                                          double digital_bandw) {
     if (channel == 0 || channel == 1) {
         if (direction == LMS_CH_TX || direction == LMS_CH_RX) {
+            std::cout << "INFO: device_handler::set_digital_filter(): ";
             LMS_SetGFIRLPF(device_handler::getInstance().get_device(device_number),
                            direction,
                            channel,
                            1,
                            digital_bandw);
             std::string s_dir[2] = {"RX", "TX"};
-            std::cout << "INFO: device_handler::set_digital_filter(): digital filter channel "
-                    << channel << " [" << s_dir[direction] << "]: ";
+            std::cout << "digital filter channel " << channel << " [" << s_dir[direction] << "]: ";
             std::cout << digital_bandw / 1e6 << " MHz." << std::endl;
             return digital_bandw;
         } else {
-                std::cout << "ERROR: device_handler::set_digital_filter(): direction must be "
-                             "0(LMS_CH_RX) or 1(LMS_CH_TX)."
-                          << std::endl;
-                close_all_devices();
+            std::cout << "ERROR: device_handler::set_digital_filter(): direction must be "
+                         "0(LMS_CH_RX) or 1(LMS_CH_TX)."
+                      << std::endl;
+            close_all_devices();
         }
     } else {
         std::cout << "ERROR: device_handler::set_digital_filter(): channel must be 0 or 1."
-                    << std::endl;
+                  << std::endl;
         close_all_devices();
     }
 }
@@ -406,11 +433,9 @@ uint32_t
 device_handler::set_gain(int device_number, bool direction, int channel, uint32_t gain_dB) {
     if ((direction == LMS_CH_RX && gain_dB >= 0 && gain_dB <= 70) ||
         (direction == LMS_CH_TX && gain_dB >= 0 && gain_dB <= 60)) {
-        if (LMS_SetGaindB(device_handler::getInstance().get_device(device_number),
-                          direction,
-                          channel,
-                          gain_dB) != LMS_SUCCESS)
-            device_handler::error(device_number);
+        std::cout << "INFO: device_handler::set_gain(): ";
+        LMS_SetGaindB(
+            device_handler::getInstance().get_device(device_number), direction, channel, gain_dB);
 
         std::string s_dir[2] = {"RX", "TX"};
 
@@ -419,8 +444,8 @@ device_handler::set_gain(int device_number, bool direction, int channel, uint32_
                       direction,
                       channel,
                       &gain_value);
-        std::cout << "INFO: device_handler::set_gain(): set gain [" << s_dir[direction] << "] CH"
-                  << channel << ": " << gain_value << " dB." << std::endl;
+        std::cout << "set gain [" << s_dir[direction] << "] CH" << channel << ": " << gain_value
+                  << " dB." << std::endl;
         return gain_value;
     } else {
         std::cout << "ERROR: device_handler::set_gain(): valid RX gain range [0, 70], TX gain "
@@ -435,8 +460,8 @@ void device_handler::set_nco(int device_number, bool direction, int channel, flo
         LMS_SetNCOIndex(
             device_handler::getInstance().get_device(device_number), direction, channel, -1, 0);
     } else {
+        std::cout << "INFO: device_handler::set_nco(): ";
         double freq_value_in[16] = {nco_freq};
-
         int cmix_mode;
 
         if (nco_freq > 0)
@@ -465,10 +490,9 @@ void device_handler::set_nco(int device_number, bool direction, int channel, flo
                             channel,
                             freq_value_out,
                             pho_value_out);
-        std::cout << "INFO: device_handler::set_nco(): set channel " << channel << " NCO ["
-                  << s_dir[direction] << "] CH" << channel << ": " << freq_value_out[0] / 1e6
-                  << " MHz (" << pho_value_out[0] << " deg.)(" << s_cmix[cmix_mode] << ")."
-                  << std::endl;
+        std::cout << "set channel " << channel << " NCO [" << s_dir[direction] << "] CH" << channel
+                  << ": " << freq_value_out[0] / 1e6 << " MHz (" << pho_value_out[0] << " deg.)("
+                  << s_cmix[cmix_mode] << ")." << std::endl;
     }
 }
 

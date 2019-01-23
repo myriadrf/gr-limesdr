@@ -47,7 +47,8 @@ class sink_impl : public sink {
         std::string serial;
         int device_number;
         int channel_mode;
-        double samp_rate = 1e6;
+        double samp_rate = 10e6;
+        uint32_t FIFO_size = 0;
     } stored;
 
     std::chrono::high_resolution_clock::time_point t1, t2;
@@ -74,7 +75,7 @@ class sink_impl : public sink {
 
     inline gr::io_signature::sptr args_to_io_signature(int channel_number);
 
-    void init_stream(int device_number, int channel, float samp_rate);
+    void init_stream(int device_number, int channel);
 
     double set_center_freq(double freq, size_t chan = 0);
 
@@ -91,6 +92,8 @@ class sink_impl : public sink {
     double set_sample_rate(double rate);
 
     void set_oversampling(int oversample);
+
+    void set_buffer_size(uint32_t size);
 
     void calibrate(double bandw, int channel = 0);
 };

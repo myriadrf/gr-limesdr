@@ -67,7 +67,6 @@ source_impl::source_impl(std::string serial, int channel_mode, const std::string
         device_handler::getInstance().set_chip_mode(
             stored.device_number, stored.channel_mode, LMS_CH_RX);
     }
-    std::cout << "---------------------------------------------------------------" << std::endl;
 }
 
 source_impl::~source_impl() {
@@ -94,7 +93,7 @@ bool source_impl::start(void) {
     // Initialize and start stream for channel 0 (if channel_mode is SISO)
     if (stored.channel_mode < 2) // If SISO configure prefered channel
     {
-        this->init_stream(stored.device_number, stored.channel_mode, stored.samp_rate);
+        this->init_stream(stored.device_number, stored.channel_mode);
         if (LMS_StartStream(&streamId[stored.channel_mode]) != LMS_SUCCESS)
             device_handler::getInstance().error(stored.device_number);
     }
@@ -102,8 +101,8 @@ bool source_impl::start(void) {
     // Initialize and start stream for channels 0 & 1 (if channel_mode is MIMO)
     else if (stored.channel_mode == 2) {
 
-        this->init_stream(stored.device_number, LMS_CH_0, stored.samp_rate);
-        this->init_stream(stored.device_number, LMS_CH_1, stored.samp_rate);
+        this->init_stream(stored.device_number, LMS_CH_0);
+        this->init_stream(stored.device_number, LMS_CH_1);
 
         if (LMS_StartStream(&streamId[LMS_CH_0]) != LMS_SUCCESS)
             device_handler::getInstance().error(stored.device_number);
@@ -134,6 +133,7 @@ bool source_impl::stop(void) {
         LMS_StopStream(&streamId[LMS_CH_1]);
     }
     std::unique_lock<std::recursive_mutex> unlock(device_handler::getInstance().block_mutex);
+    device_handler::getInstance().close_device(stored.device_number, source_block);
     return true;
 }
 
@@ -204,9 +204,10 @@ int source_impl::general_work(int noutput_items,
 }
 
 // Setup stream
-void source_impl::init_stream(int device_number, int channel, float samp_rate) {
+void source_impl::init_stream(int device_number, int channel) {
     streamId[channel].channel = channel;
-    streamId[channel].fifoSize = (int)samp_rate / 10;
+    streamId[channel].fifoSize =
+        (stored.FIFO_size == 0) ? (int)stored.samp_rate / 10 : stored.FIFO_size;
     streamId[channel].throughputVsLatency = 0.5;
     streamId[channel].isTx = LMS_CH_RX;
     streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
@@ -255,7 +256,7 @@ inline gr::io_signature::sptr source_impl::args_to_io_signature(int channel_numb
     } else if (channel_number == 2) {
         return gr::io_signature::make(2, 2, sizeof(gr_complex));
     } else {
-        std::cout << "ERROR: source_impl::args_to_io_signature(): channel_number must be 0 or 1."
+        std::cout << "ERROR: source_impl::args_to_io_signature(): channel_number must be 0,1 or 2."
                   << std::endl;
         exit(0);
     }
@@ -301,6 +302,8 @@ double source_impl::set_sample_rate(double rate) {
     stored.samp_rate = rate;
     return rate;
 }
+
+void source_impl::set_buffer_size(uint32_t size) { stored.FIFO_size = size; }
 
 void source_impl::set_oversampling(int oversample) {
     device_handler::getInstance().set_oversampling(stored.device_number, oversample);
