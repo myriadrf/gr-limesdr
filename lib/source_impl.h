@@ -52,7 +52,7 @@ class source_impl : public source {
 
     void print_stream_stats(lms_stream_status_t status);
 
-    int add_time_tag(int channel, lms_stream_meta_t meta);
+    void add_time_tag(int channel, lms_stream_meta_t meta);
 
     public:
     source_impl(std::string serial, int channel_mode, const std::string& filename);

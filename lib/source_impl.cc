@@ -242,7 +242,7 @@ void source_impl::print_stream_stats(lms_stream_status_t status) {
 }
 
 // Add rx_time tag to stream
-int source_impl::add_time_tag(int channel, lms_stream_meta_t meta) {
+void source_impl::add_time_tag(int channel, lms_stream_meta_t meta) {
 
     uint64_t u_rate = (uint64_t)stored.samp_rate;
     double f_rate = stored.samp_rate - u_rate;
@@ -283,7 +283,7 @@ void source_impl::set_antenna(int antenna, int channel) {
 
 double source_impl::set_bandwidth(double analog_bandw, int channel) {
     add_tag = true;
-    device_handler::getInstance().set_analog_filter(
+    return device_handler::getInstance().set_analog_filter(
         stored.device_number, LMS_CH_RX, channel, analog_bandw);
 }
 

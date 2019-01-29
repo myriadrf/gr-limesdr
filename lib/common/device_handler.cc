@@ -68,7 +68,7 @@ int device_handler::open_device(std::string& serial) {
     // Identify device by serial number
     for (int i = 0; i < device_count; i++) {
         std::string device_string(list[i]);
-        unsigned first = device_string.find("serial=");
+        size_t first = device_string.find("serial=");
         std::string aquired_serial = device_string.substr(first + 7, std::string::npos);
 
         // If serial is left empty, use first device in list
@@ -149,7 +149,7 @@ void device_handler::close_all_devices() {
                 LMS_Close(this->device_vector[i].address);
             }
         }
-        close_flag == true;
+        close_flag = true;
         exit(0);
     }
 }
