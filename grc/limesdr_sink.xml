@@ -12,13 +12,13 @@ self.$(id).set_sample_rate($samp_rate)
 self.$(id).set_oversampling($oversample)
 #end if
 self.$(id).set_center_freq($rf_freq, 0)
-#if $analog_bandw_ch0() > 0
+#if $analog_bandw_ch0() > 0 and ($channel_mode() == 0 or $channel_mode() == 2)
 self.$(id).set_bandwidth($analog_bandw_ch0,0)
 #end if
 #if $analog_bandw_ch1() > 0 and $channel_mode() > 0
 self.$(id).set_bandwidth($analog_bandw_ch1,1)
 #end if
-#if $digital_bandw_ch0() > 0
+#if $digital_bandw_ch0() > 0 and ($channel_mode() == 0 or $channel_mode() == 2)
 self.$(id).set_digital_filter($digital_bandw_ch0,0)
 #end if
 #if $digital_bandw_ch1() > 0 and $channel_mode() > 0
@@ -36,16 +36,16 @@ self.$(id).set_antenna($pa_path_ch0,0)
 #if $channel_mode() > 0
 self.$(id).set_antenna($pa_path_ch1,1)
 #end if
-#if $calibr_bandw_ch0() > 0
+#if $calibr_bandw_ch0() > 0 and ($channel_mode() == 0 or $channel_mode() == 2)
 self.$(id).calibrate($calibr_bandw_ch0, 0)
 #end if
 #if $calibr_bandw_ch1() > 0 and $channel_mode() > 0
 self.$(id).calibrate($calibr_bandw_ch1, 1)
 #end if
-#if $channel_mode() == 1 or $channel_mode() == 2
+#if $nco_freq_ch0() != 0 and ($channel_mode() == 0 or $channel_mode() == 2)
 self.$(id).set_nco($nco_freq_ch0,0)
 #end if
-#if $channel_mode() > 1
+#if $nco_freq_ch1() != 0 and $channel_mode() > 0
 self.$(id).set_nco($nco_freq_ch1,1)
 #end if
 #end if    
@@ -76,6 +76,13 @@ self.$(id).set_nco($nco_freq_ch1,1)
         <type>string</type>
         <hide>none</hide>
     </param>
+
+    <param>
+        <name>File</name>
+        <key>filename</key>
+        <value></value>
+        <type>file_open</type>
+    </param>
  
     <param>
         <name>Channel</name>
@@ -94,13 +101,6 @@ self.$(id).set_nco($nco_freq_ch1,1)
             <name>(A+B)MIMO</name>
             <key>2</key>
         </option>
-    </param>
- 
-    <param>
-        <name>File</name>
-        <key>filename</key>
-        <value></value>
-        <type>file_open</type>
     </param>
   
     <param>
@@ -454,22 +454,11 @@ Device serial number obtained by running
 
 If left blank, the first device is used.
 -------------------------------------------------------------------------------------------------------------------
-DEVICE TYPE
-
-This setting lets you choose from predefined device type list and loads appropriate settings for the selected device.
-Currently supported device types: LimeSDR-USB, LimeSDR-Mini, LimeNET-Micro.
--------------------------------------------------------------------------------------------------------------------
 CHANNEL
 
 Use this setting to choose between SISO channels or MIMO mode.
 
 Note: not all devices support MIMO mode and have more than one channel.
--------------------------------------------------------------------------------------------------------------------
-LOAD SETTINGS
-
-Enable loading settings from file.
-
-Note: setting must match in LimeSuite Source and Sink for the same device.
 -------------------------------------------------------------------------------------------------------------------
 FILE
 
@@ -477,7 +466,7 @@ Generate .ini file with LimeSuite and select path.
 
 Note: setting must match in LimeSuite Source and Sink for the same device.
 -------------------------------------------------------------------------------------------------------------------
-CENTER FREQUENCY
+RF FREQUENCY
 
 Set RF center frequency for TX (both channels).
 LimeSDR-USB supports	[100e3,3800e6] Hz.
@@ -500,44 +489,36 @@ Here you can select oversampling value for TX. Default value uses highest possib
 
 Note: LimeSDR-Mini and LimeNET-Micro supports only the same oversampling value for TX and RX.
 -------------------------------------------------------------------------------------------------------------------
+Length tag name
+
+Set name of stream tag with which number of samples sent is set.
+-------------------------------------------------------------------------------------------------------------------
 NCO FREQUENCY
 
 Adjust numerically controlled oscillator for each channel. 0 means that NCO is OFF.
 -------------------------------------------------------------------------------------------------------------------
-CMIX MODE
-
-Controls NCO direction for each channel.
--------------------------------------------------------------------------------------------------------------------
-CALIBRATION
-
-Turn DC offset and IQ imbalance calibration ON/OFF for each channel.
--------------------------------------------------------------------------------------------------------------------
 CALIBRATION BANDW.
 
-When calibration is turned ON this setting is used to set bandwidth for calibration for each channel. This value should be equal to your signal bandwidth.
+This setting is used to set bandwidth for calibration for each channel. This value should be equal to your signal bandwidth.
+Calibration is off when bandwidth is set to 0.
 
 Calibration bandwidth range must be [2.5e6,120e6] Hz.
 -------------------------------------------------------------------------------------------------------------------
 PA PATH
 
-Select active power amplifier path of each channel.
--------------------------------------------------------------------------------------------------------------------
-ANALOG FILTER
-
-Turn low-pass filter ON/OFF for each channel.
+Select active power amplifier path of each channel. 
+For LimeSDR-Mini and LimeNET-Micro Auto(Default) option sets preferred PA path depending on RF frequency.
+For LimeSDR-USB Auto(Default) sets PA path to Band1.
 -------------------------------------------------------------------------------------------------------------------
 ANALOG FILTER BANDW.
 
-Enter analog filter bandwidth for each channel.
+Enter analog filter bandwidth for each channel. Analog filter is off if bandwidth is set to 0.
 Analog filter bandwidth range must be [5e6,130e6] Hz.
--------------------------------------------------------------------------------------------------------------------
-DIGITAL FILTER
-
-Turn digital filters (GFIR) ON/OFF for each channel.
 -------------------------------------------------------------------------------------------------------------------
 DIGITAL FILTER BANDW.
 
-Enter digital filter bandwidth for each channel. Bandwidth should not be higher than sample rate.
+Enter digital filter bandwidth for each channel. Digital filter if off if bandwidth is set to 0.
+Bandwidth should not be higher than sample rate.
 -------------------------------------------------------------------------------------------------------------------
 GAIN
 

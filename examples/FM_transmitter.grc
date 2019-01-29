@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.12'?>
+<?grc format='1' created='3.7.13'?>
 <flow_graph>
   <timestamp>Tue Feb 20 16:22:48 2018</timestamp>
   <block>
@@ -168,7 +168,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>SET PATH TO .WAV!</value>
+      <value>/home/garmus/GITHUB/gr-limesdr/examples/guitar.wav</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -206,36 +206,16 @@
       <value></value>
     </param>
     <param>
-      <key>channel</key>
-      <value>0</value>
-    </param>
-    <param>
       <key>analog_bandw_ch0</key>
       <value>5e6</value>
     </param>
     <param>
-      <key>analog_filter_ch0</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>cmix_mode_ch0</key>
-      <value>0</value>
-    </param>
-    <param>
       <key>calibr_bandw_ch0</key>
-      <value>2.5e6</value>
-    </param>
-    <param>
-      <key>calibration_ch0</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>digital_bandw_ch0</key>
       <value>100e3</value>
-    </param>
-    <param>
-      <key>digital_filter_ch0</key>
-      <value>1</value>
     </param>
     <param>
       <key>gain_dB_ch0</key>
@@ -247,43 +227,23 @@
     </param>
     <param>
       <key>pa_path_ch0</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>pa_path_mini</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>analog_bandw_ch1</key>
-      <value>7e6</value>
-    </param>
-    <param>
-      <key>analog_filter_ch1</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>cmix_mode_ch1</key>
-      <value>0</value>
+      <value>5e6</value>
     </param>
     <param>
       <key>calibr_bandw_ch1</key>
-      <value>10e6</value>
-    </param>
-    <param>
-      <key>calibration_ch1</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>digital_bandw_ch1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>digital_filter_ch1</key>
-      <value>1</value>
+      <value>100e3</value>
     </param>
     <param>
       <key>gain_dB_ch1</key>
-      <value>0</value>
+      <value>60</value>
     </param>
     <param>
       <key>nco_freq_ch1</key>
@@ -294,8 +254,8 @@
       <value>1</value>
     </param>
     <param>
-      <key>chip_mode</key>
-      <value>1</value>
+      <key>channel_mode</key>
+      <value>0</value>
     </param>
     <param>
       <key>comment</key>
@@ -308,10 +268,6 @@
     <param>
       <key>serial</key>
       <value></value>
-    </param>
-    <param>
-      <key>device_type</key>
-      <value>2</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -334,8 +290,8 @@
       <value>limesdr_sink_0</value>
     </param>
     <param>
-      <key>file_switch</key>
-      <value>0</value>
+      <key>length_tag_name</key>
+      <value></value>
     </param>
     <param>
       <key>oversample</key>

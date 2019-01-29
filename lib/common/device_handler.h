@@ -53,8 +53,8 @@ class device_handler {
         // shared settings and blocks usage
         bool source_flag = false;
         bool sink_flag = false;
-        int source_chip_mode = -1;
-        int sink_chip_mode = -1;
+        int source_channel_mode = -1;
+        int sink_channel_mode = -1;
         std::string source_filename;
         std::string sink_filename;
     };
@@ -123,12 +123,12 @@ class device_handler {
      *
      * @param   block_type Source block(1), Sink block(2).
      *
-     * @param   chip_mode SISO(1), MIMO(2).
+     * @param   channel_mode Channel A(0), Channel B(1), MIMO(2)
      *
      * @param   filename  Path to file if file switch is turned on.
      */
     void
-    check_blocks(int device_number, int block_type, int chip_mode, const std::string& filename);
+    check_blocks(int device_number, int block_type, int channel_mode, const std::string& filename);
 
     /**
      * Load settings from .ini file.
@@ -140,15 +140,15 @@ class device_handler {
     void settings_from_file(int device_number, const std::string& filename);
 
     /**
-     * Set chip mode (single-input single-output/multiple-input multiple-output)
+     * Set used channels
      *
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
-     * @param   chip_mode  Channel A(0), Channel B(1), MIMO(2)
+     * @param   channel_mode  Channel A(0), Channel B(1), MIMO(2)
      *
      * @param   direction  Direction of samples RX(LMS_CH_RX), TX(LMS_CH_RX).
      */
-    void set_chip_mode(int device_number, int chip_mode, bool direction);
+    void enable_channels(int device_number, int channel_mode, bool direction);
 
     /**
      * Set the same sample rate for both channels.
@@ -197,7 +197,19 @@ class device_handler {
      */
     void calibrate(int device_number, int direction, int channel, double bandwidth);
 
-
+    /**
+     * Set which antenna is used
+     *
+     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     *
+     * @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
+     *
+     * @param   direction  Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_RX).
+     *
+     * @param   antenna Antenna to set: None(0), LNAH(1), LNAL(2), LNAW(3) for RX
+     *                                  None(0), BAND1(1), BAND(2), NONE(3) for TX
+     *
+     */
     void set_antenna(int device_number, int channel, int direction, int antenna);
 
     /**
@@ -211,8 +223,7 @@ class device_handler {
      *
      * @param   analog_bandw  Channel filter bandwidth in Hz.
      */
-    double set_analog_filter(
-        int device_number, bool direction, int channel, double analog_bandw);
+    double set_analog_filter(int device_number, bool direction, int channel, double analog_bandw);
 
     /**
      * Set digital filters (GFIR).
@@ -225,8 +236,7 @@ class device_handler {
      *
      * @param   digital_bandw  Channel filter bandwidth in Hz.
      */
-    double set_digital_filter(
-        int device_number, bool direction, int channel, double digital_bandw);
+    double set_digital_filter(int device_number, bool direction, int channel, double digital_bandw);
 
     /**
      * Set the combined gain value in dB
@@ -240,7 +250,7 @@ class device_handler {
      *
      * @param   direction      Select RX or TX.
      *
-     * @param   channel        Channel index.
+     * @param   channel        Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
      * @param   gain_dB        Desired gain: [0,70] RX, [0,60] TX.
      */
@@ -248,7 +258,7 @@ class device_handler {
 
     /**
      * Set NCO (numerically controlled oscillator).
-     * By selecting NCO frequency, phase offset and CMIX mode
+     * By selecting NCO frequency
      * configure NCO. When NCO frequency is 0, NCO is off.
      *
      * @param   device_number  Device number from the list of LMS_GetDeviceList.

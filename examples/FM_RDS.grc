@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.12'?>
+<?grc format='1' created='3.7.13'?>
 <flow_graph>
   <timestamp>Thu Aug 28 08:24:49 2014</timestamp>
   <block>
@@ -1819,36 +1819,16 @@
       <value></value>
     </param>
     <param>
-      <key>channel</key>
-      <value>0</value>
-    </param>
-    <param>
       <key>analog_bandw_ch0</key>
       <value>1.5e6</value>
-    </param>
-    <param>
-      <key>analog_filter_ch0</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>cmix_mode_ch0</key>
-      <value>0</value>
     </param>
     <param>
       <key>calibr_bandw_ch0</key>
       <value>2.5e6</value>
     </param>
     <param>
-      <key>calibration_ch0</key>
-      <value>1</value>
-    </param>
-    <param>
       <key>digital_bandw_ch0</key>
       <value>100e3</value>
-    </param>
-    <param>
-      <key>digital_filter_ch0</key>
-      <value>1</value>
     </param>
     <param>
       <key>gain_dB_ch0</key>
@@ -1856,10 +1836,6 @@
     </param>
     <param>
       <key>lna_path_ch0</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>lna_path_mini</key>
       <value>3</value>
     </param>
     <param>
@@ -1868,47 +1844,31 @@
     </param>
     <param>
       <key>analog_bandw_ch1</key>
-      <value>10e6</value>
-    </param>
-    <param>
-      <key>analog_filter_ch1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>cmix_mode_ch1</key>
-      <value>0</value>
+      <value>1.5e6</value>
     </param>
     <param>
       <key>calibr_bandw_ch1</key>
-      <value>10e6</value>
-    </param>
-    <param>
-      <key>calibration_ch1</key>
-      <value>0</value>
+      <value>2.5e6</value>
     </param>
     <param>
       <key>digital_bandw_ch1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>digital_filter_ch1</key>
-      <value>0</value>
+      <value>100e3</value>
     </param>
     <param>
       <key>gain_dB_ch1</key>
-      <value>60</value>
+      <value>gain</value>
     </param>
     <param>
       <key>lna_path_ch1</key>
-      <value>1</value>
+      <value>3</value>
     </param>
     <param>
       <key>nco_freq_ch1</key>
-      <value>100e6</value>
+      <value>0</value>
     </param>
     <param>
-      <key>chip_mode</key>
-      <value>1</value>
+      <key>channel_mode</key>
+      <value>0</value>
     </param>
     <param>
       <key>comment</key>
@@ -1921,10 +1881,6 @@
     <param>
       <key>serial</key>
       <value></value>
-    </param>
-    <param>
-      <key>device_type</key>
-      <value>1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1945,10 +1901,6 @@
     <param>
       <key>id</key>
       <value>limesdr_source_0</value>
-    </param>
-    <param>
-      <key>file_switch</key>
-      <value>0</value>
     </param>
     <param>
       <key>maxoutbuf</key>

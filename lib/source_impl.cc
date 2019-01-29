@@ -63,8 +63,8 @@ source_impl::source_impl(std::string serial, int channel_mode, const std::string
         device_handler::getInstance().check_blocks(
             stored.device_number, source_block, stored.channel_mode, "");
 
-        // 5. Set SISO/MIMO mode
-        device_handler::getInstance().set_chip_mode(
+        // 5. Enable required channel/s
+        device_handler::getInstance().enable_channels(
             stored.device_number, stored.channel_mode, LMS_CH_RX);
     }
 }

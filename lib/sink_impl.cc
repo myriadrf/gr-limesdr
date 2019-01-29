@@ -71,8 +71,8 @@ sink_impl::sink_impl(std::string serial,
         device_handler::getInstance().check_blocks(
             stored.device_number, sink_block, stored.channel_mode, "");
 
-        // 5. Set SISO/MIMO mode
-        device_handler::getInstance().set_chip_mode(
+        // 5. Enable required channels
+        device_handler::getInstance().enable_channels(
             stored.device_number, stored.channel_mode, LMS_CH_TX);
     }
 }
@@ -150,7 +150,6 @@ int sink_impl::general_work(int noutput_items,
     tx_meta.flushPartialPacket = false;
     // Check if channel 0 has any tags
     this->work_tags(noutput_items);
-
     // If length tag has been found burst_length should be higher than 0
     if (burst_length > 0) {
         nitems_send = std::min<long>(burst_length, nitems_send);

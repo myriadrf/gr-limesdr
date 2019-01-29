@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.12'?>
+<?grc format='1' created='3.7.13'?>
 <flow_graph>
   <timestamp>Mon May 21 21:11:53 2018</timestamp>
   <block>
@@ -109,7 +109,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>3,0,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -126,105 +126,6 @@
     <param>
       <key>type</key>
       <value>real</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_chooser</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(792, 251)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>analog_filter_tx</value>
-    </param>
-    <param>
-      <key>label0</key>
-      <value>"OFF"</value>
-    </param>
-    <param>
-      <key>label1</key>
-      <value>"ON"</value>
-    </param>
-    <param>
-      <key>label2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>label3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>label4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>TX analog filter</value>
-    </param>
-    <param>
-      <key>labels</key>
-      <value>[]</value>
-    </param>
-    <param>
-      <key>num_opts</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>option0</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>option1</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>option2</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>option3</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>option4</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>options</key>
-      <value>[0, 1, 2]</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.QHBoxLayout</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>int</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>radio_buttons</value>
     </param>
   </block>
   <block>
@@ -247,7 +148,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value>1,0,2,2</value>
+      <value>0,1,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -286,7 +187,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>3,1,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -303,105 +204,6 @@
     <param>
       <key>type</key>
       <value>real</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_chooser</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(960, 251)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>digital_filter_tx</value>
-    </param>
-    <param>
-      <key>label0</key>
-      <value>"OFF"</value>
-    </param>
-    <param>
-      <key>label1</key>
-      <value>"ON"</value>
-    </param>
-    <param>
-      <key>label2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>label3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>label4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>TX digital filter</value>
-    </param>
-    <param>
-      <key>labels</key>
-      <value>[]</value>
-    </param>
-    <param>
-      <key>num_opts</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>option0</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>option1</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>option2</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>option3</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>option4</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>options</key>
-      <value>[0, 1, 2]</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.QHBoxLayout</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>int</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>radio_buttons</value>
     </param>
   </block>
   <block>
@@ -424,7 +226,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value>6,0,1,2</value>
+      <value>1,1,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -440,7 +242,7 @@
     </param>
     <param>
       <key>min_len</key>
-      <value>200</value>
+      <value>1</value>
     </param>
     <param>
       <key>orient</key>
@@ -487,7 +289,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value>3,1,1,1</value>
+      <value>2,1,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -531,105 +333,6 @@
     </param>
   </block>
   <block>
-    <key>variable_qtgui_chooser</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(624, 251)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>nco_direction_tx</value>
-    </param>
-    <param>
-      <key>label0</key>
-      <value>"UPCONVERT"</value>
-    </param>
-    <param>
-      <key>label1</key>
-      <value>"DOWNCONVERT"</value>
-    </param>
-    <param>
-      <key>label2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>label3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>label4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>TX NCO direction</value>
-    </param>
-    <param>
-      <key>labels</key>
-      <value>[]</value>
-    </param>
-    <param>
-      <key>num_opts</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>option0</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>option1</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>option2</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>option3</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>option4</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>options</key>
-      <value>[0, 1, 2]</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.QHBoxLayout</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>int</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>radio_buttons</value>
-    </param>
-  </block>
-  <block>
     <key>variable_qtgui_entry</key>
     <param>
       <key>comment</key>
@@ -649,7 +352,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value>4,1,1,1</value>
+      <value>2,0,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -688,7 +391,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value>6,2,1,2</value>
+      <value>1,0,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -704,7 +407,7 @@
     </param>
     <param>
       <key>min_len</key>
-      <value>2000</value>
+      <value>1</value>
     </param>
     <param>
       <key>orient</key>
@@ -755,7 +458,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>0,0,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -844,36 +547,16 @@
       <value></value>
     </param>
     <param>
-      <key>channel</key>
-      <value>0</value>
-    </param>
-    <param>
       <key>analog_bandw_ch0</key>
       <value>analog_filter_bandwidth_tx*1e6</value>
     </param>
     <param>
-      <key>analog_filter_ch0</key>
-      <value>analog_filter_tx</value>
-    </param>
-    <param>
-      <key>cmix_mode_ch0</key>
-      <value>nco_direction_tx</value>
-    </param>
-    <param>
       <key>calibr_bandw_ch0</key>
-      <value>5e6</value>
-    </param>
-    <param>
-      <key>calibration_ch0</key>
       <value>0</value>
     </param>
     <param>
       <key>digital_bandw_ch0</key>
       <value>digital_filter_bandwidth_tx*1e6</value>
-    </param>
-    <param>
-      <key>digital_filter_ch0</key>
-      <value>digital_filter_tx</value>
     </param>
     <param>
       <key>gain_dB_ch0</key>
@@ -885,38 +568,18 @@
     </param>
     <param>
       <key>pa_path_ch0</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>pa_path_mini</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>analog_bandw_ch1</key>
-      <value>10e6</value>
-    </param>
-    <param>
-      <key>analog_filter_ch1</key>
       <value>0</value>
     </param>
     <param>
-      <key>cmix_mode_ch1</key>
+      <key>analog_bandw_ch1</key>
       <value>0</value>
     </param>
     <param>
       <key>calibr_bandw_ch1</key>
-      <value>5e6</value>
-    </param>
-    <param>
-      <key>calibration_ch1</key>
       <value>0</value>
     </param>
     <param>
       <key>digital_bandw_ch1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>digital_filter_ch1</key>
       <value>0</value>
     </param>
     <param>
@@ -932,8 +595,8 @@
       <value>1</value>
     </param>
     <param>
-      <key>chip_mode</key>
-      <value>1</value>
+      <key>channel_mode</key>
+      <value>0</value>
     </param>
     <param>
       <key>comment</key>
@@ -946,10 +609,6 @@
     <param>
       <key>serial</key>
       <value></value>
-    </param>
-    <param>
-      <key>device_type</key>
-      <value>2</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -972,8 +631,8 @@
       <value>limesdr_sink_0</value>
     </param>
     <param>
-      <key>file_switch</key>
-      <value>0</value>
+      <key>length_tag_name</key>
+      <value></value>
     </param>
     <param>
       <key>oversample</key>
@@ -1028,7 +687,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>4,0,1,2</value>
     </param>
     <param>
       <key>_rotation</key>
