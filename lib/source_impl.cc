@@ -125,12 +125,12 @@ bool source_impl::stop(void) {
     std::unique_lock<std::recursive_mutex> lock(device_handler::getInstance().block_mutex);
     // Stop stream for channel 0 (if channel_mode is SISO)
     if (stored.channel_mode < 2) {
-        LMS_StopStream(&streamId[stored.channel_mode]);
+        this->release_stream(stored.device_number, &streamId[stored.channel_mode]);
     }
     // Stop streams for channels 0 & 1 (if channel_mode is MIMO)
     else if (stored.channel_mode == 2) {
-        LMS_StopStream(&streamId[LMS_CH_0]);
-        LMS_StopStream(&streamId[LMS_CH_1]);
+        this->release_stream(stored.device_number, &streamId[LMS_CH_0]);
+        this->release_stream(stored.device_number, &streamId[LMS_CH_1]);
     }
     std::unique_lock<std::recursive_mutex> unlock(device_handler::getInstance().block_mutex);
     device_handler::getInstance().close_device(stored.device_number, source_block);
@@ -218,6 +218,11 @@ void source_impl::init_stream(int device_number, int channel) {
 
     std::cout << "INFO: source_impl::init_stream(): source channel " << channel << " (device nr. "
               << device_number << ") stream setup done." << std::endl;
+}
+
+void source_impl::release_stream(int device_number, lms_stream_t *stream) {
+    LMS_StopStream(stream);
+    LMS_DestroyStream(device_handler::getInstance().get_device(device_number), stream);
 }
 
 // Print stream status
