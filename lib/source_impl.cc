@@ -133,7 +133,6 @@ bool source_impl::stop(void) {
         this->release_stream(stored.device_number, &streamId[LMS_CH_1]);
     }
     std::unique_lock<std::recursive_mutex> unlock(device_handler::getInstance().block_mutex);
-    device_handler::getInstance().close_device(stored.device_number, source_block);
     return true;
 }
 
