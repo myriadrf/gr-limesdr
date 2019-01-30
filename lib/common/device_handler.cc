@@ -68,8 +68,9 @@ int device_handler::open_device(std::string& serial) {
     // Identify device by serial number
     for (int i = 0; i < device_count; i++) {
         std::string device_string(list[i]);
-        size_t first = device_string.find("serial=");
-        std::string aquired_serial = device_string.substr(first + 7, std::string::npos);
+        size_t first = device_string.find("serial=") + 7;
+        size_t end = device_string.find(",", first);
+        std::string aquired_serial = device_string.substr(first, end - first);
 
         // If serial is left empty, use first device in list
         if (serial.empty()) {
