@@ -74,6 +74,9 @@ sink_impl::sink_impl(std::string serial,
         // 5. Enable required channels
         device_handler::getInstance().enable_channels(
             stored.device_number, stored.channel_mode, LMS_CH_TX);
+
+        // 6. Disable PA path
+        this->toggle_pa_path(stored.device_number, false);
     }
 }
 
@@ -99,6 +102,8 @@ bool sink_impl::start(void) {
         t1 = std::chrono::high_resolution_clock::now();
         t2 = t1;
     }
+    // Enable PA path
+    this->toggle_pa_path(stored.device_number, true);
     // Initialize and start stream for channel 0 (if channel_mode is SISO)
     if (stored.channel_mode < 2) // If SISO configure prefered channel
     {
@@ -128,6 +133,8 @@ bool sink_impl::stop(void) {
         this->release_stream(stored.device_number, &streamId[LMS_CH_0]);
         this->release_stream(stored.device_number, &streamId[LMS_CH_1]);
     }
+    // Disable PA path
+    this->toggle_pa_path(stored.device_number, false);
     std::unique_lock<std::recursive_mutex> unlock(device_handler::getInstance().block_mutex);
     return true;
 }
@@ -290,7 +297,26 @@ double sink_impl::set_center_freq(double freq, size_t chan) {
 }
 
 void sink_impl::set_antenna(int antenna, int channel) {
+    pa_path[channel] = antenna;
     device_handler::getInstance().set_antenna(stored.device_number, channel, LMS_CH_TX, antenna);
+}
+
+void sink_impl::toggle_pa_path(int device_number, bool enable) {
+    if (stored.channel_mode < 2) {
+        LMS_SetAntenna(device_handler::getInstance().get_device(device_number),
+                       LMS_CH_TX,
+                       stored.channel_mode,
+                       enable ? pa_path[stored.channel_mode] : 0);
+    } else {
+        LMS_SetAntenna(device_handler::getInstance().get_device(device_number),
+                       LMS_CH_TX,
+                       LMS_CH_0,
+                       enable ? pa_path[0] : 0);
+        LMS_SetAntenna(device_handler::getInstance().get_device(device_number),
+                       LMS_CH_TX,
+                       LMS_CH_1,
+                       enable ? pa_path[1] : 0);
+    }
 }
 
 void sink_impl::set_nco(float nco_freq, int channel) {
@@ -312,7 +338,10 @@ uint32_t sink_impl::set_gain(uint32_t gain_dB, int channel) {
         stored.device_number, LMS_CH_TX, channel, gain_dB);
 }
 void sink_impl::calibrate(double bandw, int channel) {
+    // PA path needs to be enabled for calibration
+    this->toggle_pa_path(stored.device_number, true);
     device_handler::getInstance().calibrate(stored.device_number, LMS_CH_TX, channel, bandw);
+    this->toggle_pa_path(stored.device_number, false);
 }
 
 double sink_impl::set_sample_rate(double rate) {

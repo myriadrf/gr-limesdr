@@ -360,9 +360,8 @@ void device_handler::calibrate(int device_number, int direction, int channel, do
 
 void device_handler::set_antenna(int device_number, int channel, int direction, int antenna) {
     std::cout << "INFO: device_handler::set_antenna(): ";
-    if (antenna != 0) // Skip this if antenna is set to Auto
-        LMS_SetAntenna(
-            device_handler::getInstance().get_device(device_number), direction, channel, antenna);
+    LMS_SetAntenna(
+        device_handler::getInstance().get_device(device_number), direction, channel, antenna);
     int antenna_value =
         LMS_GetAntenna(device_handler::getInstance().get_device(device_number), direction, channel);
 

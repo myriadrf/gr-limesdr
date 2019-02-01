@@ -42,6 +42,7 @@ class sink_impl : public sink {
     long burst_length = 0;
     int nitems_send = 0;
     int ret[2] = {0};
+    int pa_path[2] = {0}; // TX PA path NONE
 
     struct constant_data {
         std::string serial;
@@ -76,11 +77,12 @@ class sink_impl : public sink {
     inline gr::io_signature::sptr args_to_io_signature(int channel_number);
 
     void init_stream(int device_number, int channel);
-    void release_stream(int device_number, lms_stream_t *stream);
+    void release_stream(int device_number, lms_stream_t* stream);
 
     double set_center_freq(double freq, size_t chan = 0);
-
+    
     void set_antenna(int antenna, int channel = 0);
+    void toggle_pa_path(int device_number, bool enable);
 
     void set_nco(float nco_freq, int channel = 0);
 

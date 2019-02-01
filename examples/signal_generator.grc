@@ -568,7 +568,7 @@
     </param>
     <param>
       <key>pa_path_ch0</key>
-      <value>0</value>
+      <value>255</value>
     </param>
     <param>
       <key>analog_bandw_ch1</key>
