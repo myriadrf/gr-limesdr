@@ -72,18 +72,12 @@ source_impl::source_impl(std::string serial, int channel_mode, const std::string
 source_impl::~source_impl() {
     // Stop and destroy stream for channel 0 (if channel_mode is SISO)
     if (stored.channel_mode < 2) {
-        LMS_StopStream(&streamId[stored.channel_mode]);
-        LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number),
-                          &streamId[stored.channel_mode]);
+        this->release_stream(stored.device_number, &streamId[stored.channel_mode]);
     }
     // Stop and destroy stream for channels 0 & 1 (if channel_mode is MIMO)
     else if (stored.channel_mode == 2) {
-        LMS_StopStream(&streamId[LMS_CH_0]);
-        LMS_StopStream(&streamId[LMS_CH_1]);
-        LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number),
-                          &streamId[LMS_CH_0]);
-        LMS_DestroyStream(device_handler::getInstance().get_device(stored.device_number),
-                          &streamId[LMS_CH_1]);
+        this->release_stream(stored.device_number, &streamId[LMS_CH_0]);
+        this->release_stream(stored.device_number, &streamId[LMS_CH_1]);
     }
     device_handler::getInstance().close_device(stored.device_number, source_block);
 }
@@ -219,9 +213,11 @@ void source_impl::init_stream(int device_number, int channel) {
               << device_number << ") stream setup done." << std::endl;
 }
 
-void source_impl::release_stream(int device_number, lms_stream_t *stream) {
-    LMS_StopStream(stream);
-    LMS_DestroyStream(device_handler::getInstance().get_device(device_number), stream);
+void source_impl::release_stream(int device_number, lms_stream_t* stream) {
+    if (stream->handle != 0) {
+        LMS_StopStream(stream);
+        LMS_DestroyStream(device_handler::getInstance().get_device(device_number), stream);
+    }
 }
 
 // Print stream status
