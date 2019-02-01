@@ -53,17 +53,17 @@ class LIMESDR_API source : virtual public gr::block {
      * @param   freq Frequency to set in Hz
      *
      * @param   chan Channel (not used)
+     * 
+     * @return  actual center frequency in Hz
      */
     virtual double set_center_freq(double freq, size_t chan = 0) = 0;
 
     /**
      * Set which antenna is used
      *
-     * @param   antenna Antenna to set: None(0), LNAH(1), LNAL(2), LNAW(3) for RX
-     *                                  None(0), BAND1(1), BAND(2), NONE(3) for TX
+     * @param   antenna Antenna to set: None(0), LNAH(1), LNAL(2), LNAW(3), AUTO(255)
      *     
      * @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
-     *
      */
     virtual void set_antenna(int antenna, int channel = 0) = 0;
     /**
@@ -82,6 +82,8 @@ class LIMESDR_API source : virtual public gr::block {
      * @param   analog_bandw  Channel filter bandwidth in Hz.
      * 
      * @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
+     * 
+     * @return actual filter bandwidth in Hz
      */
     virtual double set_bandwidth(double analog_bandw, int channel = 0) = 0;
     /**
@@ -98,15 +100,19 @@ class LIMESDR_API source : virtual public gr::block {
      * @note actual gain depends on LO frequency and analog LPF configuration and
      * resulting output signal level may be different when those values are changed
      *
-     * @param   gain_dB        Desired gain: [0,70] RX, [0,60] TX.
+     * @param   gain_dB        Desired gain: [0,70] RX
      * 
      * @param   channel        Channel selection: A(LMS_CH_0),B(LMS_CH_1).
+     * 
+     * @return actual gain in dB
      */
     virtual uint32_t set_gain(uint32_t gain_dB, int channel = 0) = 0;
     /**
      * Set the same sample rate for both channels.
      *
      * @param   rate  Sample rate in S/s.
+     * 
+     * @return actual sample rate in S/s
      */
     virtual double set_sample_rate(double rate) = 0;
     /**
