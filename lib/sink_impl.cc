@@ -333,7 +333,7 @@ void sink_impl::set_digital_filter(double digital_bandw, int channel) {
         stored.device_number, LMS_CH_TX, channel, digital_bandw);
 }
 
-uint32_t sink_impl::set_gain(uint32_t gain_dB, int channel) {
+unsigned sink_impl::set_gain(unsigned gain_dB, int channel) {
     return device_handler::getInstance().set_gain(
         stored.device_number, LMS_CH_TX, channel, gain_dB);
 }

@@ -254,7 +254,7 @@ class device_handler {
      *
      * @param   gain_dB        Desired gain: [0,70] RX, [0,60] TX.
      */
-    uint32_t set_gain(int device_number, bool direction, int channel, uint32_t gain_dB);
+    unsigned set_gain(int device_number, bool direction, int channel, unsigned gain_dB);
 
     /**
      * Set NCO (numerically controlled oscillator).

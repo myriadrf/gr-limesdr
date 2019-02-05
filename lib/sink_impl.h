@@ -90,7 +90,7 @@ class sink_impl : public sink {
 
     void set_digital_filter(double digital_bandw, int channel = 0);
 
-    uint32_t set_gain(uint32_t gain_dB, int channel = 0);
+    unsigned set_gain(unsigned gain_dB, int channel = 0);
 
     double set_sample_rate(double rate);
 

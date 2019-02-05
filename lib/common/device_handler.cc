@@ -437,8 +437,8 @@ double device_handler::set_digital_filter(int device_number,
     }
 }
 
-uint32_t
-device_handler::set_gain(int device_number, bool direction, int channel, uint32_t gain_dB) {
+unsigned
+device_handler::set_gain(int device_number, bool direction, int channel, unsigned gain_dB) {
     if ((direction == LMS_CH_RX && gain_dB >= 0 && gain_dB <= 70) ||
         (direction == LMS_CH_TX && gain_dB >= 0 && gain_dB <= 60)) {
         std::cout << "INFO: device_handler::set_gain(): ";

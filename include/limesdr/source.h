@@ -106,7 +106,7 @@ class LIMESDR_API source : virtual public gr::block {
      * 
      * @return actual gain in dB
      */
-    virtual uint32_t set_gain(uint32_t gain_dB, int channel = 0) = 0;
+    virtual unsigned set_gain(unsigned gain_dB, int channel = 0) = 0;
     /**
      * Set the same sample rate for both channels.
      *
