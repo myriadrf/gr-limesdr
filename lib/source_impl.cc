@@ -288,7 +288,7 @@ void source_impl::set_digital_filter(double digital_bandw, int channel) {
     add_tag = true;
 }
 
-uint32_t source_impl::set_gain(uint32_t gain_dB, int channel) {
+unsigned source_impl::set_gain(unsigned gain_dB, int channel) {
     return device_handler::getInstance().set_gain(
         stored.device_number, LMS_CH_RX, channel, gain_dB);
 }
