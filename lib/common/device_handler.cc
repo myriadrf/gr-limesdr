@@ -297,7 +297,7 @@ void device_handler::set_oversampling(int device_number, int oversample) {
             device_handler::getInstance().error(device_number);
 
         if (LMS_SetSampleRate(device_handler::getInstance().get_device(device_number),
-                              rf_value,
+                              host_value,
                               oversample) != LMS_SUCCESS)
             device_handler::getInstance().error(device_number);
 
