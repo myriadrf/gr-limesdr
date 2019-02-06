@@ -200,7 +200,7 @@ self.$(id).set_nco($nco_freq_ch1,1)
     <param>
       <name>CH_A:Calibration bandw.</name>
       <key>calibr_bandw_ch0</key>
-      <value>0</value>
+      <value>5e6</value>
       <type>float</type>
       <hide>
       #if $filename() != ""
@@ -246,7 +246,7 @@ self.$(id).set_nco($nco_freq_ch1,1)
     <param>
         <name>CH_A:Analog filter bandw.</name>
         <key>analog_bandw_ch0</key>
-        <value>0</value>
+        <value>5e6</value>
         <type>float</type>
         <hide>
 	  #if $filename() != ""
@@ -315,7 +315,7 @@ self.$(id).set_nco($nco_freq_ch1,1)
     <param>
         <name>CH_B:Calibration bandw.</name>
         <key>calibr_bandw_ch1</key>
-        <value>0</value>
+        <value>5e6</value>
         <type>float</type>
         <hide>
 	  #if $channel_mode() == 0
@@ -357,7 +357,7 @@ self.$(id).set_nco($nco_freq_ch1,1)
     <param>
         <name>CH_B:Analog filter bandw.</name>
         <key>analog_bandw_ch1</key>
-        <value>0</value>
+        <value>5e6</value>
         <type>float</type>
         <hide>
 	  #if $channel_mode() == 0
