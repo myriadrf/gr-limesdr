@@ -302,6 +302,7 @@ void sink_impl::set_antenna(int antenna, int channel) {
 }
 
 void sink_impl::toggle_pa_path(int device_number, bool enable) {
+    LMS_RegisterLogHandler([](int, const char*) {});
     if (stored.channel_mode < 2) {
         LMS_SetAntenna(device_handler::getInstance().get_device(device_number),
                        LMS_CH_TX,
@@ -317,6 +318,7 @@ void sink_impl::toggle_pa_path(int device_number, bool enable) {
                        LMS_CH_1,
                        enable ? pa_path[1] : 0);
     }
+    LMS_RegisterLogHandler(nullptr);
 }
 
 void sink_impl::set_nco(float nco_freq, int channel) {
