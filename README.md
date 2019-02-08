@@ -31,7 +31,7 @@ sudo ldconfig
 
 * Windows
 
-If you have "GNU Radio", download zip file from [MyriadRF Wiki](https://downloads.myriadrf.org/project/limesuite/19.01/GNU_Radio_windows_19.01.zip) and extract it to:
+If you have "GNU Radio", download zip file from [MyriadRF Wiki](http://downloads.myriadrf.org/project/limesuite/19.01/GNU_Radio_windows_19.01.zip) and extract it to:
 <pre>
 C:\Program Files\GNURadio-3.7
 </pre>
