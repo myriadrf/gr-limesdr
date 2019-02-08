@@ -31,17 +31,9 @@ sudo ldconfig
 
 * Windows
 
-If you have "GNU Radio", merge windows\GNU_Radio folders with folders located in
-
+If you have "GNU Radio", download zip file from [MyriadRF Wiki](https://downloads.myriadrf.org/project/limesuite/19.01/GNU_Radio_windows_19.01.zip) and extract it to:
 <pre>
 C:\Program Files\GNURadio-3.7
-</pre>
-
-If you have "Pothos SDR dev environment", merge windows\Pothos_SDR folders with
-folders located in
-
-<pre>
-C:\Program Files\PothosSDR
 </pre>
 
 ## Known issues
