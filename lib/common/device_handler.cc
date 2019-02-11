@@ -218,26 +218,33 @@ void device_handler::check_blocks(int device_number,
     }
 }
 
-void device_handler::settings_from_file(int device_number, const std::string& filename) {
+void device_handler::settings_from_file(int device_number, const std::string& filename, int* pAntenna_tx) {
     if (LMS_LoadConfig(device_handler::getInstance().get_device(device_number), filename.c_str()))
         device_handler::getInstance().error(device_number);
 
     // Set LimeSDR-Mini switches based on .ini file
-    int antenna_ch0_tx;
-    int antenna_ch0_rx;
-    antenna_ch0_tx = LMS_GetAntenna(
+    int antenna_rx;
+    int antenna_tx[2];
+    antenna_tx[0] = LMS_GetAntenna(
         device_handler::getInstance().get_device(device_number), LMS_CH_TX, LMS_CH_0);
-    antenna_ch0_rx = LMS_GetAntenna(
+    antenna_tx[1] = LMS_GetAntenna(
+        device_handler::getInstance().get_device(device_number), LMS_CH_TX, LMS_CH_1);
+    antenna_rx = LMS_GetAntenna(
         device_handler::getInstance().get_device(device_number), LMS_CH_RX, LMS_CH_0);
 
+    if(pAntenna_tx != nullptr){
+        pAntenna_tx[0] = antenna_tx[0];
+        pAntenna_tx[1] = antenna_tx[1];
+    }
+    
     LMS_SetAntenna(device_handler::getInstance().get_device(device_number),
                    LMS_CH_TX,
                    LMS_CH_0,
-                   antenna_ch0_tx);
+                   antenna_tx[0]);
     LMS_SetAntenna(device_handler::getInstance().get_device(device_number),
                    LMS_CH_RX,
                    LMS_CH_0,
-                   antenna_ch0_rx);
+                   antenna_rx);
 }
 
 void device_handler::enable_channels(int device_number, int channel_mode, bool direction) {

@@ -55,7 +55,7 @@ source_impl::source_impl(std::string serial, int channel_mode, const std::string
     stored.device_number = device_handler::getInstance().open_device(stored.serial);
     // 3. Check where to load settings from (file or block)
     if (!filename.empty()) {
-        device_handler::getInstance().settings_from_file(stored.device_number, filename);
+        device_handler::getInstance().settings_from_file(stored.device_number, filename, nullptr);
         device_handler::getInstance().check_blocks(
             stored.device_number, source_block, stored.channel_mode, filename);
     } else {

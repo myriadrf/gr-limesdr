@@ -136,8 +136,10 @@ class device_handler {
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
      * @param   filename Path to file if file switch is turned on.
+     * 
+     * @param   antenna_tx Pointer to TX antenna, so PA path would be updated in sink block
      */
-    void settings_from_file(int device_number, const std::string& filename);
+    void settings_from_file(int device_number, const std::string& filename, int* antenna_tx);
 
     /**
      * Set used channels
