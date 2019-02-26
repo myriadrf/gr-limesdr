@@ -1,4 +1,4 @@
-# gr-limesdr 1.0.0-RC
+# gr-limesdr 2.0.0
 
 Package includes GNU Radio blocks for LimeSDR-USB/LimeSDR-Mini
 boards. Various settings are hidden or shown, depending on the
