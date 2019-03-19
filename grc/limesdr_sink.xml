@@ -469,15 +469,17 @@ Note: setting must match in LimeSuite Source and Sink for the same device.
 RF FREQUENCY
 
 Set RF center frequency for TX (both channels).
-LimeSDR-USB supports	[100e3,3800e6] Hz.
-LimeSDR-Mini supports	[10e6,3500e6] Hz.
-LimeNET-Micro supports	[10e6,3500e6] Hz.
+LimeSDR-USB supports	  [100e3,3800e6] Hz.
+LimeSDR-PCIe supports	  [100e3,3800e6] Hz.
+LimeSDR-Mini supports	  [10e6,3500e6] Hz.
+LimeNET-Micro supports  [10e6,3500e6] Hz.
 -------------------------------------------------------------------------------------------------------------------
 SAMPLE RATE
 
 Here you can enter sample rate for TX.
 
 LimeSDR-USB sample rate must be no more than 61.44e6 S/s.
+LimeSDR-PCIe sample rate must be no more than 61.44e6 S/s.
 LimeSDR-Mini sample rate must be no more than 30.72e6 S/s.
 LimeNET-Micro sample rate must be no more than 10e6 S/s.
 
@@ -508,7 +510,7 @@ PA PATH
 
 Select active power amplifier path of each channel. 
 For LimeSDR-Mini and LimeNET-Micro Auto(Default) option sets preferred PA path depending on RF frequency.
-For LimeSDR-USB Auto(Default) sets PA path to Band1.
+For LimeSDR-USB and LimeSDR-PCIe Auto(Default) sets PA path to Band1.
 -------------------------------------------------------------------------------------------------------------------
 ANALOG FILTER BANDW.
 
