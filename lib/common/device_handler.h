@@ -274,6 +274,16 @@ class device_handler {
     void set_nco(int device_number, bool direction, int channel, float nco_freq);
 
     void disable_DC_corrections(int device_number);
+
+    /**
+     * Set TCXO DAC.
+     *
+     * @param   device_number  Device number from the list of LMS_GetDeviceList.
+     *
+     * @param   dacVal		   DAC value
+     */
+    void set_tcxo_dac(int device_number, int dacVal);
+
 };
 
 

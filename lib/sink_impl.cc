@@ -357,5 +357,11 @@ void sink_impl::set_buffer_size(uint32_t size) { stored.FIFO_size = size; }
 void sink_impl::set_oversampling(int oversample) {
     device_handler::getInstance().set_oversampling(stored.device_number, oversample);
 }
+
+void sink_impl::set_tcxo_dac(int dacVal) {
+    device_handler::getInstance().set_tcxo_dac(stored.device_number, dacVal);
+    //return dacVal;
+}
+
 } // namespace limesdr
 } // namespace gr

@@ -444,8 +444,7 @@ double device_handler::set_digital_filter(int device_number,
     }
 }
 
-unsigned
-device_handler::set_gain(int device_number, bool direction, int channel, unsigned gain_dB) {
+unsigned device_handler::set_gain(int device_number, bool direction, int channel, unsigned gain_dB) {
     if ((direction == LMS_CH_RX && gain_dB >= 0 && gain_dB <= 70) ||
         (direction == LMS_CH_TX && gain_dB >= 0 && gain_dB <= 60)) {
         std::cout << "INFO: device_handler::set_gain(): ";
@@ -515,4 +514,21 @@ void device_handler::set_nco(int device_number, bool direction, int channel, flo
 void device_handler::disable_DC_corrections(int device_number) {
     LMS_WriteParam(device_handler::getInstance().get_device(device_number), LMS7_DC_BYP_RXTSP, 1);
     LMS_WriteParam(device_handler::getInstance().get_device(device_number), LMS7_DCLOOP_STOP, 1);
+}
+
+void device_handler::set_tcxo_dac(int device_number, int dacVal) {
+    if ( dacVal >= 0 && dacVal <= 255) {
+        std::cout << "INFO: device_handler::set_tcxo_dac(): ";
+        LMS_VCTCXOWrite(
+            device_handler::getInstance().get_device(device_number), dacVal);
+
+        uint16_t dac_value;
+        LMS_VCTCXORead(device_handler::getInstance().get_device(device_number), &dac_value);
+        std::cout << "set tcxo: " << dac_value << std::endl;
+        //return gain_value;
+    } else {
+        std::cout << "ERROR: device_handler::set_tcxo_dac(): valid range [0, 255]"
+                  << std::endl;
+        close_all_devices();
+    }
 }

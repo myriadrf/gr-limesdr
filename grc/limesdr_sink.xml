@@ -48,6 +48,7 @@ self.$(id).set_nco($nco_freq_ch0,0)
 #if $nco_freq_ch1() != 0 and $channel_mode() > 0
 self.$(id).set_nco($nco_freq_ch1,1)
 #end if
+self.$(id).set_tcxo_dac($dacVal,0)
 #end if    
     </make>
 
@@ -62,6 +63,7 @@ self.$(id).set_nco($nco_freq_ch1,1)
     <callback>set_digital_filter($digital_bandw_ch1,1)</callback>
     <callback>set_gain($gain_dB_ch0,0)</callback>
     <callback>set_gain($gain_dB_ch1,1)</callback>
+    <callback>set_tcxo_dac($dacVal,0)</callback>
     
     <param_tab_order>
       <tab>General</tab>
@@ -172,6 +174,14 @@ self.$(id).set_nco($nco_freq_ch1,1)
             <key>32</key>
         </option>
     </param>
+    
+	<param>
+		<name>TCXO:DAC value</name>
+		<key>dacVal</key>
+		<value>127</value>
+		<type>int</type>
+	</param>
+	
     <param>
         <name>Length tag name</name>
         <key>length_tag_name</key>
@@ -437,6 +447,9 @@ self.$(id).set_nco($nco_freq_ch1,1)
   
     <check> $samp_rate > 0 </check>
     <check> 61.44e6 >= $samp_rate </check>
+
+    <!--<check> $txco_dac >= 0 </check>
+    <check> 255 > $tcxo_dac </check>-->
   
     <sink>
         <name>in</name>
@@ -525,6 +538,11 @@ Bandwidth should not be higher than sample rate.
 GAIN
 
 Controls combined TX gain settings. Gain range must be [0,60] dB.
+-------------------------------------------------------------------------------------------------------------------
+TCXO DAC
+
+Controls 40 MHz TCXO DAC settings to compensate TVXO drift.
+DAC value range must be [0,255]. Default 127 (middle of range).
 -------------------------------------------------------------------------------------------------------------------
 </doc>
 </block>

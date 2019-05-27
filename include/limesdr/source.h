@@ -135,6 +135,12 @@ class LIMESDR_API source : virtual public gr::block {
      * @param   size FIFO buffer size in samples
      */
     virtual void set_buffer_size(uint32_t size) = 0;
+    /**
+     * Set TCXO DAC value (0-255)
+     * 
+     * @param dacVal value (0-255)
+     */
+     virtual void set_tcxo_dac(int dacVal = 127 ) = 0;
 };
 } // namespace limesdr
 } // namespace gr
