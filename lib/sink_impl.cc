@@ -358,9 +358,8 @@ void sink_impl::set_oversampling(int oversample) {
     device_handler::getInstance().set_oversampling(stored.device_number, oversample);
 }
 
-void sink_impl::set_tcxo_dac(int dacVal) {
+void sink_impl::set_tcxo_dac(uint16_t dacVal) {
     device_handler::getInstance().set_tcxo_dac(stored.device_number, dacVal);
-    //return dacVal;
 }
 
 } // namespace limesdr

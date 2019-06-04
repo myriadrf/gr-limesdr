@@ -92,7 +92,7 @@ class source_impl : public source {
 
     void calibrate(double bandw, int channel = 0);
     
-    void set_tcxo_dac(int dacVal = 127);
+    void set_tcxo_dac(uint16_t dacVal = 125);
 };
 } // namespace limesdr
 } // namespace gr

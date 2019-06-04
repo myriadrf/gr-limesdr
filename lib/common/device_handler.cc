@@ -516,18 +516,19 @@ void device_handler::disable_DC_corrections(int device_number) {
     LMS_WriteParam(device_handler::getInstance().get_device(device_number), LMS7_DCLOOP_STOP, 1);
 }
 
-void device_handler::set_tcxo_dac(int device_number, int dacVal) {
-    if ( dacVal >= 0 && dacVal <= 255) {
+void device_handler::set_tcxo_dac(int device_number, uint16_t dacVal) {
+    if ( dacVal >= 0 && dacVal <= 65535) {
         std::cout << "INFO: device_handler::set_tcxo_dac(): ";
-        LMS_VCTCXOWrite(
-            device_handler::getInstance().get_device(device_number), dacVal);
+        float_type dac_value = dacVal;
 
-        uint16_t dac_value;
-        LMS_VCTCXORead(device_handler::getInstance().get_device(device_number), &dac_value);
-        std::cout << "set tcxo: " << dac_value << std::endl;
-        //return gain_value;
+        LMS_WriteCustomBoardParam(device_handler::getInstance().get_device(device_number), BOARD_PARAM_DAC, dacVal, NULL);
+
+        LMS_ReadCustomBoardParam(device_handler::getInstance().get_device(device_number),
+                                 BOARD_PARAM_DAC, &dac_value, NULL);
+
+        std::cout << "VCTCXO DAC value set to: " << dac_value << std::endl;
     } else {
-        std::cout << "ERROR: device_handler::set_tcxo_dac(): valid range [0, 255]"
+        std::cout << "ERROR: device_handler::set_tcxo_dac(): valid range [0, 65535]"
                   << std::endl;
         close_all_devices();
     }

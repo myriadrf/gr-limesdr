@@ -48,7 +48,9 @@ self.$(id).set_nco($nco_freq_ch0,0)
 #if $nco_freq_ch1() != 0 and $channel_mode() > 0
 self.$(id).set_nco($nco_freq_ch1,1)
 #end if
-self.$(id).set_tcxo_dac($dacVal,0)
+#if $allow_tcxo_dac() == 1
+self.$(id).set_tcxo_dac($dacVal)
+#end if
 #end if    
     </make>
 
@@ -63,7 +65,7 @@ self.$(id).set_tcxo_dac($dacVal,0)
     <callback>set_digital_filter($digital_bandw_ch1,1)</callback>
     <callback>set_gain($gain_dB_ch0,0)</callback>
     <callback>set_gain($gain_dB_ch1,1)</callback>
-    <callback>set_tcxo_dac($dacVal,0)</callback>
+    <callback>set_tcxo_dac($dacVal)</callback>
     
     <param_tab_order>
       <tab>General</tab>
@@ -178,8 +180,15 @@ self.$(id).set_tcxo_dac($dacVal,0)
 	<param>
 		<name>TCXO:DAC value</name>
 		<key>dacVal</key>
-		<value>127</value>
+		<value>125</value>
 		<type>int</type>
+    <hide>
+	  #if $allow_tcxo_dac() == 0
+	    all
+	  #else
+	    none
+	  #end if
+    </hide>
 	</param>
 	
     <param>
@@ -414,6 +423,23 @@ self.$(id).set_tcxo_dac($dacVal,0)
 	</hide>
 	<tab>CH_B</tab>
     </param>
+
+    <param>
+        <name>Allow TCXO DAC control</name>
+        <key>allow_tcxo_dac</key>
+        <value>0</value>
+        <type>int</type>
+        <hide>part</hide>
+        <option>
+            <name>Yes</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>No</name>
+            <key>0</key>
+        </option>
+        <tab>Advanced</tab>
+    </param>
   
     <!--<check> $device_type >= $channel_mode-1 </check>-->
     <check> $channel_mode >= 0 </check>
@@ -541,8 +567,14 @@ Controls combined TX gain settings. Gain range must be [0,60] dB.
 -------------------------------------------------------------------------------------------------------------------
 TCXO DAC
 
-Controls 40 MHz TCXO DAC settings to compensate TVXO drift.
-DAC value range must be [0,255]. Default 127 (middle of range).
+Controls 40 MHz TCXO DAC settings.  To enable this parameter "Allow TCXO DAC control" in the "Advanced" tab must be set to "Yes"
+Care must be taken as this parameter is returned to default value only after power off.
+
+LimeSDR-Mini default value is 180 range is [0,255]
+LimeSDR-USB default value is 125 range is [0,255]
+LimeSDR-PCIe default value is 134 range is [0,255]
+LimeNET-Micro default value is 30714 range is [0,65535]
+
 -------------------------------------------------------------------------------------------------------------------
 </doc>
 </block>
