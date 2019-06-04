@@ -135,6 +135,17 @@ class LIMESDR_API source : virtual public gr::block {
      * @param   size FIFO buffer size in samples
      */
     virtual void set_buffer_size(uint32_t size) = 0;
+    /**
+     * Set TCXO DAC.
+     * @note Care must be taken as this parameter is returned to default value only after power off.
+     * @note LimeSDR-Mini default value is 180 range is [0,255]
+     * LimeSDR-USB default value is 125 range is [0,255]
+     * LimeSDR-PCIe default value is 134 range is [0,255]
+     * LimeNET-Micro default value is 30714 range is [0,65535]
+     *
+     * @param   dacVal		   DAC value (0-65535)
+     */
+     virtual void set_tcxo_dac(uint16_t dacVal = 125 ) = 0;
 };
 } // namespace limesdr
 } // namespace gr

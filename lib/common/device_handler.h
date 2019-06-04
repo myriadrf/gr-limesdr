@@ -274,6 +274,21 @@ class device_handler {
     void set_nco(int device_number, bool direction, int channel, float nco_freq);
 
     void disable_DC_corrections(int device_number);
+
+    /**
+     * Set TCXO DAC.
+     * @note Care must be taken as this parameter is returned to default value only after power off.
+     * @note LimeSDR-Mini default value is 180 range is [0,255]
+     * LimeSDR-USB default value is 125 range is [0,255]
+     * LimeSDR-PCIe default value is 134 range is [0,255]
+     * LimeNET-Micro default value is 30714 range is [0,65535]
+     * 
+     * @param   device_number  Device number from the list of LMS_GetDeviceList.
+     *
+     * @param   dacVal		   DAC value (0-65535)
+     */
+    void set_tcxo_dac(int device_number, uint16_t dacVal);
+
 };
 
 

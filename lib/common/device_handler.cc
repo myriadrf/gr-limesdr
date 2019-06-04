@@ -444,8 +444,7 @@ double device_handler::set_digital_filter(int device_number,
     }
 }
 
-unsigned
-device_handler::set_gain(int device_number, bool direction, int channel, unsigned gain_dB) {
+unsigned device_handler::set_gain(int device_number, bool direction, int channel, unsigned gain_dB) {
     if ((direction == LMS_CH_RX && gain_dB >= 0 && gain_dB <= 70) ||
         (direction == LMS_CH_TX && gain_dB >= 0 && gain_dB <= 60)) {
         std::cout << "INFO: device_handler::set_gain(): ";
@@ -515,4 +514,22 @@ void device_handler::set_nco(int device_number, bool direction, int channel, flo
 void device_handler::disable_DC_corrections(int device_number) {
     LMS_WriteParam(device_handler::getInstance().get_device(device_number), LMS7_DC_BYP_RXTSP, 1);
     LMS_WriteParam(device_handler::getInstance().get_device(device_number), LMS7_DCLOOP_STOP, 1);
+}
+
+void device_handler::set_tcxo_dac(int device_number, uint16_t dacVal) {
+    if ( dacVal >= 0 && dacVal <= 65535) {
+        std::cout << "INFO: device_handler::set_tcxo_dac(): ";
+        float_type dac_value = dacVal;
+
+        LMS_WriteCustomBoardParam(device_handler::getInstance().get_device(device_number), BOARD_PARAM_DAC, dacVal, NULL);
+
+        LMS_ReadCustomBoardParam(device_handler::getInstance().get_device(device_number),
+                                 BOARD_PARAM_DAC, &dac_value, NULL);
+
+        std::cout << "VCTCXO DAC value set to: " << dac_value << std::endl;
+    } else {
+        std::cout << "ERROR: device_handler::set_tcxo_dac(): valid range [0, 65535]"
+                  << std::endl;
+        close_all_devices();
+    }
 }
