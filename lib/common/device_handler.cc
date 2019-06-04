@@ -40,18 +40,20 @@ int device_handler::open_device(std::string& serial) {
     std::cout << "##################" << std::endl;
     std::cout << "Connecting to device" << std::endl;
 
-    // Read device list once
+    // Print device and library information only once
     if (list_read == false) {
+        std::cout << "##################" << std::endl;
+        std::cout << "LimeSuite version: " << LMS_GetLibraryVersion() << std::endl;
+        std::cout << "gr-limesdr version: " << GR_LIMESDR_VER << std::endl;
+        std::cout << "##################" << std::endl;
+
         device_count = LMS_GetDeviceList(list);
-        std::cout << "##################" << std::endl;
-        std::cout << "Devices found: " << device_count << std::endl;
-        std::cout << "##################" << std::endl;
         if (device_count < 1)
             exit(0);
         std::cout << "Device list:" << std::endl;
 
         for (int i = 0; i < device_count; i++) {
-            std::cout << "Nr.:|" << i << "|device:|" << list[i] << std::endl;
+            std::cout << "Nr.:" << i << " device:" << list[i] << std::endl;
             device_vector.push_back(device());
         }
         std::cout << "##################" << std::endl;
@@ -62,7 +64,7 @@ int device_handler::open_device(std::string& serial) {
         std::cout << "INFO: device_handler::open_device(): no serial number. Using first device in "
                      "the list. Use \"LimeUtil --find\" in terminal to find prefered device serial."
                   << std::endl;
-        std::cout << "##################" << std::endl;
+        //std::cout << "##################" << std::endl;
     }
 
     // Identify device by serial number
@@ -91,11 +93,14 @@ int device_handler::open_device(std::string& serial) {
 
     // If device slot is empty, open and initialize device
     if (device_vector[device_number].address == NULL) {
-        std::cout << "Device number " << device_number << " from the list is used." << std::endl;
+        // std::cout << "Device number " << device_number << " from the list is used." << std::endl;
         if (LMS_Open(&device_vector[device_number].address, list[device_number], NULL) !=
             LMS_SUCCESS)
             exit(0);
         LMS_Init(device_vector[device_number].address);
+        const lms_dev_info_t* info = LMS_GetDeviceInfo(device_vector[device_number].address);
+        std::cout << "Using device: " << info->deviceName << " GW: " << info->gatewareVersion
+                  << " FW: " << info->firmwareVersion << std::endl;
         ++open_devices; // Count open devices
         std::cout << "##################" << std::endl;
         std::cout << std::endl;
@@ -107,6 +112,7 @@ int device_handler::open_device(std::string& serial) {
         std::cout << "##################" << std::endl;
         std::cout << std::endl;
     }
+
 
     return device_number; // return device number to identify device_vector[device_number].address
                           // connection in other functions
