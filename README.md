@@ -15,8 +15,17 @@ Package includes GNU Radio blocks for various LimeSDR boards.
 
 ## Installation process
 
-* Linux
+#### Linux
 
+* Installing via PPA
+<pre>
+sudo add-apt-repository -y ppa:myriadrf/drivers
+sudo add-apt-repository -y ppa:myriadrf/gnuradio
+sudo apt update
+sudo apt install gr-limesdr
+</pre>
+
+* Building from source
 <pre>
 cd gr-limesdr
 mkdir build
@@ -27,9 +36,9 @@ sudo make install
 sudo ldconfig
 </pre>
 
-* Windows
+#### Windows
 
-If you have "GNU Radio", download zip file from [MyriadRF Wiki](http://downloads.myriadrf.org/project/limesuite/19.01/GNU_Radio_windows_19.01.zip) and extract it to:
+Install GNU Radio then download zip file from [MyriadRF Wiki](http://downloads.myriadrf.org/project/limesuite/19.01/GNU_Radio_windows_19.01.zip) and extract it to:
 <pre>
 C:\Program Files\GNURadio-3.7
 </pre>
