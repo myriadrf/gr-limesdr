@@ -37,7 +37,7 @@
 #define LimeNET_Micro 2
 #define LimeSDR_USB 3
 
-#define GR_LIMESDR_VER "2.1.2"
+#define GR_LIMESDR_VER "2.1.3"
 
 class device_handler {
     private:

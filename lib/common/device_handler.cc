@@ -48,8 +48,11 @@ int device_handler::open_device(std::string& serial) {
         std::cout << "##################" << std::endl;
 
         device_count = LMS_GetDeviceList(list);
-        if (device_count < 1)
+        if (device_count < 1) {
+            std::cout << "ERROR: device_handler::open_device(): No Lime devices found."
+                      << std::endl;
             exit(0);
+        }
         std::cout << "Device list:" << std::endl;
 
         for (int i = 0; i < device_count; i++) {
@@ -64,7 +67,6 @@ int device_handler::open_device(std::string& serial) {
         std::cout << "INFO: device_handler::open_device(): no serial number. Using first device in "
                      "the list. Use \"LimeUtil --find\" in terminal to find prefered device serial."
                   << std::endl;
-        //std::cout << "##################" << std::endl;
     }
 
     // Identify device by serial number
@@ -93,14 +95,14 @@ int device_handler::open_device(std::string& serial) {
 
     // If device slot is empty, open and initialize device
     if (device_vector[device_number].address == NULL) {
-        // std::cout << "Device number " << device_number << " from the list is used." << std::endl;
         if (LMS_Open(&device_vector[device_number].address, list[device_number], NULL) !=
             LMS_SUCCESS)
             exit(0);
         LMS_Init(device_vector[device_number].address);
         const lms_dev_info_t* info = LMS_GetDeviceInfo(device_vector[device_number].address);
-        std::cout << "Using device: " << info->deviceName << " GW: " << info->gatewareVersion
-                  << " FW: " << info->firmwareVersion << std::endl;
+        std::cout << "Using device: " << info->deviceName << "(" << serial
+                  << ") GW: " << info->gatewareVersion << " FW: " << info->firmwareVersion
+                  << std::endl;
         ++open_devices; // Count open devices
         std::cout << "##################" << std::endl;
         std::cout << std::endl;
@@ -224,7 +226,9 @@ void device_handler::check_blocks(int device_number,
     }
 }
 
-void device_handler::settings_from_file(int device_number, const std::string& filename, int* pAntenna_tx) {
+void device_handler::settings_from_file(int device_number,
+                                        const std::string& filename,
+                                        int* pAntenna_tx) {
     if (LMS_LoadConfig(device_handler::getInstance().get_device(device_number), filename.c_str()))
         device_handler::getInstance().error(device_number);
 
@@ -238,19 +242,17 @@ void device_handler::settings_from_file(int device_number, const std::string& fi
     antenna_rx = LMS_GetAntenna(
         device_handler::getInstance().get_device(device_number), LMS_CH_RX, LMS_CH_0);
 
-    if(pAntenna_tx != nullptr){
+    if (pAntenna_tx != nullptr) {
         pAntenna_tx[0] = antenna_tx[0];
         pAntenna_tx[1] = antenna_tx[1];
     }
-    
+
     LMS_SetAntenna(device_handler::getInstance().get_device(device_number),
                    LMS_CH_TX,
                    LMS_CH_0,
                    antenna_tx[0]);
-    LMS_SetAntenna(device_handler::getInstance().get_device(device_number),
-                   LMS_CH_RX,
-                   LMS_CH_0,
-                   antenna_rx);
+    LMS_SetAntenna(
+        device_handler::getInstance().get_device(device_number), LMS_CH_RX, LMS_CH_0, antenna_rx);
 }
 
 void device_handler::enable_channels(int device_number, int channel_mode, bool direction) {
@@ -450,7 +452,8 @@ double device_handler::set_digital_filter(int device_number,
     }
 }
 
-unsigned device_handler::set_gain(int device_number, bool direction, int channel, unsigned gain_dB) {
+unsigned
+device_handler::set_gain(int device_number, bool direction, int channel, unsigned gain_dB) {
     if ((direction == LMS_CH_RX && gain_dB >= 0 && gain_dB <= 70) ||
         (direction == LMS_CH_TX && gain_dB >= 0 && gain_dB <= 60)) {
         std::cout << "INFO: device_handler::set_gain(): ";
@@ -523,19 +526,21 @@ void device_handler::disable_DC_corrections(int device_number) {
 }
 
 void device_handler::set_tcxo_dac(int device_number, uint16_t dacVal) {
-    if ( dacVal >= 0 && dacVal <= 65535) {
+    if (dacVal >= 0 && dacVal <= 65535) {
         std::cout << "INFO: device_handler::set_tcxo_dac(): ";
         float_type dac_value = dacVal;
 
-        LMS_WriteCustomBoardParam(device_handler::getInstance().get_device(device_number), BOARD_PARAM_DAC, dacVal, NULL);
+        LMS_WriteCustomBoardParam(
+            device_handler::getInstance().get_device(device_number), BOARD_PARAM_DAC, dacVal, NULL);
 
         LMS_ReadCustomBoardParam(device_handler::getInstance().get_device(device_number),
-                                 BOARD_PARAM_DAC, &dac_value, NULL);
+                                 BOARD_PARAM_DAC,
+                                 &dac_value,
+                                 NULL);
 
         std::cout << "VCTCXO DAC value set to: " << dac_value << std::endl;
     } else {
-        std::cout << "ERROR: device_handler::set_tcxo_dac(): valid range [0, 65535]"
-                  << std::endl;
+        std::cout << "ERROR: device_handler::set_tcxo_dac(): valid range [0, 65535]" << std::endl;
         close_all_devices();
     }
 }

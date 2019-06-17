@@ -1,4 +1,4 @@
-# gr-limesdr 2.1.2
+# gr-limesdr 2.1.3
 
 Package includes GNU Radio blocks for various LimeSDR boards.
 
