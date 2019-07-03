@@ -65,7 +65,9 @@ int device_handler::open_device(std::string& serial) {
 
     if (serial.empty()) {
         std::cout << "INFO: device_handler::open_device(): no serial number. Using first device in "
-                     "the list. Use \"LimeUtil --find\" in terminal to find prefered device serial."
+                     "the list."
+                  << std::endl
+                  << "Use \"LimeUtil --find\" in terminal to find prefered device serial."
                   << std::endl;
     }
 
@@ -233,12 +235,15 @@ void device_handler::settings_from_file(int device_number,
         device_handler::getInstance().error(device_number);
 
     // Set LimeSDR-Mini switches based on .ini file
-    int antenna_rx;
-    int antenna_tx[2];
+    int antenna_rx = LMS_PATH_NONE;
+    int antenna_tx[2] = {LMS_PATH_NONE};
     antenna_tx[0] = LMS_GetAntenna(
         device_handler::getInstance().get_device(device_number), LMS_CH_TX, LMS_CH_0);
+    /* Don't print error message for the mini board */
+    LMS_RegisterLogHandler([](int, const char*) {});
     antenna_tx[1] = LMS_GetAntenna(
         device_handler::getInstance().get_device(device_number), LMS_CH_TX, LMS_CH_1);
+    LMS_RegisterLogHandler(nullptr);
     antenna_rx = LMS_GetAntenna(
         device_handler::getInstance().get_device(device_number), LMS_CH_RX, LMS_CH_0);
 
