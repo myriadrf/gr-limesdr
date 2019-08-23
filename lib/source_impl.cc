@@ -65,6 +65,20 @@ namespace gr {
       return noutput_items;
     }
 
+    // Return io_signature to manage module output count
+    // based on SISO (one output) and MIMO (two outputs) modes
+    inline gr::io_signature::sptr source_impl::args_to_io_signature(int channel_number) {
+      if (channel_number < 2) {
+        return gr::io_signature::make(1, 1, sizeof(gr_complex));
+      } else if (channel_number == 2) {
+        return gr::io_signature::make(2, 2, sizeof(gr_complex));
+      } else {
+        std::cout << "ERROR: source_impl::args_to_io_signature(): channel_number must be 0,1 or 2."
+          << std::endl;
+        exit(0);
+      }
+    }
+
   } /* namespace limesdr */
 } /* namespace gr */
 

@@ -41,6 +41,9 @@ namespace gr {
               gr_vector_const_void_star &input_items,
               gr_vector_void_star &output_items
       );
+
+      inline gr::io_signature::sptr args_to_io_signature(int channel_mode);
+
     };
 
   } // namespace limesdr
