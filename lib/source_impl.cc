@@ -42,7 +42,7 @@ namespace gr {
     source_impl::source_impl(std::string serial, int channel_mode, const std::string& filename)
       : gr::sync_block("source",
               gr::io_signature::make(0, 0, 0),
-              gr::io_signature::make(<+MIN_OUT+>, <+MAX_OUT+>, sizeof(<+OTYPE+>)))
+              gr::io_signature::make(1, 1, sizeof(gr_complex)))
     {}
 
     /*
@@ -57,7 +57,7 @@ namespace gr {
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)
     {
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+      gr_complex *out = (gr_complex *) output_items[0];
 
       // Do <+signal processing+>
 
