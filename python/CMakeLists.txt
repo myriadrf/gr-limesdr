@@ -42,3 +42,4 @@ include(GrTest)
 
 set(GR_TEST_TARGET_DEPS gnuradio-limesdr)
 set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
+GR_ADD_TEST(qa_source ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_source.py)

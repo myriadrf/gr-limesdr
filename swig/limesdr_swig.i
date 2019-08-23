@@ -8,5 +8,8 @@
 %include "limesdr_swig_doc.i"
 
 %{
+#include "limesdr/source.h"
 %}
 
+%include "limesdr/source.h"
+GR_SWIG_BLOCK_MAGIC2(limesdr, source);

@@ -23,5 +23,5 @@
 ########################################################################
 install(FILES
     api.h
-    DESTINATION include/limesdr
+    source.h DESTINATION include/limesdr
 )

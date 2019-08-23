@@ -24,6 +24,7 @@
 include(GrPlatform) #define LIB_SUFFIX
 
 list(APPEND limesdr_sources
+    source_impl.cc
 )
 
 set(limesdr_sources "${limesdr_sources}" PARENT_SCOPE)
