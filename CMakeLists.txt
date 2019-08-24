@@ -102,6 +102,14 @@ set(GR_PKG_CONF_DIR     ${GR_CONF_DIR}/${CMAKE_PROJECT_NAME}/conf.d)
 set(GR_PKG_LIBEXEC_DIR  ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME})
 
 ########################################################################
+# LimeSuite
+########################################################################
+
+find_package(LimeSuite REQUIRED)
+message(STATUS "LimeSuite version ${LimeSuite_VERSION} found.")
+include_directories("${LIMESUITE_INCLUDE_DIR}/lime")
+
+########################################################################
 # On Apple only, set install name and use rpath correctly, if not already set
 ########################################################################
 if(APPLE)

@@ -23,13 +23,37 @@
 
 #include <limesdr/source.h>
 
+#include "device_handler.h"
+
 namespace gr {
   namespace limesdr {
 
     class source_impl : public source
     {
-     private:
-      // Nothing to declare in this block.
+      private:
+        lms_stream_t streamId[2];
+
+        bool stream_analyzer = false;
+
+        int source_block = 1;
+
+        bool add_tag = false;
+        uint32_t pktLoss = 0;
+
+        struct constant_data {
+          std::string serial;
+          int device_number;
+          int channel_mode;
+          double samp_rate = 10e6;
+          uint32_t FIFO_size = 0;
+        } stored;
+
+        std::chrono::high_resolution_clock::time_point t1, t2;
+
+        void print_stream_stats(lms_stream_status_t status);
+
+        void add_time_tag(int channel, lms_stream_meta_t meta);
+        // Nothing to declare in this block.
 
      public:
       source_impl(std::string serial, int channel_mode, const std::string& filename);
