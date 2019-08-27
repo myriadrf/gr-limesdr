@@ -37,6 +37,8 @@ namespace gr {
     /*
      * The private constructor
      */
+    // gr::sync_block("source", gr::io_signature::make(0, 0, 0), gr::io_signature::make(1, 1, sizeof(gr_complex)))
+
     source_impl::source_impl(std::string serial, int channel_mode,
         const std::string &filename)
       : gr::sync_block("source", gr::io_signature::make(0, 0, 0),
