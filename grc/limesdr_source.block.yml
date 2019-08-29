@@ -19,7 +19,7 @@ parameters:
 - id: channel_mode
   label: Channel
   dtype: enum
-  options: ['0', '1', '2']
+  options:       ['0', '1', '2']
   option_labels: ['A', 'B', 'A+B']
   default: 0
   hide: part
@@ -40,7 +40,7 @@ parameters:
 - id: oversample
   label: Oversample
   dtype: enum
-  options: ['0', '1', '2', '4', '8', '16', '32']
+  options:       ['0', '1', '2', '4', '8', '16', '32']
   option_labels: ['0', '1', '2', '4', '8', '16', '32']
   default: 0
   category: General
@@ -59,19 +59,12 @@ parameters:
   hide: part
   category: Channel A
 
-  #- id: lna_path_ch0
-  #  label: LNA path
-  #  dtype: enum
-  #  options: ['1', '2', '3', '255']
-  #  option_labels: ['H', 'L', 'W', 'Auto']
-  #  default: 255
-  #  hide: part
-  #  category: Channel A
-
 - id: lna_path_ch0
   label: LNA path
-  dtype: int
-  default: 3
+  dtype: enum
+  options:       ['1', '2', '3', '255']
+  option_labels: ['H', 'L', 'W', 'Auto']
+  default: '255'
   hide: part
   category: Channel A
 
@@ -112,8 +105,10 @@ parameters:
 
 - id: lna_path_ch1
   label: LNA path
-  dtype: int
-  default: 3
+  dtype: enum
+  options:       ['1', '2', '3']
+  option_labels: ['H', 'L', 'W']
+  default: 2
   hide: part
   category: Channel B
 
@@ -141,7 +136,7 @@ parameters:
 - id: allow_tcxo_dac
   label: Allow TCXO DAC control
   dtype: enum
-  options: ['0', '1']
+  options:       ['0', '1']
   option_labels: ['No', 'Yes']
   default: 0
   hide: part
@@ -278,6 +273,7 @@ outputs:
 - label: out
   domain: stream
   dtype: complex
+  multiplicity: ${ (2 if int(channel_mode) == 2 else 1) }
 
 file_format: 1
 
@@ -368,5 +364,4 @@ documentation: |-
   LimeSDR-USB default value is 125 range is [0,255]
   LimeSDR-PCIe default value is 134 range is [0,255]
   LimeNET-Micro default value is 30714 range is [0,65535]
-  
   -------------------------------------------------------------------------------------------------------------------
