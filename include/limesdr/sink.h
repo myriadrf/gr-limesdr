@@ -21,13 +21,14 @@
 #ifndef INCLUDED_LIMESDR_SINK_H
 #define INCLUDED_LIMESDR_SINK_H
 
-#include <limesdr/api.h>
 #include <gnuradio/sync_block.h>
+#include <limesdr/api.h>
 
 namespace gr {
 namespace limesdr {
-class LIMESDR_API sink : virtual public gr::sync_block {
-    public:
+class LIMESDR_API sink : virtual public gr::sync_block
+{
+public:
     typedef boost::shared_ptr<sink> sptr;
     /*!
      * @brief Return a shared_ptr to a new instance of sink.
@@ -64,8 +65,8 @@ class LIMESDR_API sink : virtual public gr::sync_block {
     /**
      * Set which antenna is used
      *
-     * @note setting antenna to BAND1 or BAND2 will enable PA path and because of that Lime boards
-     * will transmit CW signal, even when stream is stopped.
+     * @note setting antenna to BAND1 or BAND2 will enable PA path and because of that
+     * Lime boards will transmit CW signal, even when stream is stopped.
      *
      * @param   antenna Antenna to set: None(0), BAND1(1), BAND(2), NONE(3), AUTO(255)
      *
@@ -143,7 +144,8 @@ class LIMESDR_API sink : virtual public gr::sync_block {
     virtual void set_buffer_size(uint32_t size) = 0;
     /**
      * Set TCXO DAC.
-     * @note Care must be taken as this parameter is returned to default value only after power off.
+     * @note Care must be taken as this parameter is returned to default value only after
+     * power off.
      * @note LimeSDR-Mini default value is 180 range is [0,255]
      * LimeSDR-USB default value is 125 range is [0,255]
      * LimeSDR-PCIe default value is 134 range is [0,255]
@@ -151,7 +153,7 @@ class LIMESDR_API sink : virtual public gr::sync_block {
      *
      * @param   dacVal		   DAC value (0-65535)
      */
-     virtual void set_tcxo_dac(uint16_t dacVal = 125 ) = 0;
+    virtual void set_tcxo_dac(uint16_t dacVal = 125) = 0;
 };
 } // namespace limesdr
 } // namespace gr

@@ -28,79 +28,76 @@
 static const pmt::pmt_t TIME_TAG = pmt::string_to_symbol("rx_time");
 
 namespace gr {
-  namespace limesdr {
+namespace limesdr {
 
-    class source_impl : public source
-    {
-      private:
-        lms_stream_t streamId[2];
+class source_impl : public source
+{
+private:
+    lms_stream_t streamId[2];
 
-        bool stream_analyzer = false;
+    bool stream_analyzer = false;
 
-        int source_block = 1;
+    int source_block = 1;
 
-        bool add_tag = false;
-        uint32_t pktLoss = 0;
+    bool add_tag = false;
+    uint32_t pktLoss = 0;
 
-        struct constant_data {
-          std::string serial;
-          int device_number;
-          int channel_mode;
-          double samp_rate = 10e6;
-          uint32_t FIFO_size = 0;
-        } stored;
+    struct constant_data {
+        std::string serial;
+        int device_number;
+        int channel_mode;
+        double samp_rate = 10e6;
+        uint32_t FIFO_size = 0;
+    } stored;
 
-        std::chrono::high_resolution_clock::time_point t1, t2;
+    std::chrono::high_resolution_clock::time_point t1, t2;
 
-        void print_stream_stats(lms_stream_status_t status);
+    void print_stream_stats(lms_stream_status_t status);
 
-        void add_time_tag(int channel, lms_stream_meta_t meta);
+    void add_time_tag(int channel, lms_stream_meta_t meta);
 
-      public:
-        source_impl(std::string serial, int channel_mode, const std::string& filename);
-        ~source_impl();
+public:
+    source_impl(std::string serial, int channel_mode, const std::string& filename);
+    ~source_impl();
 
-        bool start(void);
+    bool start(void);
 
-        bool stop(void);
+    bool stop(void);
 
-        // Where all the action really happens
-        int work(
-            int noutput_items,
-            gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items
-            );
+    // Where all the action really happens
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-        inline gr::io_signature::sptr args_to_io_signature(int channel_mode);
+    inline gr::io_signature::sptr args_to_io_signature(int channel_mode);
 
-        void init_stream(int device_number, int channel);
-        void release_stream(int device_number, lms_stream_t *stream);
+    void init_stream(int device_number, int channel);
+    void release_stream(int device_number, lms_stream_t* stream);
 
-        double set_center_freq(double freq, size_t chan = 0);
+    double set_center_freq(double freq, size_t chan = 0);
 
-        void set_antenna(int antenna, int channel = 0);
+    void set_antenna(int antenna, int channel = 0);
 
-        void set_nco(float nco_freq, int channel = 0);
+    void set_nco(float nco_freq, int channel = 0);
 
-        double set_bandwidth(double analog_bandw, int channel = 0);
+    double set_bandwidth(double analog_bandw, int channel = 0);
 
-        void set_digital_filter(double digital_bandw, int channel = 0);
+    void set_digital_filter(double digital_bandw, int channel = 0);
 
-        unsigned set_gain(unsigned gain_dB, int channel = 0);
+    unsigned set_gain(unsigned gain_dB, int channel = 0);
 
-        double set_sample_rate(double rate);
+    double set_sample_rate(double rate);
 
-        void set_oversampling(int oversample);
+    void set_oversampling(int oversample);
 
-        void set_buffer_size(uint32_t size);
+    void set_buffer_size(uint32_t size);
 
-        void calibrate(double bandw, int channel = 0);
+    void calibrate(double bandw, int channel = 0);
 
-        void set_tcxo_dac(uint16_t dacVal = 125);
-    };
+    void set_tcxo_dac(uint16_t dacVal = 125);
+};
 
-  } // namespace limesdr
+} // namespace limesdr
 } // namespace gr
 
 #endif /* INCLUDED_LIMESDR_SOURCE_IMPL_H */
-
