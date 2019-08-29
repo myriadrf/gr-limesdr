@@ -22,9 +22,10 @@ FIND_LIBRARY(
           /usr/local/lib64
           /usr/lib
           /usr/lib64
-)
+          )
+
+include("${CMAKE_CURRENT_LIST_DIR}/limesdrTarget.cmake")
 
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(LIMESDR DEFAULT_MSG LIMESDR_LIBRARIES LIMESDR_INCLUDE_DIRS)
 MARK_AS_ADVANCED(LIMESDR_LIBRARIES LIMESDR_INCLUDE_DIRS)
-

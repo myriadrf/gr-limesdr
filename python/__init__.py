@@ -22,13 +22,14 @@
 This is the GNU Radio LIMESDR module. Place your Python package
 description here (python/__init__.py).
 '''
+from __future__ import unicode_literals
 
 # import swig generated symbols into the limesdr namespace
 try:
-	# this might fail if the module is python-only
-	from limesdr_swig import *
+    # this might fail if the module is python-only
+    from .limesdr_swig import *
 except ImportError:
-	pass
+    pass
 
 # import any pure python here
 #
