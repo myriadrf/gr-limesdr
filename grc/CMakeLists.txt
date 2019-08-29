@@ -19,5 +19,6 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    limesdr_source.block.yml DESTINATION share/gnuradio/grc/blocks
+    limesdr_source.block.yml
+    limesdr_sink.block.yml DESTINATION share/gnuradio/grc/blocks
 )
