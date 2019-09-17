@@ -20,7 +20,9 @@ To install GNURadio3.8 please follow this guide [Installing GNURadio](https://wi
 
 * Building from source
 <pre>
+git clone https://github.com/myriadrf/gr-limesdr.git
 cd gr-limesdr
+git checkout gr-3.8
 mkdir build
 cd build
 cmake ..
