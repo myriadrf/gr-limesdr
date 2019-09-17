@@ -8,7 +8,7 @@ Package includes GNU Radio blocks for various LimeSDR boards.
 
 ## Dependencies
  
-* GNU Radio
+* GNU Radio(3.7)
 * BOOST
 * SWIG
 * LimeSuite
@@ -27,6 +27,7 @@ sudo apt install gr-limesdr
 
 * Building from source
 <pre>
+git clone https://github.com/myriadrf/gr-limesdr.git
 cd gr-limesdr
 mkdir build
 cd build
