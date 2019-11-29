@@ -86,8 +86,15 @@ ENDIF()
 ########################################################################
 # Install directories
 ########################################################################
-find_package(Gnuradio "3.8" REQUIRED)
+set(MIN_GR_VERSION "3.8.0")
+set(MAX_GR_VERSION "3.9.0")
+find_package(Gnuradio REQUIRED)
 include(GrVersion)
+if("${Gnuradio_VERSION}" VERSION_LESS MIN_GR_VERSION OR "${Gnuradio_VERSION}" 
+        VERSION_GREATER_EQUAL MAX_GR_VERSION)
+    MESSAGE(FATAL_ERROR "GnuRadio version required: >=\"" ${MIN_GR_VERSION} "\" \
+        < \"${MAX_GR_VERSION}\"  found: \"" ${Gnuradio_VERSION} "\"")
+endif()
 
 include(GrPlatform) #define LIB_SUFFIX
 
