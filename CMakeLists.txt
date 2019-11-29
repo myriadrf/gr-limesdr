@@ -126,9 +126,12 @@ find_package(Doxygen)
 MESSAGE(STATUS "Configuring GNU Radio C++ Libraries...")
 set(GR_REQUIRED_COMPONENTS RUNTIME PMT)
 set(MIN_GR_VERSION "3.7.8")
+set(MAX_GR_VERSION "3.8.0")
 find_package(Gnuradio REQUIRED)
-if("${Gnuradio_VERSION}" VERSION_LESS MIN_GR_VERSION)
-    MESSAGE(FATAL_ERROR "GnuRadio version required: >=\"" ${MIN_GR_VERSION} "\" found: \"" ${Gnuradio_VERSION} "\"")
+if("${Gnuradio_VERSION}" VERSION_LESS MIN_GR_VERSION OR "${Gnuradio_VERSION}" 
+        VERSION_GREATER_EQUAL MAX_GR_VERSION)
+    MESSAGE(FATAL_ERROR "GnuRadio version required: >=\"" ${MIN_GR_VERSION} "\" \
+        < \"${MAX_GR_VERSION}\"  found: \"" ${Gnuradio_VERSION} "\"")
 endif()
 
 ########################################################################
