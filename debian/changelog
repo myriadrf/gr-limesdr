@@ -1,3 +1,8 @@
+gr-limesdr (2.1.4-1) unstable; urgency=low
+
+  * Allow change of parameters after the config file is loaded
+
+ -- Lime Microsystems <info@limemicro.com>  Tue, 10 Dec 2019 10:36:59 +0300
 gr-limesdr (2.1.3-1) unstable; urgency=low
 
   * debian packaging work for gr-limesdr
