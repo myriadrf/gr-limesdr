@@ -1,3 +1,8 @@
+gr-limesdr (2.1.4-2) unstable; urgency=low
+
+  * Fix cmake for old versions
+
+ -- Lime Microsystems <info@limemicro.com>  Tue, 10 Dec 2019 11:47:20 +0300
 gr-limesdr (2.1.4-1) unstable; urgency=low
 
   * Allow change of parameters after the config file is loaded
