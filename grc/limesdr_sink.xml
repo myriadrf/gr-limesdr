@@ -69,12 +69,12 @@ self.$(id).set_tcxo_dac($dacVal)
     
     <param_tab_order>
       <tab>General</tab>
-      <tab>CH_A</tab>
-      <tab>CH_B</tab>
+      <tab>Channel A</tab>
+      <tab>Channel B</tab>
     </param_tab_order>
 
     <param>
-        <name>Device serial</name>
+        <name>Device Serial</name>
         <key>serial</key>
         <value></value>
         <type>string</type>
@@ -102,20 +102,20 @@ self.$(id).set_tcxo_dac($dacVal)
             <key>1</key>
         </option>
         <option>
-            <name>(A+B)MIMO</name>
+            <name>A+B (MIMO)</name>
             <key>2</key>
         </option>
     </param>
   
     <param>
-        <name>RF frequency</name>
+        <name>RF Frequency</name>
         <key>rf_freq</key>
         <value>100e6</value>
         <type>float</type>
     </param>
  
     <param>
-        <name>Sample rate</name>
+        <name>Sample Rate</name>
         <key>samp_rate</key>
         <value>samp_rate</value>
         <type>float</type>
@@ -171,7 +171,7 @@ self.$(id).set_tcxo_dac($dacVal)
     </param>
     
 	<param>
-		<name>TCXO:DAC value</name>
+		<name>DAC Value (TCXO)</name>
 		<key>dacVal</key>
 		<value>125</value>
 		<type>int</type>
@@ -185,7 +185,7 @@ self.$(id).set_tcxo_dac($dacVal)
 	</param>
 	
     <param>
-        <name>Length tag name</name>
+        <name>Length Tag Name</name>
         <key>length_tag_name</key>
         <value></value>
         <type>string</type>
@@ -193,7 +193,7 @@ self.$(id).set_tcxo_dac($dacVal)
     </param>
 
     <param>
-        <name>CH_A:NCO frequency</name>
+        <name>NCO Frequency</name>
         <key>nco_freq_ch0</key>
         <value>0</value>
         <type>float</type>
@@ -204,11 +204,11 @@ self.$(id).set_tcxo_dac($dacVal)
           none
         #end if
     </hide>
-    <tab>CH_A</tab>
+    <tab>Channel A</tab>
     </param>
     
     <param>
-      <name>CH_A:Calibration bandw.</name>
+      <name>Calibration BW</name>
       <key>calibr_bandw_ch0</key>
       <value>5e6</value>
       <type>float</type>
@@ -221,11 +221,11 @@ self.$(id).set_tcxo_dac($dacVal)
         none
       #end if
       </hide>
-      <tab>CH_A</tab>
+      <tab>Channel A</tab>
     </param>
   
     <param>
-        <name>CH_A:PA path</name>
+        <name>PA Path</name>
         <key>pa_path_ch0</key>
         <value>255</value>
         <type>int</type>
@@ -237,22 +237,22 @@ self.$(id).set_tcxo_dac($dacVal)
         #end if
         </hide>
         <option>
-            <name>Auto(Default)</name>
+            <name>Auto (Default)</name>
             <key>255</key>
         </option>
         <option>
-            <name>Band1</name>
+            <name>Band 1</name>
             <key>1</key>
         </option>
         <option>
-            <name>Band2</name>
+            <name>Band 2</name>
             <key>2</key>
         </option>
-	<tab>CH_A</tab>
+	<tab>Channel A</tab>
     </param>
   
     <param>
-        <name>CH_A:Analog filter bandw.</name>
+        <name>Analog Filter BW</name>
         <key>analog_bandw_ch0</key>
         <value>5e6</value>
         <type>float</type>
@@ -263,12 +263,12 @@ self.$(id).set_tcxo_dac($dacVal)
 	    none
 	  #end if
 	</hide>
-	<tab>CH_A</tab>
+	<tab>Channel A</tab>
     </param>
   
  
     <param>
-        <name>CH_A:Digital filter bandw.</name>
+        <name>Digital Filter BW</name>
         <key>digital_bandw_ch0</key>
         <value>0</value>
         <type>float</type>
@@ -279,11 +279,11 @@ self.$(id).set_tcxo_dac($dacVal)
 	    none
 	  #end if
 	</hide>
-	<tab>CH_A</tab>
+	<tab>Channel A</tab>
     </param>
  
     <param>
-        <name>CH_A:Gain,dB</name>
+        <name>Gain (dB)</name>
         <key>gain_dB_ch0</key>
         <value>30</value>
         <type>int</type>
@@ -294,11 +294,11 @@ self.$(id).set_tcxo_dac($dacVal)
 	    none
 	  #end if
 	</hide>
-	<tab>CH_A</tab>
+	<tab>Channel A</tab>
     </param>
  
     <param>
-        <name>CH_B:NCO frequency</name>
+        <name>NCO Frequency</name>
         <key>nco_freq_ch1</key>
         <value>0</value>
         <type>float</type>
@@ -309,11 +309,11 @@ self.$(id).set_tcxo_dac($dacVal)
 	    none
 	  #end if
 	</hide>
-	<tab>CH_B</tab>
+	<tab>Channel B</tab>
     </param>
   
     <param>
-        <name>CH_B:Calibration bandw.</name>
+        <name>Calibration BW</name>
         <key>calibr_bandw_ch1</key>
         <value>5e6</value>
         <type>float</type>
@@ -326,11 +326,11 @@ self.$(id).set_tcxo_dac($dacVal)
 	    none
 	  #end if
 	</hide>
-	<tab>CH_B</tab>
+	<tab>Channel B</tab>
     </param>
   
     <param>
-        <name>CH_B:PA path</name>
+        <name>PA Path</name>
         <key>pa_path_ch1</key>
         <value>1</value>
         <type>int</type>
@@ -342,18 +342,18 @@ self.$(id).set_tcxo_dac($dacVal)
 	    #end if
     	</hide>
         <option>
-            <name>Band1</name>
+            <name>Band 1</name>
             <key>1</key>
         </option>
         <option>
-            <name>Band2</name>
+            <name>Band 2</name>
             <key>2</key>
         </option>
-	<tab>CH_B</tab>
+	<tab>Channel B</tab>
     </param>
   
     <param>
-        <name>CH_B:Analog filter bandw.</name>
+        <name>Analog Filter BW</name>
         <key>analog_bandw_ch1</key>
         <value>5e6</value>
         <type>float</type>
@@ -364,11 +364,11 @@ self.$(id).set_tcxo_dac($dacVal)
 	    none
 	  #end if
 	</hide>
-	<tab>CH_B</tab>
+	<tab>Channel B</tab>
     </param>
   
     <param>
-        <name>CH_B:Digital filter bandw.</name>
+        <name>Digital Filter BW</name>
         <key>digital_bandw_ch1</key>
         <value>0</value>
         <type>float</type>
@@ -379,11 +379,11 @@ self.$(id).set_tcxo_dac($dacVal)
 	    none
 	  #end if
 	</hide>
-	<tab>CH_B</tab>
+	<tab>Channel B</tab>
     </param>
   
     <param>
-        <name>CH_B:Gain,dB</name>
+        <name>Gain (dB)</name>
         <key>gain_dB_ch1</key>
         <value>30</value>
         <type>int</type>
@@ -394,11 +394,11 @@ self.$(id).set_tcxo_dac($dacVal)
 	    none
 	  #end if
 	</hide>
-	<tab>CH_B</tab>
+	<tab>Channel B</tab>
     </param>
 
     <param>
-        <name>Allow TCXO DAC control</name>
+        <name>Allow TCXO DAC Control</name>
         <key>allow_tcxo_dac</key>
         <value>0</value>
         <type>int</type>
