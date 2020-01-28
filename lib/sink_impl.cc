@@ -302,7 +302,7 @@ inline gr::io_signature::sptr sink_impl::args_to_io_signature(int channel_number
     if (channel_number < 2) {
         return gr::io_signature::make(1, 1, sizeof(gr_complex));
     } else if (channel_number == 2) {
-        return gr::io_signature::make(1, 1, sizeof(gr_complex));
+        return gr::io_signature::make(2, 2, sizeof(gr_complex));
     } else {
         std::cout << "ERROR: sink_impl::args_to_io_signature(): channel_number must be "
                      "0,1 or 2."
