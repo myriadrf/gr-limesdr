@@ -20,5 +20,6 @@
 
 install(FILES
     limesdr_source.block.yml
-    limesdr_sink.block.yml DESTINATION share/gnuradio/grc/blocks
+    limesdr_sink.block.yml
+    limerfe.block.yml DESTINATION share/gnuradio/grc/blocks
 )

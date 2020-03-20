@@ -27,6 +27,7 @@ list(APPEND limesdr_sources
     device_handler.cc
     source_impl.cc
     sink_impl.cc
+    rfe_impl.cc
 )
 
 set(limesdr_sources "${limesdr_sources}" PARENT_SCOPE)

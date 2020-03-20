@@ -294,6 +294,15 @@ void device_handler::enable_channels(int device_number, int channel_mode, bool d
             device_handler::getInstance().error(device_number);
         std::cout << "SISO CH" << channel_mode << " set for device number "
                   << device_number << "." << std::endl;
+
+        if (direction)
+            rfe_device.tx_channel = channel_mode;
+        else
+            rfe_device.rx_channel = channel_mode;
+
+        if (rfe_device.rfe_dev) {
+            update_rfe_channels();
+        }
     } else if (channel_mode == 2) {
         if (LMS_EnableChannel(device_handler::getInstance().get_device(device_number),
                               direction,
@@ -619,5 +628,25 @@ void device_handler::set_tcxo_dac(int device_number, uint16_t dacVal)
         std::cout << "ERROR: device_handler::set_tcxo_dac(): valid range [0, 65535]"
                   << std::endl;
         close_all_devices();
+    }
+}
+
+void device_handler::set_rfe_device(rfe_dev_t* rfe_dev) { rfe_device.rfe_dev = rfe_dev; }
+
+void device_handler::update_rfe_channels()
+{
+    if (rfe_device.rfe_dev) {
+        std::cout << "INFO: device_handler::update_rfe_channels(): ";
+        if (RFE_AssignSDRChannels(
+                rfe_device.rfe_dev, rfe_device.rx_channel, rfe_device.tx_channel) != 0) {
+            std::cout << std::endl << "ERROR: Failed to assign SDR channels" << std::endl;
+            return;
+        }
+        std::cout << "RFE RX channel: " << rfe_device.rx_channel
+                  << " TX channel: " << rfe_device.tx_channel << std::endl;
+    } else {
+        std::cout
+            << "ERROR: device_handler::update_rfe_channels(): no assigned RFE device"
+            << std::endl;
     }
 }
