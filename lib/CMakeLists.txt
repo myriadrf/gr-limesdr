@@ -27,8 +27,13 @@ list(APPEND limesdr_sources
     device_handler.cc
     source_impl.cc
     sink_impl.cc
-    rfe_impl.cc
 )
+
+if(ENABLE_RFE)
+    list(APPEND limesdr_sources
+    rfe_impl.cc
+    )
+endif()
 
 set(limesdr_sources "${limesdr_sources}" PARENT_SCOPE)
 if(NOT limesdr_sources)

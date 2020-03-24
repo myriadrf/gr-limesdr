@@ -12,11 +12,16 @@
 %{
 #include "limesdr/source.h"
 #include "limesdr/sink.h"
-#include "limesdr/rfe.h"
 %}
 %include "limesdr/source.h"
 %include "limesdr/sink.h"
+
+#ifdef ENABLE_RFE
+%{
+#include "limesdr/rfe.h"
+%}
 %include "limesdr/rfe.h"
+#endif
 
 GR_SWIG_BLOCK_MAGIC2(limesdr, source);
 GR_SWIG_BLOCK_MAGIC2(limesdr, sink);

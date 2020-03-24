@@ -26,6 +26,9 @@ if(NOT limesdr_sources)
     return()
 endif(NOT limesdr_sources)
 
+if(ENABLE_RFE)
+    set(GR_SWIG_FLAGS -DENABLE_RFE) 
+endif()
 ########################################################################
 # Include swig generation macros
 ########################################################################

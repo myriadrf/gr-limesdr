@@ -25,5 +25,9 @@ install(FILES
     api.h
     source.h
     sink.h
-    rfe.h DESTINATION include/limesdr
+    DESTINATION include/limesdr
 )
+if(ENABLE_RFE)
+    install(FILES rfe.h DESTINATION include/limesdr
+    )
+endif()

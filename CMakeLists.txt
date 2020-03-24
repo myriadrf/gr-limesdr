@@ -118,6 +118,16 @@ message(STATUS "LimeSuite version ${LimeSuite_VERSION} found.")
 include_directories("${LIMESUITE_INCLUDE_DIR}/lime")
 
 ########################################################################
+# LimeRFE
+########################################################################
+include(FeatureSummary)
+include(CMakeDependentOption)
+option(ENABLE_RFE "Enable LimeRFE support" OFF)
+add_feature_info(LimeRFE ENABLE_LIBRARY "LimeRFE support")
+if(ENABLE_RFE)
+    message(STATUS "Enabling LimeRFE support")
+endif()
+########################################################################
 # On Apple only, set install name and use rpath correctly, if not already set
 ########################################################################
 if(APPLE)
