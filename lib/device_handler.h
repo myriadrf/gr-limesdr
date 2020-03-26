@@ -275,7 +275,7 @@ public:
      *
      * @param   channel        Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
-     * @param   gain_dB        Desired gain: [0,70] RX, [0,60] TX.
+     * @param   gain_dB        Desired gain: [0,73] dB
      */
     unsigned set_gain(int device_number, bool direction, int channel, unsigned gain_dB);
 

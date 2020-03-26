@@ -365,7 +365,7 @@ documentation: |-
   -------------------------------------------------------------------------------------------------------------------
   GAIN
 
-  Controls combined TX gain settings. Gain range must be [0,60] dB.
+  Controls combined TX gain settings. Gain range must be [0,73] dB.
   -------------------------------------------------------------------------------------------------------------------
   TCXO DAC
 
