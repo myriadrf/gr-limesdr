@@ -529,7 +529,7 @@ Bandwidth should not be higher than sample rate.
 -------------------------------------------------------------------------------------------------------------------
 GAIN
 
-Controls combined RX gain settings. Gain range must be [0,70] dB.
+Controls combined RX gain settings. Gain range must be [0,73] dB.
 -------------------------------------------------------------------------------------------------------------------
 TCXO DAC
 

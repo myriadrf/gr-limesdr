@@ -470,8 +470,7 @@ double device_handler::set_digital_filter(int device_number,
 
 unsigned
 device_handler::set_gain(int device_number, bool direction, int channel, unsigned gain_dB) {
-    if ((direction == LMS_CH_RX && gain_dB >= 0 && gain_dB <= 70) ||
-        (direction == LMS_CH_TX && gain_dB >= 0 && gain_dB <= 60)) {
+    if (gain_dB >= 0 && gain_dB <= 73) {
         std::cout << "INFO: device_handler::set_gain(): ";
         LMS_SetGaindB(
             device_handler::getInstance().get_device(device_number), direction, channel, gain_dB);
@@ -487,8 +486,7 @@ device_handler::set_gain(int device_number, bool direction, int channel, unsigne
                   << " dB." << std::endl;
         return gain_value;
     } else {
-        std::cout << "ERROR: device_handler::set_gain(): valid RX gain range [0, 70], TX gain "
-                     "range [0, 60]."
+        std::cout << "ERROR: device_handler::set_gain(): valid gain range [0, 73] "
                   << std::endl;
         close_all_devices();
     }

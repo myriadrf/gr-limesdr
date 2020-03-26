@@ -38,7 +38,7 @@
 #define LimeNET_Micro 2
 #define LimeSDR_USB 3
 
-#define GR_LIMESDR_VER "2.2.4"
+#define GR_LIMESDR_VER "2.2.5"
 
 class device_handler {
     private:
@@ -263,7 +263,7 @@ class device_handler {
      *
      * @param   channel        Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
-     * @param   gain_dB        Desired gain: [0,70] RX, [0,60] TX.
+     * @param   gain_dB        Desired gain: [0,73] dB
      */
     unsigned set_gain(int device_number, bool direction, int channel, unsigned gain_dB);
 

@@ -100,7 +100,7 @@ class LIMESDR_API source : virtual public gr::block {
      * @note actual gain depends on LO frequency and analog LPF configuration and
      * resulting output signal level may be different when those values are changed
      *
-     * @param   gain_dB        Desired gain: [0,70] RX
+     * @param   gain_dB        Desired gain: [0,73] dB
      * 
      * @param   channel        Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      * 
