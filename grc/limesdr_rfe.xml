@@ -19,6 +19,7 @@
     <callback>change_mode($mode)</callback>
     <callback>set_attenuation($atten)</callback>
     <callback>set_notch($notch)</callback>
+    <callback>set_fan($fan)</callback>
 
     <param>
         <name>Communication</name>
@@ -71,6 +72,21 @@
         <hide>part</hide>
     </param>
 
+    <param>
+        <name>Enable Fan</name>
+        <key>fan</key>
+        <value>0</value>
+        <type>int</type>
+        <hide>part</hide>
+        <option>
+            <name>False</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>True</name>
+            <key>1</key>
+        </option>
+    </param>
 
     <param>
         <name>Mode</name>

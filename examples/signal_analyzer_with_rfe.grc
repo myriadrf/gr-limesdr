@@ -671,6 +671,10 @@
       <value></value>
     </param>
     <param>
+      <key>fan</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
