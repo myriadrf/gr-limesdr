@@ -1,0 +1,393 @@
+<?xml version="1.0"?>
+<block>
+    <name>LimeRFE Control</name>
+    <key>limesdr_rfe</key>
+    <category>[LimeSuite]</category>
+    <import>import limesdr</import>
+    <make>limesdr.rfe($comm_type,
+    #if $comm_type() == 0
+        $com_port,
+    #else
+        $sdr_serial,
+    #end if
+    $filename,
+    $rx_channel,
+    $tx_channel,
+     $rx_port, $tx_port, $mode, $notch, $atten)
+    </make>
+
+    <callback>change_mode($mode)</callback>
+    <callback>set_attenuation($atten)</callback>
+    <callback>set_notch($notch)</callback>
+
+    <param>
+        <name>Communication</name>
+        <key>comm_type</key>
+        <value>0</value>
+        <type>int</type>
+        <option>
+            <name>Direct USB</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>SDR</name>
+            <key>1</key>
+        </option>
+    </param>
+
+    <param>
+        <name>USB COM Port</name>
+        <key>com_port</key>
+        <value></value>
+        <type>string</type>
+        <hide>        
+        #if $comm_type() == 0
+          part
+        #else
+          all
+        #end if
+        </hide>
+    </param>
+
+    <param>
+        <name>SDR Device Serial</name>
+        <key>sdr_serial</key>
+        <value></value>
+        <type>string</type>
+        <hide>        
+        #if $comm_type() == 1
+          part
+        #else
+          all
+        #end if
+        </hide>
+    </param>
+
+    <param>
+        <name>Configuration File</name>
+        <key>filename</key>
+        <value></value>
+        <type>file_open</type>
+        <hide>part</hide>
+    </param>
+
+
+    <param>
+        <name>Mode</name>
+        <key>mode</key>
+        <value>0</value>
+        <type>int</type>
+        <option>
+            <name>RX</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>TX</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>RX+TX</name>
+            <key>3</key>
+        </option>
+        <option>
+            <name>NONE</name>
+            <key>2</key>
+        </option>
+    </param>
+
+    <param>
+        <name>RX Channel</name>
+        <key>rx_channel</key>
+        <value>1</value>
+        <type>int</type>
+        <option>
+            <name>Wideband 1-1000</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>Wideband 1000-4000</name>
+            <key>2</key>
+        </option>
+        <option>
+            <name>HAM 30</name>
+            <key>3</key>
+        </option>
+        <option>
+            <name>HAM 50-70</name>
+            <key>4</key>
+        </option>
+        <option>
+            <name>HAM 144-146</name>
+            <key>5</key>
+        </option>
+        <option>
+            <name>HAM 220-225</name>
+            <key>6</key>
+        </option>
+        <option>
+            <name>HAM 430-440</name>
+            <key>7</key>
+        </option>
+        <option>
+            <name>HAM 902-928</name>
+            <key>8</key>
+        </option>
+        <option>
+            <name>HAM 1240-1325</name>
+            <key>9</key>
+        </option>
+        <option>
+            <name>HAM 2300-2450</name>
+            <key>10</key>
+        </option>
+        <option>
+            <name>HAM 3300-3500</name>
+            <key>11</key>
+        </option>
+        <option>
+            <name>Cellular Band 1</name>
+            <key>12</key>
+        </option>
+        <option>
+            <name>Cellular Band 2/PCS-1900</name>
+            <key>13</key>
+        </option>
+        <option>
+            <name>Cellular Band 3/PCS-1800</name>
+            <key>14</key>
+        </option>
+        <option>
+            <name>Cellular Band 7</name>
+            <key>15</key>
+        </option>
+        <option>
+            <name>Cellular Band 38</name>
+            <key>16</key>
+        </option>
+        <option>
+            <name>Auto</name>
+            <key>-2</key>
+        </option>
+    </param>
+
+    <param>
+        <name>RX Port</name>
+        <key>rx_port</key>
+        <value>1</value>
+        <type>int</type>
+        <option>
+            <name>TX/RX(J3)</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>30 MHz TX/RX(J5)</name>
+            <key>3</key>
+        </option>
+    </param>
+
+    <param>
+        <name>RX Attenuation(dB)</name>
+        <key>atten</key>
+        <value>0</value>
+        <type>int</type>
+        <hide>part</hide>
+        <option>
+            <name>0</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>2</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>4</name>
+            <key>2</key>
+        </option>
+        <option>
+            <name>6</name>
+            <key>3</key>
+        </option>
+        <option>
+            <name>8</name>
+            <key>4</key>
+        </option>
+        <option>
+            <name>10</name>
+            <key>5</key>
+        </option><option>
+            <name>12</name>
+            <key>6</key>
+        </option>
+        <option>
+            <name>14</name>
+            <key>7</key>
+        </option>
+    </param>
+
+    <param>
+        <name>AM FM Notch Filter</name>
+        <key>notch</key>
+        <value>0</value>
+        <type>int</type>
+        <hide>part</hide>
+        <option>
+            <name>Disabled</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>Enabled</name>
+            <key>1</key>
+        </option>  
+    </param>
+
+    <param>
+        <name>TX Channel</name>
+        <key>tx_channel</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>        
+        #if $rx_channel() > 11
+          all
+        #else
+          none
+        #end if
+        </hide>
+        <option>
+            <name>Wideband 1-1000</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>Wideband 1000-4000</name>
+            <key>2</key>
+        </option>
+        <option>
+            <name>HAM 30</name>
+            <key>3</key>
+        </option>
+        <option>
+            <name>HAM 50-70</name>
+            <key>4</key>
+        </option>
+        <option>
+            <name>HAM 144-146</name>
+            <key>5</key>
+        </option>
+        <option>
+            <name>HAM 220-225</name>
+            <key>6</key>
+        </option>
+        <option>
+            <name>HAM 430-440</name>
+            <key>7</key>
+        </option>
+        <option>
+            <name>HAM 902-928</name>
+            <key>8</key>
+        </option>
+        <option>
+            <name>HAM 1240-1325</name>
+            <key>9</key>
+        </option>
+        <option>
+            <name>HAM 2300-2450</name>
+            <key>10</key>
+        </option>
+        <option>
+            <name>HAM 3300-3500</name>
+            <key>11</key>
+        </option>
+        <option>
+            <name>Auto</name>
+            <key>-2</key>
+        </option>
+    </param>
+
+    <param>
+        <name>TX Port</name>
+        <key>tx_port</key>
+        <value>1</value>
+        <type>int</type>
+        <option>
+            <name>TX/RX(J3)</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>TX (J4)</name>
+            <key>2</key>
+        </option>
+        <option>
+            <name>30 MHz TX/RX(J5)</name>
+            <key>3</key>
+        </option>
+    </param>
+<doc>
+-------------------------------------------------------------------------------------------------------------------
+COMMUNICATION
+
+Type of communication used to configure LimeRFE board.
+Direct USB: LimeRFE is configured directly through USB COM port
+SDR: LimeRFE is configured through LimeSDR device GPIO ports
+
+-------------------------------------------------------------------------------------------------------------------
+USB COM PORT
+
+Specified USB COM Port device is connected to e.g. /dev/ttyUSB0 on linux or COM0 on windows
+-------------------------------------------------------------------------------------------------------------------
+SDR DEVICE SERIAL
+
+SDR Device serial number obtained by running
+
+LimeUtil --find
+
+If left blank, the first device in the list will be used to configure LimeRFE board
+-------------------------------------------------------------------------------------------------------------------
+CONFIGURATION FILE
+
+If set LimeRFE device will be configured using already generated .ini file
+
+Note: .ini file must be generated using LimeSuite->Modules->LimeRFE->save, general LimeSuite .ini file will not work
+-------------------------------------------------------------------------------------------------------------------
+ENABLE FAN
+
+Enable or disable fan connected to LimeRFE device
+-------------------------------------------------------------------------------------------------------------------
+MODE
+
+Select LimeRFE mode to be used, valid values are: RX(0), TX(1), RX+TX(2), NONE(3)
+
+-------------------------------------------------------------------------------------------------------------------
+RX CHANNEL
+
+Select RX channel to be configured, if Cellular Bands are selected, the same channel is set for TX
+
+-------------------------------------------------------------------------------------------------------------------
+RX PORT
+
+Select hardware port to be used for receive
+
+-------------------------------------------------------------------------------------------------------------------
+RX ATTENUATION
+
+Specifies the attenuation in the RX path. Attenuation [dB] = 2 * attenuation.
+Valid value range is [0,7]
+
+-------------------------------------------------------------------------------------------------------------------
+AM FM NOTCH FILTER
+
+Enables or disables AM FM notch filter
+
+Note: Only works for specific channels(see block diagram of LimeRFE)
+
+-------------------------------------------------------------------------------------------------------------------
+TX CHANNEL
+
+Select TX channel to be configured
+
+-------------------------------------------------------------------------------------------------------------------
+TX PORT
+
+Select hardware port to be used for transmit
+
+-------------------------------------------------------------------------------------------------------------------
+</doc>
+</block>

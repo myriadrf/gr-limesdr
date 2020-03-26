@@ -156,6 +156,18 @@ find_library(LIMESUITE_LIB
 )
 
 message(STATUS "Found LimeSuite: ${LIMESUITE_INCLUDE_DIRS}, ${LIMESUITE_LIB}")
+
+########################################################################
+# LimeRFE
+########################################################################
+include(FeatureSummary)
+include(CMakeDependentOption)
+option(ENABLE_RFE "Enable LimeRFE support" OFF)
+add_feature_info(LimeRFE ENABLE_LIBRARY "LimeRFE support")
+if(ENABLE_RFE)
+    message(STATUS "Enabling LimeRFE support")
+endif()
+
 ########################################################################
 # Setup doxygen option
 ########################################################################

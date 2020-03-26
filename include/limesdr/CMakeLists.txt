@@ -26,3 +26,7 @@ install(FILES
     sink.h 
     DESTINATION include/limesdr
 )
+if(ENABLE_RFE)
+    install(FILES rfe.h DESTINATION include/limesdr
+    )
+endif()

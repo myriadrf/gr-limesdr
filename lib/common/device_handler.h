@@ -22,6 +22,7 @@
 #define DEVICE_HANDLER_H
 
 #include <LimeSuite.h>
+#include <limeRFE.h>
 #include <cmath>
 #include <iostream>
 #include <list>
@@ -37,7 +38,7 @@
 #define LimeNET_Micro 2
 #define LimeSDR_USB 3
 
-#define GR_LIMESDR_VER "2.1.4"
+#define GR_LIMESDR_VER "2.2.4"
 
 class device_handler {
     private:
@@ -61,6 +62,12 @@ class device_handler {
         std::string sink_filename;
     };
 
+    struct rfe_device
+    {
+        int rx_channel = 0;
+        int tx_channel = 0;
+        rfe_dev_t* rfe_dev = nullptr;
+    }rfe_device;
     // Device list
     lms_info_str_t* list = new lms_info_str_t[20];
     // Device vector. Adds devices from the list
@@ -290,6 +297,15 @@ class device_handler {
      * @param   dacVal		   DAC value (0-65535)
      */
     void set_tcxo_dac(int device_number, uint16_t dacVal);
+        /**
+     * Sets up LimeRFE device pointer so that automatic channel configuration could be made
+     * @param   rfe_dev  Pointer to LimeRFE device descriptor
+     */
+    void set_rfe_device(rfe_dev_t* rfe_dev);
+    /**
+     * Assigns configured LimeSDR channels to LimeRFE for automatic channel switching
+     */
+    void update_rfe_channels();
 
 };
 
