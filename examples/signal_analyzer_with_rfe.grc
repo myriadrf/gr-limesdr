@@ -249,6 +249,7 @@ blocks:
     com_port: ''
     comm_type: '1'
     comment: ''
+    fan: '0'
     filename: ''
     mode: rfe_mode
     notch: rfe_notch
@@ -263,7 +264,7 @@ blocks:
     bus_structure: null
     coordinate: [178, 323]
     rotation: 0
-    state: true
+    state: enabled
 - name: limesdr_source_0
   id: limesdr_source
   parameters:
@@ -298,7 +299,7 @@ blocks:
     bus_structure: null
     coordinate: [177, 233]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_sink_x_0
   id: qtgui_sink_x
   parameters:
@@ -327,7 +328,7 @@ blocks:
     bus_structure: null
     coordinate: [427, 233]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
 - [limesdr_source_0, '0', qtgui_sink_x_0, '0']

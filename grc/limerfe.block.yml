@@ -29,14 +29,14 @@ parameters:
   hide: part
   category: General
 
-# Not working
-# - id: fan
-#   label: Enable Fan
-#   dtype: int
-#   options: ['0','1']
-#   option_labels: ['False', 'True']
-#   default: 0
-#   category: General
+- id: fan
+  label: Enable Fan
+  dtype: int
+  options: ['0','1']
+  option_labels: ['False', 'True']
+  default: 0
+  hide: part
+  category: General
 
 - id: mode
   label: Mode
@@ -124,7 +124,7 @@ templates:
      ${rx_port}, ${tx_port}, ${mode}, ${notch}, ${atten})
   callbacks:
   - change_mode(${mode})
- # - set_fan(${fan})
+  - set_fan(${fan})
   - set_attenuation(${atten})
   - set_notch(${notch})
 asserts:
