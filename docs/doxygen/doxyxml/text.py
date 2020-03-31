@@ -28,7 +28,7 @@ def is_string(txt):
     if isinstance(txt, str):
         return True
     try:
-        if isinstance(txt, str):
+        if isinstance(txt, unicode):
             return True
     except NameError:
         pass
