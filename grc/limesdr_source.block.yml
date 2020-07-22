@@ -257,10 +257,10 @@ asserts:
 - ${ samp_rate >= digital_bandw_ch1 or digital_bandw_ch0 == 0 }
 
 - ${ gain_dB_ch0 >= 0 }
-- ${ 70 >= gain_dB_ch0 }
+- ${ 73 >= gain_dB_ch0 }
 
 - ${ gain_dB_ch1 >= 0 }
-- ${ 70 >= gain_dB_ch1 }
+- ${ 73 >= gain_dB_ch1 }
 
 - ${ samp_rate > 0 }
 - ${ 61.44e6 >= samp_rate }
