@@ -436,10 +436,10 @@ self.$(id).set_tcxo_dac($dacVal)
     <check> $samp_rate >= $digital_bandw_ch1 or $digital_bandw_ch0 == 0 </check>
 
     <check> $gain_dB_ch0 >= 0 </check>
-    <check> 70 >= $gain_dB_ch0 </check>
+    <check> 73 >= $gain_dB_ch0 </check>
 
     <check> $gain_dB_ch1 >= 0 </check>
-    <check> 70 >= $gain_dB_ch1 </check>
+    <check> 73 >= $gain_dB_ch1 </check>
 
     <check> $samp_rate > 0 </check>
     <check> 61.44e6 >= $samp_rate </check>
