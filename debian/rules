@@ -2,3 +2,6 @@
 
 %:
 	dh $@ --with python2 --parallel
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DENABLE_RFE=ON

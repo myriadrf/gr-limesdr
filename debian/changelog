@@ -1,3 +1,12 @@
+gr-limesdr (2.1.6-1) unstable; urgency=low
+
+  * Improve block labeling and documentation
+  * Added LimeRFE board support
+  * Fixed gain values to match LimeSuite 
+  * Updated required LimeSuite libraries to the newest version
+  * Changed debian/rules to compile with LimeRFE support
+
+ -- Lime Microsystems <info@limemicro.com>  Wed, 29 Jul 2020 12:10:00 +0300
 gr-limesdr (2.1.4-2) unstable; urgency=low
 
   * Fix cmake for old versions
