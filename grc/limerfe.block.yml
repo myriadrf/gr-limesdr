@@ -127,7 +127,6 @@ templates:
   - set_fan(${fan})
   - set_attenuation(${atten})
   - set_notch(${notch})
-asserts:
 
 
 file_format: 1
