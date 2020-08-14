@@ -70,6 +70,7 @@
         <value></value>
         <type>file_open</type>
         <hide>part</hide>
+        <tab>Advanced</tab>
     </param>
 
     <param>
@@ -357,12 +358,6 @@ LimeUtil --find
 
 If left blank, the first device in the list will be used to configure LimeRFE board
 -------------------------------------------------------------------------------------------------------------------
-CONFIGURATION FILE
-
-If set LimeRFE device will be configured using already generated .ini file
-
-Note: .ini file must be generated using LimeSuite->Modules->LimeRFE->save, general LimeSuite .ini file will not work
--------------------------------------------------------------------------------------------------------------------
 ENABLE FAN
 
 Enable or disable fan connected to LimeRFE device
@@ -403,7 +398,13 @@ Select TX channel to be configured
 TX PORT
 
 Select hardware port to be used for transmit
+-------------------------------------------------------------------------------------------------------------------
+CONFIGURATION FILE
 
+This setting is available in "Advanced" tab of grc block.
+If set LimeRFE device will be configured using already generated .ini file
+
+Note: .ini file must be generated using LimeSuite->Modules->LimeRFE->save, general LimeSuite .ini file will not work
 -------------------------------------------------------------------------------------------------------------------
 </doc>
 </block>
