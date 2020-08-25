@@ -29,9 +29,11 @@ namespace gr {
 namespace limesdr {
 
 source::sptr
-source::make(std::string serial, int channel_mode, const std::string& filename)
+source::make(std::string serial, int channel_mode, const std::string& filename,
+	     bool align_ch_phase)
 {
-    return gnuradio::get_initial_sptr(new source_impl(serial, channel_mode, filename));
+    return gnuradio::get_initial_sptr(new source_impl(serial, channel_mode, filename,
+						      align_ch_phase));
 }
 
 /*
@@ -42,7 +44,8 @@ source::make(std::string serial, int channel_mode, const std::string& filename)
 
 source_impl::source_impl(std::string serial,
                          int channel_mode,
-                         const std::string& filename)
+                         const std::string& filename,
+			 bool align_ch_phase)
     : gr::sync_block(
           "source", gr::io_signature::make(0, 0, 0), args_to_io_signature(channel_mode))
 {
@@ -55,6 +58,7 @@ source_impl::source_impl(std::string serial,
     // them later
     stored.serial = serial;
     stored.channel_mode = channel_mode;
+    stored.align = align_ch_phase ? LMS_ALIGN_CH_PHASE : 0;
 
     if (stored.channel_mode < 0 && stored.channel_mode > 2) {
         std::cout << "ERROR: source_impl::source_impl(): Channel must be A(0), "
@@ -228,7 +232,7 @@ int source_impl::work(int noutput_items,
 // Setup stream
 void source_impl::init_stream(int device_number, int channel)
 {
-    streamId[channel].channel = channel;
+    streamId[channel].channel = channel | stored.align;
     streamId[channel].fifoSize =
         (stored.FIFO_size == 0) ? (int)stored.samp_rate / 10 : stored.FIFO_size;
     streamId[channel].throughputVsLatency = 0.5;

@@ -48,6 +48,7 @@ private:
         int channel_mode;
         double samp_rate = 10e6;
         uint32_t FIFO_size = 0;
+        int align;
     } stored;
 
     std::chrono::high_resolution_clock::time_point t1, t2;
@@ -57,7 +58,8 @@ private:
     void add_time_tag(int channel, lms_stream_meta_t meta);
 
 public:
-    source_impl(std::string serial, int channel_mode, const std::string& filename);
+    source_impl(std::string serial, int channel_mode, const std::string& filename,
+		bool align_ch_phase);
     ~source_impl();
 
     bool start(void);

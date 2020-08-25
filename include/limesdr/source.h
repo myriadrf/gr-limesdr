@@ -50,9 +50,14 @@ public:
      *
      * @param filename Path to file if file switch is turned on.
      *
+     * @param align_ch_phase Perform MIMO phase alignment by calling AlignRxRF()
+     * as described in
+     * https://github.com/myriadrf/LMS7002M-docs/blob/master/LimeSDR-USB_channel_alignment_v01r00.pdf
+     *
      * @return a new limesdr source block object
      */
-    static sptr make(std::string serial, int channel_mode, const std::string& filename);
+    static sptr make(std::string serial, int channel_mode, const std::string& filename,
+		     bool align_ch_phase);
 
     /**
      * Set center frequency
