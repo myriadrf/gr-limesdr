@@ -163,6 +163,16 @@ public:
      * @param   dacVal		   DAC value (0-65535)
      */
     virtual void set_tcxo_dac(uint16_t dacVal = 125) = 0;
+
+    /**
+     * Write LMS register
+     *
+     * Writes a parameter by calling LMS_WriteLMSReg()
+     *
+     * @param   address		   Address
+     * @param   val                Value
+     */
+    virtual void write_lms_reg(uint32_t address, uint16_t val) = 0;
 };
 
 } // namespace limesdr

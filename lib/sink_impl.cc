@@ -396,5 +396,10 @@ void sink_impl::set_tcxo_dac(uint16_t dacVal)
     device_handler::getInstance().set_tcxo_dac(stored.device_number, dacVal);
 }
 
+void sink_impl::write_lms_reg(uint32_t address, uint16_t val)
+{
+    device_handler::getInstance().write_lms_reg(stored.device_number, address, val);
+}
+  
 } // namespace limesdr
 } // namespace gr

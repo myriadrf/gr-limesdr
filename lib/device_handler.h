@@ -321,6 +321,11 @@ public:
      * Assigns configured LimeSDR channels to LimeRFE for automatic channel switching
      */
     void update_rfe_channels();
+
+    /**
+     * Writes an LMS register by calling LMS_WriteLMSReg()
+     */
+    void write_lms_reg(int device_number, uint32_t address, uint16_t val);
 };
 
 
