@@ -56,8 +56,10 @@ public:
      *
      * @return a new limesdr source block object
      */
-    static sptr make(std::string serial, int channel_mode, const std::string& filename,
-		     bool align_ch_phase);
+    static sptr make(std::string serial,
+                     int channel_mode,
+                     const std::string& filename,
+                     bool align_ch_phase);
 
     /**
      * Set center frequency

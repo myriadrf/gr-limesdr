@@ -58,8 +58,10 @@ private:
     void add_time_tag(int channel, lms_stream_meta_t meta);
 
 public:
-    source_impl(std::string serial, int channel_mode, const std::string& filename,
-		bool align_ch_phase);
+    source_impl(std::string serial,
+                int channel_mode,
+                const std::string& filename,
+                bool align_ch_phase);
     ~source_impl();
 
     bool start(void);

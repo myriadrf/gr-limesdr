@@ -28,12 +28,13 @@
 namespace gr {
 namespace limesdr {
 
-source::sptr
-source::make(std::string serial, int channel_mode, const std::string& filename,
-	     bool align_ch_phase)
+source::sptr source::make(std::string serial,
+                          int channel_mode,
+                          const std::string& filename,
+                          bool align_ch_phase)
 {
-    return gnuradio::get_initial_sptr(new source_impl(serial, channel_mode, filename,
-						      align_ch_phase));
+    return gnuradio::get_initial_sptr(
+        new source_impl(serial, channel_mode, filename, align_ch_phase));
 }
 
 /*
@@ -45,7 +46,7 @@ source::make(std::string serial, int channel_mode, const std::string& filename,
 source_impl::source_impl(std::string serial,
                          int channel_mode,
                          const std::string& filename,
-			 bool align_ch_phase)
+                         bool align_ch_phase)
     : gr::sync_block(
           "source", gr::io_signature::make(0, 0, 0), args_to_io_signature(channel_mode))
 {
