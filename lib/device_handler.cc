@@ -540,8 +540,8 @@ device_handler::set_gain(int device_number, bool direction, int channel, unsigne
                   << gain_value << " dB." << std::endl;
         return gain_value;
     } else {
-        std::cout
-            << "ERROR: device_handler::set_gain(): valid range [0, 73]" << std::endl;
+        std::cout << "ERROR: device_handler::set_gain(): valid range [0, 73]"
+                  << std::endl;
         close_all_devices();
     }
 }
@@ -648,6 +648,8 @@ void device_handler::update_rfe_channels()
     }
 }
 
-void device_handler::write_lms_reg(int device_number, uint32_t address, uint16_t val) {
-    LMS_WriteLMSReg(device_handler::getInstance().get_device(device_number), address, val);    
+void device_handler::write_lms_reg(int device_number, uint32_t address, uint16_t val)
+{
+    LMS_WriteLMSReg(
+        device_handler::getInstance().get_device(device_number), address, val);
 }

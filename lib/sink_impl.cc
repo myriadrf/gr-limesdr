@@ -400,6 +400,6 @@ void sink_impl::write_lms_reg(uint32_t address, uint16_t val)
 {
     device_handler::getInstance().write_lms_reg(stored.device_number, address, val);
 }
-  
+
 } // namespace limesdr
 } // namespace gr
