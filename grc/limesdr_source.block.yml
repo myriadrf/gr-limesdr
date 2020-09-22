@@ -45,6 +45,14 @@ parameters:
   default: 0
   category: General
 
+- id: ch_align
+  label: MIMO phase align
+  dtype: enum
+  options:       ['False', 'True']
+  option_labels: ['Disabled', 'Enabled']
+  default: 0
+  category: General
+
 - id: nco_freq_ch0
   label: NCO frequency
   dtype: float
@@ -152,7 +160,7 @@ parameters:
 templates:
   imports: import limesdr
   make: |-
-    limesdr.source(${serial}, ${channel_mode}, ${filename})
+    limesdr.source(${serial}, ${channel_mode}, ${filename}, ${ch_align})
 
     % if filename() == "":
 
@@ -313,6 +321,11 @@ documentation: |-
   Here you can select oversampling value for RX. Default value uses highest possible oversampling value.
   
   Note: LimeSDR-Mini and LimeSDR-Micro supports only the same oversampling value for TX and RX.
+  -------------------------------------------------------------------------------------------------------------------
+  MIMO PHASE ALIGN
+  
+  This enables or disables a calibration that aligns the phases of channels A and B as described in
+  https://github.com/myriadrf/LMS7002M-docs/blob/master/LimeSDR-USB_channel_alignment_v01r00.pdf
   -------------------------------------------------------------------------------------------------------------------
   NCO FREQUENCY
   
