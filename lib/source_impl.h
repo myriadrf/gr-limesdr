@@ -99,6 +99,8 @@ public:
     void calibrate(double bandw, int channel = 0);
 
     void set_tcxo_dac(uint16_t dacVal = 125);
+
+    void write_lms_reg(uint32_t address, uint16_t val);
 };
 
 } // namespace limesdr

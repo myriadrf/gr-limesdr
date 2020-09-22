@@ -61,13 +61,12 @@ private:
         std::string sink_filename;
     };
 
-    struct rfe_device
-    {
+    struct rfe_device {
         int rx_channel = 0;
         int tx_channel = 0;
         rfe_dev_t* rfe_dev = nullptr;
-    }rfe_device;
-    
+    } rfe_device;
+
 
     // Device list
     lms_info_str_t* list = new lms_info_str_t[20];
@@ -313,7 +312,8 @@ public:
      */
     void set_tcxo_dac(int device_number, uint16_t dacVal);
     /**
-     * Sets up LimeRFE device pointer so that automatic channel configuration could be made
+     * Sets up LimeRFE device pointer so that automatic channel configuration could be
+     * made
      * @param   rfe_dev  Pointer to LimeRFE device descriptor
      */
     void set_rfe_device(rfe_dev_t* rfe_dev);
@@ -321,6 +321,11 @@ public:
      * Assigns configured LimeSDR channels to LimeRFE for automatic channel switching
      */
     void update_rfe_channels();
+
+    /**
+     * Writes an LMS register by calling LMS_WriteLMSReg()
+     */
+    void write_lms_reg(int device_number, uint32_t address, uint16_t val);
 };
 
 
