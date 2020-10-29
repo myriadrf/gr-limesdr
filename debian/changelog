@@ -1,5 +1,10 @@
 gr-limesdr (2.1.6-1) unstable; urgency=low
 
+  * Moved .ini file loading to advanced tab in GRC block description
+
+ -- Lime Microsystems <info@limemicro.com>  Thu, 29 Oct 2020 14:00:00 +0300
+gr-limesdr (2.1.6-1) unstable; urgency=low
+
   * Improve block labeling and documentation
   * Added LimeRFE board support
   * Fixed gain values to match LimeSuite 
