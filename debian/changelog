@@ -1,4 +1,4 @@
-gr-limesdr (2.1.6-1) unstable; urgency=low
+gr-limesdr (2.1.7-1) unstable; urgency=low
 
   * Moved .ini file loading to advanced tab in GRC block description
 
