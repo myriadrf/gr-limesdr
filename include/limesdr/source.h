@@ -180,6 +180,33 @@ public:
      * @param   val                Value
      */
     virtual void write_lms_reg(uint32_t address, uint16_t val) = 0;
+
+    /**
+     * Set GPIO direction
+     *
+     * Set GPIO direction by calling LMS_GPIODirWrite()
+     *
+     * @param   dir        Direction bitmap (eight bits, one for each pin, 1 = output, 0 = input)
+     */
+    virtual void set_gpio_dir(uint8_t dir) = 0;
+
+    /**
+     * Write GPIO outputs
+     *
+     * Write GPIO outputs by calling LMS_GPIOWrite()
+     *
+     * @param   out        Level bitmap (eight bits, one for each pin)
+     */
+    virtual void write_gpio(uint8_t out) = 0;
+
+    /**
+     * Read GPIO inputs
+     *
+     * Read GPIO inputs by calling LMS_GPIORead()
+     *
+     * @return input level bitmap (eight bits, one for each pin)
+     */
+    virtual uint8_t read_gpio() = 0;
 };
 
 } // namespace limesdr
