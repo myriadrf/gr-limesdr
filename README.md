@@ -2,6 +2,10 @@
 
 Package includes GNU Radio blocks for various LimeSDR boards.
 
+## Fork Modifications
+
+Included support for LimeSDR GPIOs in the python sink and source classes.
+
 ## Documentation
 
 * [MyriadRF Wiki page](https://wiki.myriadrf.org/Gr-limesdr_Plugin_for_GNURadio)
@@ -17,15 +21,6 @@ Package includes GNU Radio blocks for various LimeSDR boards.
 
 * Installing GNURadio
 To install GNURadio3.8 please follow this guide [Installing GNURadio](https://wiki.gnuradio.org/index.php/InstallingGR)
-
-* Installing via PPA
-Only available for Ubuntu 20.04
-<pre>
-sudo add-apt-repository -y ppa:myriadrf/drivers
-sudo add-apt-repository -y ppa:myriadrf/gnuradio
-sudo apt update
-sudo apt install gr-limesdr
-</pre>
 
 * Building from source
 <pre>
