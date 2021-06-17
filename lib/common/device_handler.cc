@@ -19,7 +19,7 @@
  */
 
 #include "device_handler.h"
-#include <LMS7002M_parameters.h>
+#include <lime/LMS7002M_parameters.h>
 
 device_handler::~device_handler() { delete list; }
 

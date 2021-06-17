@@ -1,2 +1,5 @@
-build/**
-.vscode/**
+*~
+*.pyc
+*.pyo
+build*/
+examples/grc/*.py

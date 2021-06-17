@@ -1,4 +1,6 @@
-INCLUDE(FindPkgConfig)
+if(NOT PKG_CONFIG_FOUND)
+    INCLUDE(FindPkgConfig)
+endif()
 PKG_CHECK_MODULES(PC_LIMESDR limesdr)
 
 FIND_PATH(
@@ -22,9 +24,10 @@ FIND_LIBRARY(
           /usr/local/lib64
           /usr/lib
           /usr/lib64
-)
+          )
+
+include("${CMAKE_CURRENT_LIST_DIR}/limesdrTarget.cmake")
 
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(LIMESDR DEFAULT_MSG LIMESDR_LIBRARIES LIMESDR_INCLUDE_DIRS)
 MARK_AS_ADVANCED(LIMESDR_LIBRARIES LIMESDR_INCLUDE_DIRS)
-

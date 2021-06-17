@@ -21,7 +21,7 @@
 #ifndef INCLUDED_LIMERFE_H
 #define INCLUDED_LIMERFE_H
 
-#include <limeRFE.h>
+#include <lime/limeRFE.h>
 #include <limesdr/api.h>
 #include <iostream>
 #include <string>

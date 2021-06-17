@@ -21,8 +21,8 @@
 #ifndef DEVICE_HANDLER_H
 #define DEVICE_HANDLER_H
 
-#include <LimeSuite.h>
-#include <limeRFE.h>
+#include <lime/LimeSuite.h>
+#include <lime/limeRFE.h>
 #include <cmath>
 #include <iostream>
 #include <list>
