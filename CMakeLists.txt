@@ -129,6 +129,40 @@ execute_process(
 file(TO_CMAKE_PATH "${PYTHON_NUMPY_INCLUDE_DIR}" PYTHON_NUMPY_INCLUDE_DIR)
 
 ########################################################################
+# Find LimeSuite
+########################################################################
+MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
+INCLUDE(FindPkgConfig)
+PKG_CHECK_MODULES(PC_LIMESUITE LimeSuite)
+find_path(LIMESUITE_INCLUDE_DIRS
+ NAMES LimeSuite.h
+ HINTS ${PC_LIMESUITE_INCLUDEDIR}/lime
+ PATHS ${LIMESUITE_PKG_INCLUDE_DIRS}
+       /usr/include/lime
+       /usr/local/include/lime
+)
+find_library(LIMESUITE_LIB
+ NAMES LimeSuite limesuite
+ HINTS ${PC_LIMESUITE_LIBDIR}
+ PATHS ${LIMESDR_PKG_LIBRARY_DIRS}
+       /usr/lib
+       /usr/local/lib
+)
+
+message(STATUS "Found LimeSuite: ${LIMESUITE_INCLUDE_DIRS}, ${LIMESUITE_LIB}")
+
+########################################################################
+# LimeRFE
+########################################################################
+include(FeatureSummary)
+include(CMakeDependentOption)
+option(ENABLE_RFE "Enable LimeRFE support" OFF)
+add_feature_info(LimeRFE ENABLE_LIBRARY "LimeRFE support")
+if(ENABLE_RFE)
+    message(STATUS "Enabling LimeRFE support")
+endif()
+
+########################################################################
 # Setup doxygen option
 ########################################################################
 if(DOXYGEN_FOUND)
