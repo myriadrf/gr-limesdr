@@ -15,8 +15,14 @@
  */
 
 
-
+ 
  static const char *__doc_gr_limesdr_sink = R"doc()doc";
+
+
+ static const char *__doc_gr_limesdr_sink_sink_0 = R"doc()doc";
+
+
+ static const char *__doc_gr_limesdr_sink_sink_1 = R"doc()doc";
 
 
  static const char *__doc_gr_limesdr_sink_make = R"doc()doc";
@@ -54,4 +60,4 @@
 
  static const char *__doc_gr_limesdr_sink_set_tcxo_dac = R"doc()doc";
 
-
+  

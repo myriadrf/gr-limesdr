@@ -30,12 +30,10 @@ namespace py = pybind11;
 void bind_sink(py::module& m)
 {
 
-    using sink    = gr::limesdr::sink;
+    using sink    = ::gr::limesdr::sink;
 
 
-    py::class_<sink,
-        gr::block,
-        gr::basic_block,
+    py::class_<sink, gr::block, gr::basic_block,
         std::shared_ptr<sink>>(m, "sink", D(sink))
 
         .def(py::init(&sink::make),
@@ -45,81 +43,93 @@ void bind_sink(py::module& m)
            py::arg("length_tag_name"),
            D(sink,make)
         )
+        
 
-        .def("set_center_freq",
-            &sink::set_center_freq,
+
+
+
+        
+        .def("set_center_freq",&sink::set_center_freq,       
             py::arg("freq"),
             py::arg("chan") = 0,
-            D(sink, set_center_freq)
+            D(sink,set_center_freq)
         )
 
-        .def("set_antenna",
-            &sink::set_antenna,
+
+        
+        .def("set_antenna",&sink::set_antenna,       
             py::arg("antenna"),
             py::arg("channel") = 0,
-            D(sink, set_antenna)
+            D(sink,set_antenna)
         )
 
-        .def("set_nco",
-            &sink::set_nco,
+
+        
+        .def("set_nco",&sink::set_nco,       
             py::arg("nco_freq"),
             py::arg("channel"),
-            D(sink, set_nco)
+            D(sink,set_nco)
         )
 
-        .def("set_bandwidth",
-            &sink::set_bandwidth,
+
+        
+        .def("set_bandwidth",&sink::set_bandwidth,       
             py::arg("analog_bandw"),
             py::arg("channel") = 0,
-            D(sink, set_bandwidth)
+            D(sink,set_bandwidth)
         )
 
-        .def("set_digital_filter",
-            &sink::set_digital_filter,
+
+        
+        .def("set_digital_filter",&sink::set_digital_filter,       
             py::arg("digital_bandw"),
             py::arg("channel"),
-            D(sink, set_digital_filter)
+            D(sink,set_digital_filter)
         )
 
-        .def("set_gain",
-            &sink::set_gain,
+
+        
+        .def("set_gain",&sink::set_gain,       
             py::arg("gain_dB"),
             py::arg("channel") = 0,
-            D(sink, set_gain)
+            D(sink,set_gain)
         )
 
-        .def("set_sample_rate",
-            &sink::set_sample_rate,
+
+        
+        .def("set_sample_rate",&sink::set_sample_rate,       
             py::arg("rate"),
-            D(sink, set_sample_rate)
+            D(sink,set_sample_rate)
         )
 
-        .def("set_oversampling",
-            &sink::set_oversampling,
+
+        
+        .def("set_oversampling",&sink::set_oversampling,       
             py::arg("oversample"),
-            D(sink, set_oversampling)
+            D(sink,set_oversampling)
         )
 
-        .def("calibrate",
-            &sink::calibrate,
+
+        
+        .def("calibrate",&sink::calibrate,       
             py::arg("bandw"),
             py::arg("channel") = 0,
-            D(sink, calibrate)
+            D(sink,calibrate)
         )
 
-        .def("set_buffer_size",
-            &sink::set_buffer_size,
+
+        
+        .def("set_buffer_size",&sink::set_buffer_size,       
             py::arg("size"),
-            D(sink, set_buffer_size)
+            D(sink,set_buffer_size)
         )
 
-        .def("set_tcxo_dac",
-            &sink::set_tcxo_dac,
+
+        
+        .def("set_tcxo_dac",&sink::set_tcxo_dac,       
             py::arg("dacVal") = 125,
-            D(sink, set_tcxo_dac)
+            D(sink,set_tcxo_dac)
         )
-
-
 
         ;
 

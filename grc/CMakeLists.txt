@@ -19,7 +19,8 @@
 
 install(FILES
     limesdr_source.block.yml
-    limesdr_sink.block.yml DESTINATION share/gnuradio/grc/blocks
+    limesdr_sink.block.yml
+    DESTINATION share/gnuradio/grc/blocks
 )
 if(ENABLE_RFE)
     install(FILES limesdr_rfe.block.yml DESTINATION share/gnuradio/grc/blocks)

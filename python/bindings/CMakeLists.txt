@@ -33,6 +33,11 @@ list(APPEND limesdr_python_files
     source_python.cc
     python_bindings.cc)
 
+if(ENABLE_RFE)
+    list(APPEND limesdr_python_files rfe_python.cc)
+    add_compile_definitions(ENABLE_RFE)
+endif()
+
 GR_PYBIND_MAKE_OOT(limesdr
    ../..
    gr::limesdr

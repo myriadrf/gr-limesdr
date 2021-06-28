@@ -15,8 +15,14 @@
  */
 
 
-
+ 
  static const char *__doc_gr_limesdr_source = R"doc()doc";
+
+
+ static const char *__doc_gr_limesdr_source_source_0 = R"doc()doc";
+
+
+ static const char *__doc_gr_limesdr_source_source_1 = R"doc()doc";
 
 
  static const char *__doc_gr_limesdr_source_make = R"doc()doc";
@@ -53,3 +59,5 @@
 
 
  static const char *__doc_gr_limesdr_source_set_tcxo_dac = R"doc()doc";
+
+  

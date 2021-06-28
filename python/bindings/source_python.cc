@@ -30,12 +30,10 @@ namespace py = pybind11;
 void bind_source(py::module& m)
 {
 
-    using source    = gr::limesdr::source;
+    using source    = ::gr::limesdr::source;
 
 
-    py::class_<source,
-        gr::block,
-        gr::basic_block,
+    py::class_<source, gr::block, gr::basic_block,
         std::shared_ptr<source>>(m, "source", D(source))
 
         .def(py::init(&source::make),
@@ -44,80 +42,93 @@ void bind_source(py::module& m)
            py::arg("filename"),
            D(source,make)
         )
+        
 
-        .def("set_center_freq",
-            &source::set_center_freq,
+
+
+
+        
+        .def("set_center_freq",&source::set_center_freq,       
             py::arg("freq"),
             py::arg("chan") = 0,
-            D(source, set_center_freq)
+            D(source,set_center_freq)
         )
 
-        .def("set_antenna",
-            &source::set_antenna,
+
+        
+        .def("set_antenna",&source::set_antenna,       
             py::arg("antenna"),
             py::arg("channel") = 0,
-            D(source, set_antenna)
+            D(source,set_antenna)
         )
 
-        .def("set_nco",
-            &source::set_nco,
+
+        
+        .def("set_nco",&source::set_nco,       
             py::arg("nco_freq"),
-            py::arg("channel") = 0,
-            D(source, set_nco)
+            py::arg("channel"),
+            D(source,set_nco)
         )
 
-        .def("set_bandwidth",
-            &source::set_bandwidth,
+
+        
+        .def("set_bandwidth",&source::set_bandwidth,       
             py::arg("analog_bandw"),
             py::arg("channel") = 0,
-            D(source, set_bandwidth)
+            D(source,set_bandwidth)
         )
 
-        .def("set_digital_filter",
-            &source::set_digital_filter,
+
+        
+        .def("set_digital_filter",&source::set_digital_filter,       
             py::arg("digital_bandw"),
             py::arg("channel"),
-            D(source, set_digital_filter)
+            D(source,set_digital_filter)
         )
 
-        .def("set_gain",
-            &source::set_gain,
+
+        
+        .def("set_gain",&source::set_gain,       
             py::arg("gain_dB"),
             py::arg("channel") = 0,
-            D(source, set_gain)
-            )
+            D(source,set_gain)
+        )
 
-        .def("set_sample_rate",
-            &source::set_sample_rate,
+
+        
+        .def("set_sample_rate",&source::set_sample_rate,       
             py::arg("rate"),
-            D(source, set_sample_rate)
+            D(source,set_sample_rate)
         )
 
-        .def("set_oversampling",
-            &source::set_oversampling,
+
+        
+        .def("set_oversampling",&source::set_oversampling,       
             py::arg("oversample"),
-            D(source, set_oversampling)
+            D(source,set_oversampling)
         )
 
-        .def("calibrate",
-            &source::calibrate,
+
+        
+        .def("calibrate",&source::calibrate,       
             py::arg("bandw"),
             py::arg("channel") = 0,
-            D(source, calibrate)
+            D(source,calibrate)
         )
 
-        .def("set_buffer_size",
-            &source::set_buffer_size,
+
+        
+        .def("set_buffer_size",&source::set_buffer_size,       
             py::arg("size"),
-            D(source, set_buffer_size)
+            D(source,set_buffer_size)
         )
 
-        .def("set_tcxo_dac",
-            &source::set_tcxo_dac,
+
+        
+        .def("set_tcxo_dac",&source::set_tcxo_dac,       
             py::arg("dacVal") = 125,
-            D(source, set_tcxo_dac)
+            D(source,set_tcxo_dac)
         )
-
 
         ;
 
