@@ -21,6 +21,8 @@ namespace py = pybind11;
 // Please do not delete
 /**************************************/
 // BINDING_FUNCTION_PROTOTYPES(
+    void bind_sink(py::module& m);
+    void bind_source(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -49,5 +51,7 @@ PYBIND11_MODULE(limesdr_python, m)
     // Please do not delete
     /**************************************/
     // BINDING_FUNCTION_CALLS(
+        bind_sink(m);
+        bind_source(m);
     // ) END BINDING_FUNCTION_CALLS
 }
