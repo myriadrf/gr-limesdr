@@ -1,0 +1,300 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="classgr_1_1limesdr_1_1rfe" kind="class" language="C++" prot="public">
+    <compoundname>gr::limesdr::rfe</compoundname>
+    <includes refid="rfe_8h" local="no">rfe.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classgr_1_1limesdr_1_1rfe_1a97758f25fcb5f4d086f0043e8ad02c32" prot="private" static="no" mutable="no">
+        <type>rfe_dev_t *</type>
+        <definition>rfe_dev_t* gr::limesdr::rfe::rfe_dev</definition>
+        <argsstring></argsstring>
+        <name>rfe_dev</name>
+        <initializer>= nullptr</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="87" column="15" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classgr_1_1limesdr_1_1rfe_1a4cb2ed5fdc85c8d8cb3336fcd79eea09" prot="private" static="no" mutable="no">
+        <type>rfe_boardState</type>
+        <definition>rfe_boardState gr::limesdr::rfe::boardState</definition>
+        <argsstring></argsstring>
+        <name>boardState</name>
+        <initializer>= { RFE_CID_WB_1000,
+                                  RFE_CID_WB_1000,
+                                  RFE_PORT_1,
+                                  RFE_PORT_1,
+                                  RFE_MODE_NONE,
+                                  RFE_NOTCH_OFF,
+                                  0,
+                                  0,
+                                  0 }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="88" column="20" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classgr_1_1limesdr_1_1rfe_1ad2f45f4758bdba3f090bb884c9c72917" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int gr::limesdr::rfe::sdr_device_num</definition>
+        <argsstring></argsstring>
+        <name>sdr_device_num</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="97" column="9" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1rfe_1a61d36419bbb1b791e5779c87147ff663" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gr::limesdr::rfe::rfe</definition>
+        <argsstring>(int comm_type, std::string device, std::string config_file, char IDRX, char IDTX, char PortRX, char PortTX, char Mode, char Notch, char Atten)</argsstring>
+        <name>rfe</name>
+        <param>
+          <type>int</type>
+          <declname>comm_type</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>device</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>config_file</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>IDRX</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>IDTX</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>PortRX</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>PortTX</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>Mode</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>Notch</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>Atten</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="40" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1rfe_1a966b5ccf8cacd7f8327f525e546cb8a7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gr::limesdr::rfe::~rfe</definition>
+        <argsstring>()</argsstring>
+        <name>~rfe</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="50" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1rfe_1acd06fa9ba5a00f3b7dcae83c376524d5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int gr::limesdr::rfe::change_mode</definition>
+        <argsstring>(int mode)</argsstring>
+        <name>change_mode</name>
+        <param>
+          <type>int</type>
+          <declname>mode</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Change LimeRFE Mode</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mode</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Mode to be set: RX(0), TX(1), NONE(2), TXRX(3)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, other on failure (see LimeRFE error codes) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="58" column="9"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1rfe_1a5a818862739bcd32e47be1e3f7787ccf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int gr::limesdr::rfe::set_fan</definition>
+        <argsstring>(int enable)</argsstring>
+        <name>set_fan</name>
+        <param>
+          <type>int</type>
+          <declname>enable</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Enable or disbale fan</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>enable</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>fan state: 0 - disable; 1 - enable.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, other on failure (see LimeRFE error codes) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="66" column="9"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1rfe_1a0e5d26e95499293719a074e538a61cbb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int gr::limesdr::rfe::set_attenuation</definition>
+        <argsstring>(int attenuation)</argsstring>
+        <name>set_attenuation</name>
+        <param>
+          <type>int</type>
+          <declname>attenuation</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set RX Attenuation value</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>attenuation</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specifies the attenuation in the RX path. Attenuation [dB] = 2 * attenuation. Value range: [0,7]</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, other on failure (see LimeRFE error codes) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="75" column="9"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1rfe_1ab7b53ad02a6844a1c12ff055e1129875" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int gr::limesdr::rfe::set_notch</definition>
+        <argsstring>(int enable)</argsstring>
+        <name>set_notch</name>
+        <param>
+          <type>int</type>
+          <declname>enable</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Enable or disable AM/FM notch filter</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>enable</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>notch state: 0 - disable; 1 - enable</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Notch filter is only possible up to HAM 430-440 MHz, or Wideband 1-1000 MHz </para>
+</simplesect>
+<simplesect kind="return"><para>0 on success, other on failure (see LimeRFE error codes) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="84" column="9"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1rfe_1a3d0edfc1dacb0df903bfdb975d8c0302" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void gr::limesdr::rfe::print_error</definition>
+        <argsstring>(int error)</argsstring>
+        <name>print_error</name>
+        <param>
+          <type>int</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="99" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1rfe_1ad66c8479f6e025c00795af06347487f9" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void gr::limesdr::rfe::get_board_state</definition>
+        <argsstring>()</argsstring>
+        <name>get_board_state</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="101" column="10" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" bodystart="101" bodyend="118"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>GNURadio block to control LimeRFE boards. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="37" column="1" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" bodystart="38" bodyend="119"/>
+    <listofallmembers>
+      <member refid="classgr_1_1limesdr_1_1rfe_1a4cb2ed5fdc85c8d8cb3336fcd79eea09" prot="private" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>boardState</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1acd06fa9ba5a00f3b7dcae83c376524d5" prot="public" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>change_mode</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1ad66c8479f6e025c00795af06347487f9" prot="private" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>get_board_state</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1a3d0edfc1dacb0df903bfdb975d8c0302" prot="private" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>print_error</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1a61d36419bbb1b791e5779c87147ff663" prot="public" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>rfe</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1a97758f25fcb5f4d086f0043e8ad02c32" prot="private" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>rfe_dev</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1ad2f45f4758bdba3f090bb884c9c72917" prot="private" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>sdr_device_num</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1a0e5d26e95499293719a074e538a61cbb" prot="public" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>set_attenuation</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1a5a818862739bcd32e47be1e3f7787ccf" prot="public" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>set_fan</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1ab7b53ad02a6844a1c12ff055e1129875" prot="public" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>set_notch</name></member>
+      <member refid="classgr_1_1limesdr_1_1rfe_1a966b5ccf8cacd7f8327f525e546cb8a7" prot="public" virt="non-virtual"><scope>gr::limesdr::rfe</scope><name>~rfe</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

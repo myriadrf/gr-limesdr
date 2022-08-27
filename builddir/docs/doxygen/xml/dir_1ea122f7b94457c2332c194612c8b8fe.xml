@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="dir_1ea122f7b94457c2332c194612c8b8fe" kind="dir">
+    <compoundname>common</compoundname>
+    <innerfile refid="device__handler_8h">device_handler.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/"/>
+  </compounddef>
+</doxygen>

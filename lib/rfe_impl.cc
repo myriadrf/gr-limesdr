@@ -23,7 +23,7 @@
 #endif
 
 #include "common/device_handler.h"
-#include <limesdr/rfe.h>
+#include <gnuradio/limesdr/rfe.h>
 
 namespace gr {
 namespace limesdr {

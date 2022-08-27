@@ -22,7 +22,7 @@
 #define INCLUDED_LIMESDR_SOURCE_IMPL_H
 
 #include "common/device_handler.h"
-#include <limesdr/source.h>
+#include <gnuradio/limesdr/source.h>
 
 
 static const pmt::pmt_t TIME_TAG = pmt::string_to_symbol("rx_time");

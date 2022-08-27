@@ -8,7 +8,7 @@ Package includes GNU Radio blocks for various LimeSDR boards.
 
 ## Dependencies
  
-* GNU Radio(3.7)
+* GNU Radio(3.10)
 * BOOST
 * SWIG
 * LimeSuite

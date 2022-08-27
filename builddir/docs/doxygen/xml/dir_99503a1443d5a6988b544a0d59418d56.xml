@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="dir_99503a1443d5a6988b544a0d59418d56" kind="dir">
+    <compoundname>limesdr</compoundname>
+    <innerfile refid="api_8h">api.h</innerfile>
+    <innerfile refid="rfe_8h">rfe.h</innerfile>
+    <innerfile refid="sink_8h">sink.h</innerfile>
+    <innerfile refid="source_8h">source.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/"/>
+  </compounddef>
+</doxygen>

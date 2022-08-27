@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="dir_4e6f47f7d343ab5a542ed34733e0ca59" kind="dir">
+    <compoundname>python</compoundname>
+    <innerdir refid="dir_fb7aa15d2ebab276991028229f1a4adb">limesdr</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/builddir/python/"/>
+  </compounddef>
+</doxygen>

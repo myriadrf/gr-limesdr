@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="namespacegr_1_1limesdr" kind="namespace" language="C++">
+    <compoundname>gr::limesdr</compoundname>
+    <innerclass refid="classgr_1_1limesdr_1_1rfe" prot="public">gr::limesdr::rfe</innerclass>
+    <innerclass refid="classgr_1_1limesdr_1_1sink" prot="public">gr::limesdr::sink</innerclass>
+    <innerclass refid="classgr_1_1limesdr_1_1source" prot="public">gr::limesdr::source</innerclass>
+    <innerclass refid="classgr_1_1limesdr_1_1sink__impl" prot="public">gr::limesdr::sink_impl</innerclass>
+    <innerclass refid="classgr_1_1limesdr_1_1source__impl" prot="public">gr::limesdr::source_impl</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/rfe.h" line="30" column="1"/>
+  </compounddef>
+</doxygen>

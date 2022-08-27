@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="rfe__pydoc__template_8h" kind="file" language="C++">
+    <compoundname>rfe_pydoc_template.h</compoundname>
+    <includes local="yes">pydoc_macros.h</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>rfe_pydoc_template.h</label>
+        <link refid="rfe__pydoc__template_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>pydoc_macros.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="rfe__pydoc__template_8h_1a74021f021dcdfbb22891787b79c5529d" prot="public" static="no">
+        <name>D</name>
+        <param><defname>...</defname></param>
+        <initializer><ref refid="docs_2doxygen_2pydoc__macros_8h_1a4e578031ec998eaeb933d5caa6a7d28a" kindref="member">DOC</ref>(gr, limesdr, __VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" line="10" column="10" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="rfe__pydoc__template_8h_1aa0697470ffb685314413d02d851dbedf" prot="public" static="yes" mutable="no">
+        <type>const char *</type>
+        <definition>const char* __doc_gr_limesdr_rfe</definition>
+        <argsstring></argsstring>
+        <name>__doc_gr_limesdr_rfe</name>
+        <initializer>= R&quot;doc()doc&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" line="18" column="19" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rfe__pydoc__template_8h_1ab5785048725826697861367c845ca20d" prot="public" static="yes" mutable="no">
+        <type>const char *</type>
+        <definition>const char* __doc_gr_limesdr_rfe_rfe_0</definition>
+        <argsstring></argsstring>
+        <name>__doc_gr_limesdr_rfe_rfe_0</name>
+        <initializer>= R&quot;doc()doc&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" line="21" column="19" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rfe__pydoc__template_8h_1ace99028339c6567ad0c34c703aaf9864" prot="public" static="yes" mutable="no">
+        <type>const char *</type>
+        <definition>const char* __doc_gr_limesdr_rfe_rfe_1</definition>
+        <argsstring></argsstring>
+        <name>__doc_gr_limesdr_rfe_rfe_1</name>
+        <initializer>= R&quot;doc()doc&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" line="24" column="19" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rfe__pydoc__template_8h_1a7a817bce63644ed0ae0d4557d4d18e8d" prot="public" static="yes" mutable="no">
+        <type>const char *</type>
+        <definition>const char* __doc_gr_limesdr_rfe_change_mode</definition>
+        <argsstring></argsstring>
+        <name>__doc_gr_limesdr_rfe_change_mode</name>
+        <initializer>= R&quot;doc()doc&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" line="27" column="19" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rfe__pydoc__template_8h_1a5d97208f256c2d10852dbde808171f87" prot="public" static="yes" mutable="no">
+        <type>const char *</type>
+        <definition>const char* __doc_gr_limesdr_rfe_set_fan</definition>
+        <argsstring></argsstring>
+        <name>__doc_gr_limesdr_rfe_set_fan</name>
+        <initializer>= R&quot;doc()doc&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" line="30" column="19" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rfe__pydoc__template_8h_1afe78f930f552ce63ff1453d636bba470" prot="public" static="yes" mutable="no">
+        <type>const char *</type>
+        <definition>const char* __doc_gr_limesdr_rfe_set_attenuation</definition>
+        <argsstring></argsstring>
+        <name>__doc_gr_limesdr_rfe_set_attenuation</name>
+        <initializer>= R&quot;doc()doc&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" line="33" column="19" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="rfe__pydoc__template_8h_1abfed3fb1abb84c723d2ae4f6c7d1f139" prot="public" static="yes" mutable="no">
+        <type>const char *</type>
+        <definition>const char* __doc_gr_limesdr_rfe_set_notch</definition>
+        <argsstring></argsstring>
+        <name>__doc_gr_limesdr_rfe_set_notch</name>
+        <initializer>= R&quot;doc()doc&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" line="36" column="19" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/python/limesdr/bindings/docstrings/rfe_pydoc_template.h"/>
+  </compounddef>
+</doxygen>

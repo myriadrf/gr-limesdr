@@ -1,0 +1,567 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="classgr_1_1limesdr_1_1sink" kind="class" language="C++" prot="public" abstract="yes">
+    <compoundname>gr::limesdr::sink</compoundname>
+    <basecompoundref prot="public" virt="virtual">gr::block</basecompoundref>
+    <derivedcompoundref refid="classgr_1_1limesdr_1_1sink__impl" prot="public" virt="non-virtual">gr::limesdr::sink_impl</derivedcompoundref>
+    <includes refid="sink_8h" local="no">sink.h</includes>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="classgr_1_1limesdr_1_1sink_1aa3fc352b1b9d08070a155b91461ccc4f" prot="public" static="no">
+        <type>std::shared_ptr&lt; <ref refid="classgr_1_1limesdr_1_1sink" kindref="compound">sink</ref> &gt;</type>
+        <definition>typedef std::shared_ptr&lt;sink&gt; gr::limesdr::sink::sptr</definition>
+        <argsstring></argsstring>
+        <name>sptr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="31" column="29" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1a784625da90c66ef502d1eb178e28f524" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classgr_1_1limesdr_1_1sink_1aa3fc352b1b9d08070a155b91461ccc4f" kindref="member">sptr</ref></type>
+        <definition>static sptr gr::limesdr::sink::make</definition>
+        <argsstring>(std::string serial, int channel_mode, const std::string &amp;filename, const std::string &amp;length_tag_name)</argsstring>
+        <name>make</name>
+        <param>
+          <type>std::string</type>
+          <declname>serial</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel_mode</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>filename</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>length_tag_name</declname>
+        </param>
+        <briefdescription>
+<para>Return a shared_ptr to a new instance of sink. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>To avoid accidental use of raw pointers, sink&apos;s constructor is private. <ref refid="classgr_1_1limesdr_1_1sink_1a784625da90c66ef502d1eb178e28f524" kindref="member">limesdr::sink::make</ref> is the public interface for creating new instances.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>serial</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device serial number. Cannot be left blank.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel_mode</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel and mode selection A(1), B(2), (A+B)MIMO(3).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>filename</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Path to file if file switch is turned on.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>length_tag_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of stream burst length tag</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>a new limesdr sink block object </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="49" column="17"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1a62a98a2aff746ae41aec5735d36be7de" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double gr::limesdr::sink::set_center_freq</definition>
+        <argsstring>(double freq, size_t chan=0)=0</argsstring>
+        <name>set_center_freq</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1a8ae9ee0726b68fee39161f0275185e2f">set_center_freq</reimplementedby>
+        <param>
+          <type>double</type>
+          <declname>freq</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>chan</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set center frequency</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>freq</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Frequency to set in Hz</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>chan</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel (not used)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>actual center frequency </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="62" column="20"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1a686b7b49530c3d3a9bd4311727070dbf" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void gr::limesdr::sink::set_antenna</definition>
+        <argsstring>(int antenna, int channel=0)=0</argsstring>
+        <name>set_antenna</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1a023f3c6bcfd1aa109f33c5cdce8bc429">set_antenna</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>antenna</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set which antenna is used</para>
+<para><simplesect kind="note"><para>setting antenna to BAND1 or BAND2 will enable PA path and because of that Lime boards will transmit CW signal, even when stream is stopped.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>antenna</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Antenna to set: None(0), BAND1(1), BAND(2), NONE(3), AUTO(255)</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="74" column="18"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1ac0b7aaa0cdc77b79521fdfec1580a3f5" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void gr::limesdr::sink::set_nco</definition>
+        <argsstring>(float nco_freq, int channel)=0</argsstring>
+        <name>set_nco</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1ae00d18fe09b3dbe4f93c764eb838be3c">set_nco</reimplementedby>
+        <param>
+          <type>float</type>
+          <declname>nco_freq</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set NCO (numerically controlled oscillator). By selecting NCO frequency configure NCO. When NCO frequency is 0, NCO is off.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>nco_freq</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>NCO frequency in Hz.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel index. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="84" column="18"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1a8a882cde87ee8656abab6fcb50744cdd" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double gr::limesdr::sink::set_bandwidth</definition>
+        <argsstring>(double analog_bandw, int channel=0)=0</argsstring>
+        <name>set_bandwidth</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1a7d48ae49c92ac462bc5305fd56fbcd04">set_bandwidth</reimplementedby>
+        <param>
+          <type>double</type>
+          <declname>analog_bandw</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set analog filters.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>analog_bandw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel filter bandwidth in Hz.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1).</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>actual filter bandwidth in Hz </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="94" column="20"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1a1c778956a814eab15eb294b5bb1a1796" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void gr::limesdr::sink::set_digital_filter</definition>
+        <argsstring>(double digital_bandw, int channel)=0</argsstring>
+        <name>set_digital_filter</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1a470738bf990d387217355f67c3983211">set_digital_filter</reimplementedby>
+        <param>
+          <type>double</type>
+          <declname>digital_bandw</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set digital filters (GFIR).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>digital_bandw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel filter bandwidth in Hz.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="102" column="18"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1ab4c7d15468e2064dbab6a1b9d001b047" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>unsigned</type>
+        <definition>virtual unsigned gr::limesdr::sink::set_gain</definition>
+        <argsstring>(unsigned gain_dB, int channel=0)=0</argsstring>
+        <name>set_gain</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1a45c104e0c0e3abac0cb1ac155dd6a82f">set_gain</reimplementedby>
+        <param>
+          <type>unsigned</type>
+          <declname>gain_dB</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the combined gain value in dB</para>
+<para><simplesect kind="note"><para>actual gain depends on LO frequency and analog LPF configuration and resulting output signal level may be different when those values are changed</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gain_dB</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Desired gain: [0,73] dB</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1).</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>actual gain in dB </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="115" column="22"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1a5ec207a345ac78891923368c8e284e8c" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>double</type>
+        <definition>virtual double gr::limesdr::sink::set_sample_rate</definition>
+        <argsstring>(double rate)=0</argsstring>
+        <name>set_sample_rate</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1a599fc1fb27dc77c0c26b1e61e06a59c5">set_sample_rate</reimplementedby>
+        <param>
+          <type>double</type>
+          <declname>rate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the same sample rate for both channels.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rate</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sample rate in S/s.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>actual sample rate in S/s </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="123" column="20"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1af66efdccc38c744d716068f62ebcde43" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void gr::limesdr::sink::set_oversampling</definition>
+        <argsstring>(int oversample)=0</argsstring>
+        <name>set_oversampling</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1a66d9f7b7c098648ef3501f88061f56f0">set_oversampling</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>oversample</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set oversampling for both channels.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>oversample</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Oversampling value (0 (default),1,2,4,8,16,32). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="129" column="18"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1ae000c93789ce88da2757820650c8db95" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void gr::limesdr::sink::calibrate</definition>
+        <argsstring>(double bandw, int channel=0)=0</argsstring>
+        <name>calibrate</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1a584656609ef0b86899fa22aaa0d8a3d4">calibrate</reimplementedby>
+        <param>
+          <type>double</type>
+          <declname>bandw</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Perform device calibration.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bandw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Set calibration bandwidth in Hz.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="137" column="18"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1af4289ac3ecc155ddf47e5486ba5be385" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void gr::limesdr::sink::set_buffer_size</definition>
+        <argsstring>(uint32_t size)=0</argsstring>
+        <name>set_buffer_size</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1ad922dab3e36341a13d45fce112ad1845">set_buffer_size</reimplementedby>
+        <param>
+          <type>uint32_t</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set stream buffer size</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FIFO buffer size in samples </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="143" column="18"/>
+      </memberdef>
+      <memberdef kind="function" id="classgr_1_1limesdr_1_1sink_1a39ac01cf73b12c7cc10b361cdeacefa5" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void gr::limesdr::sink::set_tcxo_dac</definition>
+        <argsstring>(uint16_t dacVal=125)=0</argsstring>
+        <name>set_tcxo_dac</name>
+        <reimplementedby refid="classgr_1_1limesdr_1_1sink__impl_1a90dd147a983ed88b324ccc259e536d7b">set_tcxo_dac</reimplementedby>
+        <param>
+          <type>uint16_t</type>
+          <declname>dacVal</declname>
+          <defval>125</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set TCXO DAC. <simplesect kind="note"><para>Care must be taken as this parameter is returned to default value only after power off. </para>
+</simplesect>
+<simplesect kind="note"><para>LimeSDR-Mini default value is 180 range is [0,255] LimeSDR-USB default value is 125 range is [0,255] LimeSDR-PCIe default value is 134 range is [0,255] LimeNET-Micro default value is 30714 range is [0,65535]</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dacVal</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>DAC value (0-65535) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="154" column="19"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="3">
+        <label>gr::limesdr::sink_impl</label>
+        <link refid="classgr_1_1limesdr_1_1sink__impl"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>gr::limesdr::sink</label>
+        <link refid="classgr_1_1limesdr_1_1sink"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>gr::block</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>gr::limesdr::sink</label>
+        <link refid="classgr_1_1limesdr_1_1sink"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>gr::block</label>
+      </node>
+    </collaborationgraph>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" line="29" column="1" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/include/gnuradio/limesdr/sink.h" bodystart="29" bodyend="155"/>
+    <listofallmembers>
+      <member refid="classgr_1_1limesdr_1_1sink_1ae000c93789ce88da2757820650c8db95" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>calibrate</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1a784625da90c66ef502d1eb178e28f524" prot="public" virt="non-virtual"><scope>gr::limesdr::sink</scope><name>make</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1a686b7b49530c3d3a9bd4311727070dbf" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_antenna</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1a8a882cde87ee8656abab6fcb50744cdd" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_bandwidth</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1af4289ac3ecc155ddf47e5486ba5be385" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_buffer_size</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1a62a98a2aff746ae41aec5735d36be7de" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_center_freq</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1a1c778956a814eab15eb294b5bb1a1796" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_digital_filter</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1ab4c7d15468e2064dbab6a1b9d001b047" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_gain</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1ac0b7aaa0cdc77b79521fdfec1580a3f5" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_nco</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1af66efdccc38c744d716068f62ebcde43" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_oversampling</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1a5ec207a345ac78891923368c8e284e8c" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_sample_rate</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1a39ac01cf73b12c7cc10b361cdeacefa5" prot="public" virt="pure-virtual"><scope>gr::limesdr::sink</scope><name>set_tcxo_dac</name></member>
+      <member refid="classgr_1_1limesdr_1_1sink_1aa3fc352b1b9d08070a155b91461ccc4f" prot="public" virt="non-virtual"><scope>gr::limesdr::sink</scope><name>sptr</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

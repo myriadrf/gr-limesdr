@@ -1,0 +1,27 @@
+var classdevice__handler =
+[
+    [ "~device_handler", "classdevice__handler.html#ac677306fdc757659646b042a7bf41579", null ],
+    [ "calibrate", "classdevice__handler.html#af27830897f344317d05a2f5a08bd2408", null ],
+    [ "check_blocks", "classdevice__handler.html#aff8d156a9caa743b0652f83c93984c00", null ],
+    [ "close_all_devices", "classdevice__handler.html#ae92785ec6bd7a97dbfef00d1122182a4", null ],
+    [ "close_device", "classdevice__handler.html#a1e5ad544c534d07ef176a08868dab841", null ],
+    [ "disable_DC_corrections", "classdevice__handler.html#a5cab538544d2b7673aa0ffde53b96b05", null ],
+    [ "enable_channels", "classdevice__handler.html#ae591bb4715c66b54d65bb99ba6e86326", null ],
+    [ "error", "classdevice__handler.html#a9691d676c7176b4d4dc115334509c2e1", null ],
+    [ "get_device", "classdevice__handler.html#a844b1695bb7f3dca3a7897653b85b77b", null ],
+    [ "getInstance", "classdevice__handler.html#a46a3051d28e0a7510b7fa6641e8d71a5", null ],
+    [ "open_device", "classdevice__handler.html#abce8ad34af2f1197cc989c413d1c571b", null ],
+    [ "set_analog_filter", "classdevice__handler.html#aa3254897014093bda00f5917ee37eb61", null ],
+    [ "set_antenna", "classdevice__handler.html#acd66a0a456056c9cf395a6163c3c6432", null ],
+    [ "set_digital_filter", "classdevice__handler.html#a46dcf8e5b6e03f3cfb42569d66e3f3ee", null ],
+    [ "set_gain", "classdevice__handler.html#a86eec55af4490a2f2650f07bec237f57", null ],
+    [ "set_nco", "classdevice__handler.html#a5912e3b843f2173e3eff4317fe8dd5ca", null ],
+    [ "set_oversampling", "classdevice__handler.html#aa267902cc291253db052f3b91f42c07c", null ],
+    [ "set_rf_freq", "classdevice__handler.html#afa589c0448741eacb4b82bdf482bb8e2", null ],
+    [ "set_rfe_device", "classdevice__handler.html#ac32e6daadcd449becabe7d9565e74895", null ],
+    [ "set_samp_rate", "classdevice__handler.html#a6563ed5ab607ec4c22dbe879b56d4074", null ],
+    [ "set_tcxo_dac", "classdevice__handler.html#acf2500089189a8dcd0221cb4dbfa9c33", null ],
+    [ "settings_from_file", "classdevice__handler.html#a87edb301c3f06e521ecfaf70255e3a90", null ],
+    [ "update_rfe_channels", "classdevice__handler.html#a8533e9ed362246aa73c8a4bc14e72e53", null ],
+    [ "block_mutex", "classdevice__handler.html#a8d38b89798e3750db285fcd752245eb3", null ]
+];

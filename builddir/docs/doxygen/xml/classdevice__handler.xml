@@ -1,0 +1,1190 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="classdevice__handler" kind="class" language="C++" prot="public">
+    <compoundname>device_handler</compoundname>
+    <includes refid="device__handler_8h" local="no">device_handler.h</includes>
+    <innerclass refid="structdevice__handler_1_1device" prot="private">device_handler::device</innerclass>
+    <innerclass refid="structdevice__handler_1_1rfe__device" prot="private">device_handler::rfe_device</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classdevice__handler_1ab5d1da4563882dec9d88f9c2dadf47fc" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int device_handler::open_devices</definition>
+        <argsstring></argsstring>
+        <name>open_devices</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="45" column="9" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classdevice__handler_1ad163bb01a1763a66229e32b253662419" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool device_handler::list_read</definition>
+        <argsstring></argsstring>
+        <name>list_read</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="47" column="10" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classdevice__handler_1a37f3899be38deed10165126083e2b0f5" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int device_handler::device_count</definition>
+        <argsstring></argsstring>
+        <name>device_count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="49" column="9" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classdevice__handler_1a9f3b6284cff7a4e35519ee80068e2af7" prot="private" static="no" mutable="no">
+        <type>struct device_handler::rfe_device</type>
+        <definition>struct device_handler::rfe_device device_handler::rfe_device</definition>
+        <argsstring></argsstring>
+        <name>rfe_device</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="70" column="15"/>
+      </memberdef>
+      <memberdef kind="variable" id="classdevice__handler_1a681da832f777da3ef888acf879821f35" prot="private" static="no" mutable="no">
+        <type>lms_info_str_t *</type>
+        <definition>lms_info_str_t* device_handler::list</definition>
+        <argsstring></argsstring>
+        <name>list</name>
+        <initializer>= new lms_info_str_t[20]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="72" column="20" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classdevice__handler_1a156af70e84d2edd65cce8472f75761e8" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; device &gt;</type>
+        <definition>std::vector&lt;device&gt; device_handler::device_vector</definition>
+        <argsstring></argsstring>
+        <name>device_vector</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="74" column="17" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classdevice__handler_1a2595e4e4ee66d5d5b21fea28b98bb555" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool device_handler::close_flag</definition>
+        <argsstring></argsstring>
+        <name>close_flag</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="76" column="10" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classdevice__handler_1a8d38b89798e3750db285fcd752245eb3" prot="public" static="no" mutable="yes">
+        <type>std::recursive_mutex</type>
+        <definition>std::recursive_mutex device_handler::block_mutex</definition>
+        <argsstring></argsstring>
+        <name>block_mutex</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="90" column="34" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classdevice__handler_1aff0f39a85e1d4e4bf169289646d7567f" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>device_handler::device_handler</definition>
+        <argsstring>()</argsstring>
+        <name>device_handler</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="78" column="5" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="78" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a8cf7208c51db1dc653733ec43320b07b" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>device_handler::device_handler</definition>
+        <argsstring>(device_handler const &amp;)</argsstring>
+        <name>device_handler</name>
+        <param>
+          <type><ref refid="classdevice__handler" kindref="compound">device_handler</ref> const &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="79" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a0be4b78df46bf94a99eb2e1366bbd288" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::operator=</definition>
+        <argsstring>(device_handler const &amp;)</argsstring>
+        <name>operator=</name>
+        <param>
+          <type><ref refid="classdevice__handler" kindref="compound">device_handler</ref> const &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="80" column="10"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classdevice__handler_1a46a3051d28e0a7510b7fa6641e8d71a5" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classdevice__handler" kindref="compound">device_handler</ref> &amp;</type>
+        <definition>static device_handler&amp; device_handler::getInstance</definition>
+        <argsstring>()</argsstring>
+        <name>getInstance</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="84" column="27" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="84" bodyend="87"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classdevice__handler_1ac677306fdc757659646b042a7bf41579" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>device_handler::~device_handler</definition>
+        <argsstring>()</argsstring>
+        <name>~device_handler</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="88" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a9691d676c7176b4d4dc115334509c2e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::error</definition>
+        <argsstring>(int device_number)</argsstring>
+        <name>error</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Print device error and close all devices.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="98" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a844b1695bb7f3dca3a7897653b85b77b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>lms_device_t *</type>
+        <definition>lms_device_t* device_handler::get_device</definition>
+        <argsstring>(int device_number)</argsstring>
+        <name>get_device</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Get device connection handler in order to configure it.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="105" column="18"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1abce8ad34af2f1197cc989c413d1c571b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int device_handler::open_device</definition>
+        <argsstring>(std::string &amp;serial)</argsstring>
+        <name>open_device</name>
+        <param>
+          <type>std::string &amp;</type>
+          <declname>serial</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Connect to the device and create singletone.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>serial</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device serial from the list of LMS_GetDeviceList. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="112" column="9"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a1e5ad544c534d07ef176a08868dab841" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::close_device</definition>
+        <argsstring>(int device_number, int block_type)</argsstring>
+        <name>close_device</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>block_type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Disconnect from the device.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>block_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Source block(1), Sink block(2). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="121" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1ae92785ec6bd7a97dbfef00d1122182a4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::close_all_devices</definition>
+        <argsstring>()</argsstring>
+        <name>close_all_devices</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Disconnect from all devices. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="126" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1aff8d156a9caa743b0652f83c93984c00" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::check_blocks</definition>
+        <argsstring>(int device_number, int block_type, int channel_mode, const std::string &amp;filename)</argsstring>
+        <name>check_blocks</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>block_type</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel_mode</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>filename</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Check what blocks are used for single device.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>block_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Source block(1), Sink block(2).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel_mode</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel A(0), Channel B(1), MIMO(2)</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>filename</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Path to file if file switch is turned on. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="140" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a87edb301c3f06e521ecfaf70255e3a90" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::settings_from_file</definition>
+        <argsstring>(int device_number, const std::string &amp;filename, int *antenna_tx)</argsstring>
+        <name>settings_from_file</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>filename</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>antenna_tx</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Load settings from .ini file.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>filename</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Path to file if file switch is turned on.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>antenna_tx</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to TX antenna, so PA path would be updated in sink block </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="151" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1ae591bb4715c66b54d65bb99ba6e86326" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::enable_channels</definition>
+        <argsstring>(int device_number, int channel_mode, bool direction)</argsstring>
+        <name>enable_channels</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel_mode</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>direction</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set used channels</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel_mode</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel A(0), Channel B(1), MIMO(2)</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>direction</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Direction of samples RX(LMS_CH_RX), TX(LMS_CH_RX). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="162" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a6563ed5ab607ec4c22dbe879b56d4074" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::set_samp_rate</definition>
+        <argsstring>(int device_number, double &amp;rate)</argsstring>
+        <name>set_samp_rate</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>double &amp;</type>
+          <declname>rate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the same sample rate for both channels.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>rate</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Sample rate in S/s. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="171" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1aa267902cc291253db052f3b91f42c07c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::set_oversampling</definition>
+        <argsstring>(int device_number, int oversample)</argsstring>
+        <name>set_oversampling</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>oversample</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set oversampling value for both channels</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>oversample</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Oversampling value (0 (default),1,2,4,8,16,32). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="180" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1afa589c0448741eacb4b82bdf482bb8e2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double device_handler::set_rf_freq</definition>
+        <argsstring>(int device_number, bool direction, int channel, float rf_freq)</argsstring>
+        <name>set_rf_freq</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>direction</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>rf_freq</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set RF frequency of both channels (RX and TX separately).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>direction</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Direction of samples RX(LMS_CH_RX), TX(LMS_CH_TX).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>selection: A(LMS_CH_0),B(LMS_CH_1).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>rf_freq</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RF frequency in Hz.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>returns RF frequency in Hz </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="195" column="12"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1af27830897f344317d05a2f5a08bd2408" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::calibrate</definition>
+        <argsstring>(int device_number, int direction, int channel, double bandwidth)</argsstring>
+        <name>calibrate</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>direction</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>bandwidth</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Perform device calibration.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>direction</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_RX).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>bandwidth</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Set calibration bandwidth in Hz. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="209" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1acd66a0a456056c9cf395a6163c3c6432" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::set_antenna</definition>
+        <argsstring>(int device_number, int channel, int direction, int antenna)</argsstring>
+        <name>set_antenna</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>direction</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>antenna</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set which antenna is used</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>direction</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_RX).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>antenna</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Antenna to set: None(0), LNAH(1), LNAL(2), LNAW(3) for RX None(0), BAND1(1), BAND(2), NONE(3) for TX </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="224" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1aa3254897014093bda00f5917ee37eb61" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double device_handler::set_analog_filter</definition>
+        <argsstring>(int device_number, bool direction, int channel, double analog_bandw)</argsstring>
+        <name>set_analog_filter</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>direction</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>analog_bandw</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set analog filters.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>direction</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_TX).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>analog_bandw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel filter bandwidth in Hz. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="237" column="12"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a46dcf8e5b6e03f3cfb42569d66e3f3ee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double device_handler::set_digital_filter</definition>
+        <argsstring>(int device_number, bool direction, int channel, double digital_bandw)</argsstring>
+        <name>set_digital_filter</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>direction</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>digital_bandw</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set digital filters (GFIR).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>direction</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_TX).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>digital_bandw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel filter bandwidth in Hz. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="250" column="12"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a86eec55af4490a2f2650f07bec237f57" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>unsigned</type>
+        <definition>unsigned device_handler::set_gain</definition>
+        <argsstring>(int device_number, bool direction, int channel, unsigned gain_dB)</argsstring>
+        <name>set_gain</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>direction</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>unsigned</type>
+          <declname>gain_dB</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the combined gain value in dB This function computes and sets the optimal gain values of various amplifiers that are present in the device based on desired gain value in dB.</para>
+<para><simplesect kind="note"><para>actual gain depends on LO frequency and analog LPF configuration and resulting output signal level may be different when those values are changed</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>direction</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Select RX or TX.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel selection: A(LMS_CH_0),B(LMS_CH_1).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>gain_dB</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Desired gain: [0,73] dB </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="268" column="14"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a5912e3b843f2173e3eff4317fe8dd5ca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::set_nco</definition>
+        <argsstring>(int device_number, bool direction, int channel, float nco_freq)</argsstring>
+        <name>set_nco</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>direction</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>channel</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>nco_freq</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set NCO (numerically controlled oscillator). By selecting NCO frequency configure NCO. When NCO frequency is 0, NCO is off.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>direction</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Select RX or TX.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>channel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Channel index.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>nco_freq</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>NCO frequency in Hz. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="283" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a5cab538544d2b7673aa0ffde53b96b05" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::disable_DC_corrections</definition>
+        <argsstring>(int device_number)</argsstring>
+        <name>disable_DC_corrections</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="285" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1acf2500089189a8dcd0221cb4dbfa9c33" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::set_tcxo_dac</definition>
+        <argsstring>(int device_number, uint16_t dacVal)</argsstring>
+        <name>set_tcxo_dac</name>
+        <param>
+          <type>int</type>
+          <declname>device_number</declname>
+        </param>
+        <param>
+          <type>uint16_t</type>
+          <declname>dacVal</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set TCXO DAC. <simplesect kind="note"><para>Care must be taken as this parameter is returned to default value only after power off. </para>
+</simplesect>
+<simplesect kind="note"><para>LimeSDR-Mini default value is 180 range is [0,255] LimeSDR-USB default value is 125 range is [0,255] LimeSDR-PCIe default value is 134 range is [0,255] LimeNET-Micro default value is 30714 range is [0,65535]</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>device_number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device number from the list of LMS_GetDeviceList.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dacVal</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>DAC value (0-65535) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="299" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1ac32e6daadcd449becabe7d9565e74895" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::set_rfe_device</definition>
+        <argsstring>(rfe_dev_t *rfe_dev)</argsstring>
+        <name>set_rfe_device</name>
+        <param>
+          <type>rfe_dev_t *</type>
+          <declname>rfe_dev</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Sets up LimeRFE device pointer so that automatic channel configuration could be made <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rfe_dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to LimeRFE device descriptor </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="304" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="classdevice__handler_1a8533e9ed362246aa73c8a4bc14e72e53" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void device_handler::update_rfe_channels</definition>
+        <argsstring>()</argsstring>
+        <name>update_rfe_channels</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Assigns configured LimeSDR channels to LimeRFE for automatic channel switching </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="308" column="10"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>std::recursive_mutex</label>
+      </node>
+      <node id="1">
+        <label>device_handler</label>
+        <link refid="classdevice__handler"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>block_mutex</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="43" column="1" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="43" bodyend="310"/>
+    <listofallmembers>
+      <member refid="classdevice__handler_1a8d38b89798e3750db285fcd752245eb3" prot="public" virt="non-virtual"><scope>device_handler</scope><name>block_mutex</name></member>
+      <member refid="classdevice__handler_1af27830897f344317d05a2f5a08bd2408" prot="public" virt="non-virtual"><scope>device_handler</scope><name>calibrate</name></member>
+      <member refid="classdevice__handler_1aff8d156a9caa743b0652f83c93984c00" prot="public" virt="non-virtual"><scope>device_handler</scope><name>check_blocks</name></member>
+      <member refid="classdevice__handler_1ae92785ec6bd7a97dbfef00d1122182a4" prot="public" virt="non-virtual"><scope>device_handler</scope><name>close_all_devices</name></member>
+      <member refid="classdevice__handler_1a1e5ad544c534d07ef176a08868dab841" prot="public" virt="non-virtual"><scope>device_handler</scope><name>close_device</name></member>
+      <member refid="classdevice__handler_1a2595e4e4ee66d5d5b21fea28b98bb555" prot="private" virt="non-virtual"><scope>device_handler</scope><name>close_flag</name></member>
+      <member refid="classdevice__handler_1a37f3899be38deed10165126083e2b0f5" prot="private" virt="non-virtual"><scope>device_handler</scope><name>device_count</name></member>
+      <member refid="classdevice__handler_1aff0f39a85e1d4e4bf169289646d7567f" prot="private" virt="non-virtual"><scope>device_handler</scope><name>device_handler</name></member>
+      <member refid="classdevice__handler_1a8cf7208c51db1dc653733ec43320b07b" prot="private" virt="non-virtual"><scope>device_handler</scope><name>device_handler</name></member>
+      <member refid="classdevice__handler_1a156af70e84d2edd65cce8472f75761e8" prot="private" virt="non-virtual"><scope>device_handler</scope><name>device_vector</name></member>
+      <member refid="classdevice__handler_1a5cab538544d2b7673aa0ffde53b96b05" prot="public" virt="non-virtual"><scope>device_handler</scope><name>disable_DC_corrections</name></member>
+      <member refid="classdevice__handler_1ae591bb4715c66b54d65bb99ba6e86326" prot="public" virt="non-virtual"><scope>device_handler</scope><name>enable_channels</name></member>
+      <member refid="classdevice__handler_1a9691d676c7176b4d4dc115334509c2e1" prot="public" virt="non-virtual"><scope>device_handler</scope><name>error</name></member>
+      <member refid="classdevice__handler_1a844b1695bb7f3dca3a7897653b85b77b" prot="public" virt="non-virtual"><scope>device_handler</scope><name>get_device</name></member>
+      <member refid="classdevice__handler_1a46a3051d28e0a7510b7fa6641e8d71a5" prot="public" virt="non-virtual"><scope>device_handler</scope><name>getInstance</name></member>
+      <member refid="classdevice__handler_1a681da832f777da3ef888acf879821f35" prot="private" virt="non-virtual"><scope>device_handler</scope><name>list</name></member>
+      <member refid="classdevice__handler_1ad163bb01a1763a66229e32b253662419" prot="private" virt="non-virtual"><scope>device_handler</scope><name>list_read</name></member>
+      <member refid="classdevice__handler_1abce8ad34af2f1197cc989c413d1c571b" prot="public" virt="non-virtual"><scope>device_handler</scope><name>open_device</name></member>
+      <member refid="classdevice__handler_1ab5d1da4563882dec9d88f9c2dadf47fc" prot="private" virt="non-virtual"><scope>device_handler</scope><name>open_devices</name></member>
+      <member refid="classdevice__handler_1a0be4b78df46bf94a99eb2e1366bbd288" prot="private" virt="non-virtual"><scope>device_handler</scope><name>operator=</name></member>
+      <member refid="classdevice__handler_1a9f3b6284cff7a4e35519ee80068e2af7" prot="private" virt="non-virtual"><scope>device_handler</scope><name>rfe_device</name></member>
+      <member refid="classdevice__handler_1aa3254897014093bda00f5917ee37eb61" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_analog_filter</name></member>
+      <member refid="classdevice__handler_1acd66a0a456056c9cf395a6163c3c6432" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_antenna</name></member>
+      <member refid="classdevice__handler_1a46dcf8e5b6e03f3cfb42569d66e3f3ee" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_digital_filter</name></member>
+      <member refid="classdevice__handler_1a86eec55af4490a2f2650f07bec237f57" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_gain</name></member>
+      <member refid="classdevice__handler_1a5912e3b843f2173e3eff4317fe8dd5ca" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_nco</name></member>
+      <member refid="classdevice__handler_1aa267902cc291253db052f3b91f42c07c" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_oversampling</name></member>
+      <member refid="classdevice__handler_1afa589c0448741eacb4b82bdf482bb8e2" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_rf_freq</name></member>
+      <member refid="classdevice__handler_1ac32e6daadcd449becabe7d9565e74895" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_rfe_device</name></member>
+      <member refid="classdevice__handler_1a6563ed5ab607ec4c22dbe879b56d4074" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_samp_rate</name></member>
+      <member refid="classdevice__handler_1acf2500089189a8dcd0221cb4dbfa9c33" prot="public" virt="non-virtual"><scope>device_handler</scope><name>set_tcxo_dac</name></member>
+      <member refid="classdevice__handler_1a87edb301c3f06e521ecfaf70255e3a90" prot="public" virt="non-virtual"><scope>device_handler</scope><name>settings_from_file</name></member>
+      <member refid="classdevice__handler_1a8533e9ed362246aa73c8a4bc14e72e53" prot="public" virt="non-virtual"><scope>device_handler</scope><name>update_rfe_channels</name></member>
+      <member refid="classdevice__handler_1ac677306fdc757659646b042a7bf41579" prot="public" virt="non-virtual"><scope>device_handler</scope><name>~device_handler</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

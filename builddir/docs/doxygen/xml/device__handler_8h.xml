@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="device__handler_8h" kind="file" language="C++">
+    <compoundname>device_handler.h</compoundname>
+    <includes local="no">LimeSuite.h</includes>
+    <includes local="no">limeRFE.h</includes>
+    <includes local="no">cmath</includes>
+    <includes local="no">iostream</includes>
+    <includes local="no">list</includes>
+    <includes local="no">math.h</includes>
+    <includes local="no">mutex</includes>
+    <includes local="no">string</includes>
+    <includes local="no">vector</includes>
+    <includedby refid="sink__impl_8h" local="yes">sink_impl.h</includedby>
+    <includedby refid="source__impl_8h" local="yes">source_impl.h</includedby>
+    <incdepgraph>
+      <node id="6">
+        <label>list</label>
+      </node>
+      <node id="4">
+        <label>cmath</label>
+      </node>
+      <node id="9">
+        <label>string</label>
+      </node>
+      <node id="10">
+        <label>vector</label>
+      </node>
+      <node id="7">
+        <label>math.h</label>
+      </node>
+      <node id="1">
+        <label>device_handler.h</label>
+        <link refid="device__handler_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>iostream</label>
+      </node>
+      <node id="3">
+        <label>limeRFE.h</label>
+      </node>
+      <node id="8">
+        <label>mutex</label>
+      </node>
+      <node id="2">
+        <label>LimeSuite.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="3">
+        <label>source_impl.h</label>
+        <link refid="source__impl_8h"/>
+      </node>
+      <node id="2">
+        <label>sink_impl.h</label>
+        <link refid="sink__impl_8h"/>
+      </node>
+      <node id="1">
+        <label>device_handler.h</label>
+        <link refid="device__handler_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classdevice__handler" prot="public">device_handler</innerclass>
+    <innerclass refid="structdevice__handler_1_1device" prot="private">device_handler::device</innerclass>
+    <innerclass refid="structdevice__handler_1_1rfe__device" prot="private">device_handler::rfe_device</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="device__handler_8h_1ac7e8c22fb546aae34df5602d8334cf49" prot="public" static="no">
+        <name>LMS_CH_0</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="34" column="9" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="device__handler_8h_1a73c1da2a6ba32f151c8e3601356809d4" prot="public" static="no">
+        <name>LMS_CH_1</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="35" column="9" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="device__handler_8h_1aef606486930c6353b1f21156774f5a5f" prot="public" static="no">
+        <name>LimeSDR_Mini</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="37" column="9" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="device__handler_8h_1a1c50aae2720db6161d0620e7b7d7d295" prot="public" static="no">
+        <name>LimeNET_Micro</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="38" column="9" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="device__handler_8h_1a2bb9af72d8895b896e8aa6bd673a01a5" prot="public" static="no">
+        <name>LimeSDR_USB</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="39" column="9" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="device__handler_8h_1ada6822fec830d95e04b9d70ad798e7c1" prot="public" static="no">
+        <name>GR_LIMESDR_VER</name>
+        <initializer>&quot;2.2.7&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" line="41" column="9" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/common/device_handler.h"/>
+  </compounddef>
+</doxygen>

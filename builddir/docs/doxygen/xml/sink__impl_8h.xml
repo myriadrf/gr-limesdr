@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="sink__impl_8h" kind="file" language="C++">
+    <compoundname>sink_impl.h</compoundname>
+    <includes refid="device__handler_8h" local="yes">common/device_handler.h</includes>
+    <includes refid="sink_8h" local="no">gnuradio/limesdr/sink.h</includes>
+    <incdepgraph>
+      <node id="7">
+        <label>list</label>
+      </node>
+      <node id="5">
+        <label>cmath</label>
+      </node>
+      <node id="10">
+        <label>string</label>
+      </node>
+      <node id="14">
+        <label>gnuradio/limesdr/api.h</label>
+        <link refid="api_8h"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>gnuradio/attributes.h</label>
+      </node>
+      <node id="1">
+        <label>sink_impl.h</label>
+        <link refid="sink__impl_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>vector</label>
+      </node>
+      <node id="13">
+        <label>gnuradio/block.h</label>
+      </node>
+      <node id="12">
+        <label>gnuradio/limesdr/sink.h</label>
+        <link refid="sink_8h"/>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>math.h</label>
+      </node>
+      <node id="2">
+        <label>common/device_handler.h</label>
+        <link refid="device__handler_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>iostream</label>
+      </node>
+      <node id="4">
+        <label>limeRFE.h</label>
+      </node>
+      <node id="9">
+        <label>mutex</label>
+      </node>
+      <node id="3">
+        <label>LimeSuite.h</label>
+      </node>
+    </incdepgraph>
+    <innerclass refid="classgr_1_1limesdr_1_1sink__impl" prot="public">gr::limesdr::sink_impl</innerclass>
+    <innerclass refid="structgr_1_1limesdr_1_1sink__impl_1_1constant__data" prot="private">gr::limesdr::sink_impl::constant_data</innerclass>
+    <innernamespace refid="namespacegr">gr</innernamespace>
+    <innernamespace refid="namespacegr_1_1limesdr">gr::limesdr</innernamespace>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="sink__impl_8h_1ad6ad3ffdbfa8f7a181221fb2b7b221a7" prot="public" static="yes" mutable="no">
+        <type>const pmt::pmt_t</type>
+        <definition>const pmt::pmt_t TIME_TAG</definition>
+        <argsstring></argsstring>
+        <name>TIME_TAG</name>
+        <initializer>= pmt::string_to_symbol(&quot;tx_time&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/sink_impl.h" line="28" column="25" bodyfile="/home/hydra/gnuradio/src/gr-limesdr/lib/sink_impl.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/hydra/gnuradio/src/gr-limesdr/lib/sink_impl.h"/>
+  </compounddef>
+</doxygen>
