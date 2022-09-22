@@ -145,7 +145,7 @@ int sink_impl::general_work(int noutput_items,
                             gr_vector_void_star& output_items) {
     // Init number of items to be sent and timestamps
     nitems_send = noutput_items;
-    int current_sample = nitems_read(0);
+    uint64_t current_sample = nitems_read(0);
     tx_meta.waitForTimestamp = false;
     tx_meta.flushPartialPacket = false;
     // Check if channel 0 has any tags
@@ -197,7 +197,7 @@ int sink_impl::general_work(int noutput_items,
 }
 void sink_impl::work_tags(int noutput_items) {
     std::vector<tag_t> tags;
-    int current_sample = nitems_read(0);
+    uint64_t current_sample = nitems_read(0);
     get_tags_in_range(tags, 0, current_sample, current_sample + noutput_items);
 
     if (!tags.empty()) {
@@ -218,7 +218,7 @@ void sink_impl::work_tags(int noutput_items) {
                     tx_meta.waitForTimestamp = true;
                     tx_meta.timestamp = timestamp;
                 } else {
-                    nitems_send = cTag.offset - current_sample;
+                    nitems_send = int(cTag.offset - current_sample);
                     break;
                 }
             }
@@ -230,7 +230,7 @@ void sink_impl::work_tags(int noutput_items) {
                         std::cout << "Warning: Length tag has been preemted" << std::endl;
                     burst_length = pmt::to_long(cTag.value);
                 } else {
-                    nitems_send = cTag.offset - current_sample;
+                    nitems_send = int(cTag.offset - current_sample);
                     break;
                 }
             }
