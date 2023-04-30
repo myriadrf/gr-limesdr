@@ -101,7 +101,7 @@ public:
     void set_tcxo_dac(uint16_t dacVal = 125);
 
     void write_lms_reg(uint32_t address, uint16_t val);
-    
+
     // Set GPIO pin directions, one bit per pin
     void set_gpio_dir(uint8_t dir);
 

@@ -668,7 +668,7 @@ uint8_t device_handler::read_gpio(int device_number)
 {
   uint8_t res;
 
-  LMS_GPIORead(device_handler::getInstance().get_device(device_number), &res, 1); 
+  LMS_GPIORead(device_handler::getInstance().get_device(device_number), &res, 1);
 
   return res;
 }
