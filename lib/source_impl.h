@@ -101,6 +101,15 @@ public:
     void set_tcxo_dac(uint16_t dacVal = 125);
 
     void write_lms_reg(uint32_t address, uint16_t val);
+
+    // Set GPIO pin directions, one bit per pin
+    void set_gpio_dir(uint8_t dir);
+
+    // Write GPIO outputs, one bit per pin
+    void write_gpio(uint8_t out);
+
+    // Read GPIO inputs, one bit per pin
+    uint8_t read_gpio();
 };
 
 } // namespace limesdr

@@ -326,6 +326,15 @@ public:
      * Writes an LMS register by calling LMS_WriteLMSReg()
      */
     void write_lms_reg(int device_number, uint32_t address, uint16_t val);
+
+    // Set GPIO pin directions, one bit per pin
+    void set_gpio_dir(int device_number, uint8_t dir);
+
+    // Write GPIO outputs, one bit per pin
+    void write_gpio(int device_number, uint8_t out);
+
+    // Read GPIO inputs, one bit per pin
+    uint8_t read_gpio(int device_number);
 };
 
 
