@@ -2,6 +2,8 @@
 
 Package includes GNU Radio blocks for various LimeSDR boards.
 
+**NOTE: this release is no longer formally supported, so this branch will no longer be updated.**
+
 ## Documentation
 
 * [MyriadRF Wiki page](https://wiki.myriadrf.org/Gr-limesdr_Plugin_for_GNURadio)
