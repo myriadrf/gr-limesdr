@@ -1,5 +1,7 @@
 # gr-limesdr
 
+**NOTE: this branch is pre-release and should not be considered stable.**
+
 Package includes GNU Radio blocks for various LimeSDR boards.
 
 ## Documentation
