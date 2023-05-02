@@ -25,6 +25,8 @@
 #include "sink_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <stdexcept>
+
 namespace gr {
 namespace limesdr {
 sink::sptr sink::make(std::string serial,
@@ -55,10 +57,7 @@ sink_impl::sink_impl(std::string serial,
     stored.channel_mode = channel_mode;
 
     if (stored.channel_mode < 0 && stored.channel_mode > 2) {
-        std::cout << "ERROR: sink_impl::sink_impl(): Channel must be A(1), B(2) or (A+B) "
-                     "MIMO(3)"
-                  << std::endl;
-        exit(0);
+        throw std::invalid_argument("sink_impl::sink_impl(): Channel must be A(0), B(1), or (A+B) MIMO(2)");
     }
 
     // 2. Open device if not opened
@@ -304,10 +303,7 @@ inline gr::io_signature::sptr sink_impl::args_to_io_signature(int channel_number
     } else if (channel_number == 2) {
         return gr::io_signature::make(2, 2, sizeof(gr_complex));
     } else {
-        std::cout << "ERROR: sink_impl::args_to_io_signature(): channel_number must be "
-                     "0,1 or 2."
-                  << std::endl;
-        exit(0);
+        throw std::invalid_argument("sink_impl::args_to_io_signature(): channel_number must be 0, 1 or 2.");
     }
 }
 

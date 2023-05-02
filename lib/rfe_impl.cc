@@ -25,6 +25,8 @@
 #include "device_handler.h"
 #include <limesdr/rfe.h>
 
+#include <stdexcept>
+
 namespace gr {
 namespace limesdr {
 rfe::rfe(int comm_type,
@@ -59,8 +61,7 @@ rfe::rfe(int comm_type,
         rfe_dev =
             RFE_Open(nullptr, device_handler::getInstance().get_device(sdr_device_num));
         if (!rfe_dev) {
-            std::cout << "LimeRFE: Failed to open device, exiting" << std::endl;
-            exit(0);
+            throw std::runtime_error("LimeRFE: failed to open device");
         }
 
         // No need to set up this if it isn't automatic
@@ -82,8 +83,7 @@ rfe::rfe(int comm_type,
         std::cout << "LimeRFE: Opening " << device << std::endl;
         rfe_dev = RFE_Open(device.c_str(), nullptr);
         if (!rfe_dev) {
-            std::cout << "LimeRFE: Failed to open device, exiting" << std::endl;
-            exit(0);
+            throw std::runtime_error("LimeRFE: failed to open device");
         }
     }
 
@@ -92,7 +92,7 @@ rfe::rfe(int comm_type,
     if ((error = RFE_GetInfo(rfe_dev, info)) != 0) {
         std::cout << "LimeRFE: Failed to get device info: ";
         print_error(error);
-        exit(0);
+        throw std::runtime_error("LimeRFE: failed to get device info.");
     }
     std::cout << "LimeRFE: FW: " << (int)info[0] << " HW: " << (int)info[1] << std::endl;
 
@@ -100,14 +100,14 @@ rfe::rfe(int comm_type,
         if ((error = RFE_ConfigureState(rfe_dev, boardState)) != 0) {
             std::cout << "LimeRFE: Failed to configure device: ";
             print_error(error);
-            exit(0);
+            throw std::runtime_error("LimeRFE: failed to configure device.");
         }
     } else {
         std::cout << "LimeRFE: Loading configuration file" << std::endl;
         if ((error = RFE_LoadConfig(rfe_dev, config_file.c_str())) != 0) {
             std::cout << "LimeRFE: Failed to load configuration file: ";
             print_error(error);
-            exit(0);
+            throw std::runtime_error("LimeRFE: failed to load configuration file.");
         }
     }
     std::cout << "LimeRFE: Board state: " << std::endl;

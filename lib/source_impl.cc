@@ -25,6 +25,8 @@
 #include "source_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <stdexcept>
+
 namespace gr {
 namespace limesdr {
 
@@ -62,10 +64,7 @@ source_impl::source_impl(std::string serial,
     stored.align = align_ch_phase ? LMS_ALIGN_CH_PHASE : 0;
 
     if (stored.channel_mode < 0 && stored.channel_mode > 2) {
-        std::cout << "ERROR: source_impl::source_impl(): Channel must be A(0), "
-                     "B(1) or (A+B) MIMO(2)"
-                  << std::endl;
-        exit(0);
+        throw std::invalid_argument("source_impl::source_impl(): Channel must be A(0), B(1), or (A+B) MIMO(2)");
     }
 
     // 2. Open device if not opened
@@ -300,10 +299,7 @@ inline gr::io_signature::sptr source_impl::args_to_io_signature(int channel_numb
     } else if (channel_number == 2) {
         return gr::io_signature::make(2, 2, sizeof(gr_complex));
     } else {
-        std::cout << "ERROR: source_impl::args_to_io_signature(): channel_number "
-                     "must be 0,1 or 2."
-                  << std::endl;
-        exit(0);
+        throw std::invalid_argument("source_impl::args_to_io_signature(): channel_number must be 0, 1 or 2.");
     }
 }
 

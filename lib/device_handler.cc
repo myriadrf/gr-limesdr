@@ -21,6 +21,8 @@
 #include "device_handler.h"
 #include <LMS7002M_parameters.h>
 
+#include <stdexcept>
+
 device_handler::~device_handler() { delete list; }
 
 void device_handler::error(int device_number)
@@ -37,7 +39,6 @@ lms_device_t* device_handler::get_device(int device_number)
 
 int device_handler::open_device(std::string& serial)
 {
-
     int device_number;
     std::string search_name;
     std::cout << "##################" << std::endl;
@@ -52,9 +53,7 @@ int device_handler::open_device(std::string& serial)
 
         device_count = LMS_GetDeviceList(list);
         if (device_count < 1) {
-            std::cout << "ERROR: device_handler::open_device(): No Lime devices found."
-                      << std::endl;
-            exit(0);
+            throw std::runtime_error("device_handler::open_device(): No Lime devices found.");
         }
         std::cout << "Device list:" << std::endl;
 
@@ -102,9 +101,9 @@ int device_handler::open_device(std::string& serial)
 
     // If device slot is empty, open and initialize device
     if (device_vector[device_number].address == NULL) {
-        if (LMS_Open(&device_vector[device_number].address, list[device_number], NULL) !=
-            LMS_SUCCESS)
-            exit(0);
+        if (LMS_Open(&device_vector[device_number].address, list[device_number], NULL) != LMS_SUCCESS)
+            throw std::runtime_error("device_handler::open_device(): failed to device " + serial);
+
         LMS_Init(device_vector[device_number].address);
         const lms_dev_info_t* info =
             LMS_GetDeviceInfo(device_vector[device_number].address);
@@ -171,7 +170,6 @@ void device_handler::close_all_devices()
             }
         }
         close_flag = true;
-        exit(0);
     }
 }
 
