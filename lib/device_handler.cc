@@ -578,3 +578,28 @@ void device_handler::update_rfe_channels()
             << std::endl;
     }
 }
+
+void device_handler::write_lms_reg(int device_number, uint32_t address, uint16_t val)
+{
+    LMS_WriteLMSReg(
+        device_handler::getInstance().get_device(device_number), address, val);
+}
+
+void device_handler::set_gpio_dir(int device_number, uint8_t dir)
+{
+  LMS_GPIODirWrite(device_handler::getInstance().get_device(device_number), &dir, 1);
+}
+
+void device_handler::write_gpio(int device_number, uint8_t out)
+{
+  LMS_GPIOWrite(device_handler::getInstance().get_device(device_number), &out, 1);
+}
+
+uint8_t device_handler::read_gpio(int device_number)
+{
+  uint8_t res;
+
+  LMS_GPIORead(device_handler::getInstance().get_device(device_number), &res, 1);
+
+  return res;
+}

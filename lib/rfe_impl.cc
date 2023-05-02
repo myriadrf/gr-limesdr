@@ -22,7 +22,7 @@
 #include "config.h"
 #endif
 
-#include "common/device_handler.h"
+#include "device_handler.h"
 #include <limesdr/rfe.h>
 
 namespace gr {

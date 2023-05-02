@@ -60,4 +60,16 @@
 
  static const char *__doc_gr_limesdr_source_set_tcxo_dac = R"doc()doc";
 
+
+ static const char *__doc_gr_limesdr_source_write_lms_reg = R"doc()doc";
+
+
+ static const char *__doc_gr_limesdr_source_set_gpio_dir = R"doc()doc";
+
+
+ static const char *__doc_gr_limesdr_source_write_gpio = R"doc()doc";
+
+
+ static const char *__doc_gr_limesdr_source_read_gpio = R"doc()doc";
+
   

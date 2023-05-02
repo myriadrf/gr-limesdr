@@ -14,7 +14,7 @@ include(GrPlatform) #define LIB_SUFFIX
 list(APPEND limesdr_sources
     source_impl.cc
     sink_impl.cc
-    common/device_handler.cc
+    device_handler.cc
 )
 
 if(ENABLE_RFE)

@@ -313,5 +313,21 @@ void source_impl::set_tcxo_dac(uint16_t dacVal) {
     device_handler::getInstance().set_tcxo_dac(stored.device_number, dacVal);
 }
 
+void source_impl::write_lms_reg(uint32_t address, uint16_t val) {
+    device_handler::getInstance().write_lms_reg(stored.device_number, address, val);
+}
+
+void source_impl::set_gpio_dir(uint8_t dir) {
+    device_handler::getInstance().set_gpio_dir(stored.device_number, dir);
+}
+
+void source_impl::write_gpio(uint8_t out) {
+    device_handler::getInstance().write_gpio(stored.device_number, out);
+}
+
+uint8_t source_impl::read_gpio() {
+    return device_handler::getInstance().read_gpio(stored.device_number);
+}
+
 } // namespace limesdr
 } // namespace gr
