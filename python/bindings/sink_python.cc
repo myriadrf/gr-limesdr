@@ -129,6 +129,34 @@ void bind_sink(py::module& m)
             D(sink,set_tcxo_dac)
         )
 
+
+        
+        .def("write_lms_reg",&sink::write_lms_reg,       
+            py::arg("address"),
+            py::arg("val"),
+            D(sink,write_lms_reg)
+        )
+
+
+        
+        .def("set_gpio_dir",&sink::set_gpio_dir,       
+            py::arg("dir"),
+            D(sink,set_gpio_dir)
+        )
+
+
+        
+        .def("write_gpio",&sink::write_gpio,       
+            py::arg("out"),
+            D(sink,write_gpio)
+        )
+
+
+        
+        .def("read_gpio",&sink::read_gpio,       
+            D(sink,read_gpio)
+        )
+
         ;
 
 

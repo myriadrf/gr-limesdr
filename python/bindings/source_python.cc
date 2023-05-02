@@ -126,6 +126,34 @@ void bind_source(py::module& m)
             D(source,set_tcxo_dac)
         )
 
+
+        
+        .def("write_lms_reg",&source::write_lms_reg,       
+            py::arg("address"),
+            py::arg("val"),
+            D(source,write_lms_reg)
+        )
+
+
+        
+        .def("set_gpio_dir",&source::set_gpio_dir,       
+            py::arg("dir"),
+            D(source,set_gpio_dir)
+        )
+
+
+        
+        .def("write_gpio",&source::write_gpio,       
+            py::arg("out"),
+            D(source,write_gpio)
+        )
+
+
+        
+        .def("read_gpio",&source::read_gpio,       
+            D(source,read_gpio)
+        )
+
         ;
 
 
