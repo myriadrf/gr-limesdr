@@ -1,10 +1,6 @@
 /*
- * Copyright 2021 Free Software Foundation, Inc.
- *
- * This file is part of GNU Radio
- *
+ * Copyright 2023 Lime Microsystems info@limemicro.com
  * SPDX-License-Identifier: GPL-3.0-or-later
- *
  */
 #include "pydoc_macros.h"
 #define D(...) DOC(gr,limesdr, __VA_ARGS__ )

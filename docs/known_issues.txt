@@ -8,6 +8,6 @@ this line is need to be added in the end of .bashrc file.
 3. While running GNU Radio flowgraph “aUaU” message is thrown. This means audio underrun (not enough
 samples ready to send to sound sink.
 
-4. Doesn't compile with GNU Radio 3.8.
+4. Doesn't compile with this software 3.8.
 
 5. CW is being transmitted when flowgraph is killed.

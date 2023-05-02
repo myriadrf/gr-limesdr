@@ -1,10 +1,6 @@
 /*
- * Copyright 2021 Free Software Foundation, Inc.
- *
- * This file is part of GNU Radio
- *
+ * Copyright 2023 Lime Microsystems info@limemicro.com
  * SPDX-License-Identifier: GPL-3.0-or-later
- *
  */
 
 /***********************************************************************************/
@@ -13,7 +9,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(rfe.h)                                        */
+/* BINDTOOL_HEADER_FILE(rfe.h)                                                     */
 /* BINDTOOL_HEADER_FILE_HASH(f9a316bfe452c1b3fe6c6ba827ced967)                     */
 /***********************************************************************************/
 

@@ -1,10 +1,6 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
- *
- * This file is part of GNU Radio
- *
+ * Copyright 2023 Lime Microsystem info@limemicro.com
  * SPDX-License-Identifier: GPL-3.0-or-later
- *
  */
 
 #include <pybind11/pybind11.h>

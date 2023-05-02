@@ -1,7 +1,5 @@
 /*
- * Copyright 2021 Free Software Foundation, Inc.
- *
- * This file is part of GNU Radio
+ * Copyright 2023 Lime Microsystems info@limemicro.com
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
@@ -14,7 +12,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(sink.h)                                                    */
-/* BINDTOOL_HEADER_FILE_HASH(2c64a374c662a1949f8ef0584060255a)                     */
+/* BINDTOOL_HEADER_FILE_HASH(a640cb90f6d2188fef8cc320b51620da)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
