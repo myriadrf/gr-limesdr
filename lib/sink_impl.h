@@ -1,8 +1,8 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2018 Lime Microsystems info@limemicro.com
+ * Copyright 2019 Lime Microsystems.
  *
- * This software is free software; you can redistribute it and/or modify
+ * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
@@ -29,8 +29,9 @@ static const pmt::pmt_t TIME_TAG = pmt::string_to_symbol("tx_time");
 
 namespace gr {
 namespace limesdr {
-class sink_impl : public sink {
-    private:
+class sink_impl : public sink
+{
+private:
     lms_stream_t streamId[2];
 
     bool stream_analyzer = false;
@@ -41,8 +42,8 @@ class sink_impl : public sink {
     lms_stream_meta_t tx_meta;
     long burst_length = 0;
     int nitems_send = 0;
-    int ret[2] = {0};
-    int pa_path[2] = {0}; // TX PA path NONE
+    int ret[2] = { 0 };
+    int pa_path[2] = { 0 }; // TX PA path NONE
 
     struct constant_data {
         std::string serial;
@@ -58,17 +59,16 @@ class sink_impl : public sink {
 
     void print_stream_stats(int channel);
 
-    public:
+public:
     sink_impl(std::string serial,
               int channel_mode,
               const std::string& filename,
               const std::string& length_tag_name);
     ~sink_impl();
 
-    int general_work(int noutput_items,
-                     gr_vector_int& ninput_items,
-                     gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
     bool start(void);
 
@@ -80,7 +80,7 @@ class sink_impl : public sink {
     void release_stream(int device_number, lms_stream_t* stream);
 
     double set_center_freq(double freq, size_t chan = 0);
-    
+
     void set_antenna(int antenna, int channel = 0);
     void toggle_pa_path(int device_number, bool enable);
 
@@ -99,7 +99,7 @@ class sink_impl : public sink {
     void set_buffer_size(uint32_t size);
 
     void calibrate(double bandw, int channel = 0);
-    
+
     void set_tcxo_dac(uint16_t dacVal = 125);
 
     void write_lms_reg(uint32_t address, uint16_t val);

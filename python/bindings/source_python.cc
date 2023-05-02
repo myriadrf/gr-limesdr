@@ -10,7 +10,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(source.h)                                                  */
-/* BINDTOOL_HEADER_FILE_HASH(3af730cd1a0e77de01aba53bcb7fd6fd)                     */
+/* BINDTOOL_HEADER_FILE_HASH(3564272b4ed28e9a9950ed098f444e40)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -36,6 +36,7 @@ void bind_source(py::module& m)
            py::arg("serial"),
            py::arg("channel_mode"),
            py::arg("filename"),
+           py::arg("align_ch_phase"),
            D(source,make)
         )
         

@@ -1,8 +1,8 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2018 Lime Microsystems info@limemicro.com
+ * Copyright 2019 Lime Microsystems <info@limemicro.com>
  *
- * This software is free software; you can redistribute it and/or modify
+ * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
@@ -21,16 +21,18 @@
 #ifndef INCLUDED_LIMESDR_SOURCE_IMPL_H
 #define INCLUDED_LIMESDR_SOURCE_IMPL_H
 
-#include "device_handler.h"
 #include <limesdr/source.h>
 
+#include "device_handler.h"
 
 static const pmt::pmt_t TIME_TAG = pmt::string_to_symbol("rx_time");
 
 namespace gr {
 namespace limesdr {
-class source_impl : public source {
-    private:
+
+class source_impl : public source
+{
+private:
     lms_stream_t streamId[2];
 
     bool stream_analyzer = false;
@@ -46,6 +48,7 @@ class source_impl : public source {
         int channel_mode;
         double samp_rate = 10e6;
         uint32_t FIFO_size = 0;
+        int align;
     } stored;
 
     std::chrono::high_resolution_clock::time_point t1, t2;
@@ -54,23 +57,26 @@ class source_impl : public source {
 
     void add_time_tag(int channel, lms_stream_meta_t meta);
 
-    public:
-    source_impl(std::string serial, int channel_mode, const std::string& filename);
+public:
+    source_impl(std::string serial,
+                int channel_mode,
+                const std::string& filename,
+                bool align_ch_phase);
     ~source_impl();
-
-    int general_work(int noutput_items,
-                     gr_vector_int& ninput_items,
-                     gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
 
     bool start(void);
 
     bool stop(void);
 
+    // Where all the action really happens
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+
     inline gr::io_signature::sptr args_to_io_signature(int channel_mode);
 
     void init_stream(int device_number, int channel);
-    void release_stream(int device_number, lms_stream_t *stream);
+    void release_stream(int device_number, lms_stream_t* stream);
 
     double set_center_freq(double freq, size_t chan = 0);
 
@@ -91,7 +97,7 @@ class source_impl : public source {
     void set_buffer_size(uint32_t size);
 
     void calibrate(double bandw, int channel = 0);
-    
+
     void set_tcxo_dac(uint16_t dacVal = 125);
 
     void write_lms_reg(uint32_t address, uint16_t val);
@@ -105,7 +111,8 @@ class source_impl : public source {
     // Read GPIO inputs, one bit per pin
     uint8_t read_gpio();
 };
+
 } // namespace limesdr
 } // namespace gr
 
-#endif
+#endif /* INCLUDED_LIMESDR_SOURCE_IMPL_H */

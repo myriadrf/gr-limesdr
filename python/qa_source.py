@@ -1,8 +1,9 @@
-# Copyright 2018 Free Software Foundation, Inc.
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
-# This file is part of GNU Radio
+# Copyright 2019 Lime Microsystems <info@limemicro.com>
 #
-# This software is free software; you can redistribute it and/or modify
+# This is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
@@ -16,11 +17,25 @@
 # along with this software; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
+#
 
-include(CMakeFindDependencyMacro)
+from gnuradio import gr, gr_unittest
+from gnuradio import blocks
+import limesdr_swig as limesdr
 
-set(target_deps "@TARGET_DEPENDENCIES@")
-foreach(dep IN LISTS target_deps)
-    find_dependency(${dep})
-endforeach()
-include("${CMAKE_CURRENT_LIST_DIR}/@TARGET@Targets.cmake")
+class qa_source(gr_unittest.TestCase):
+
+    def setUp(self):
+        self.tb = gr.top_block()
+
+    def tearDown(self):
+        self.tb = None
+
+    def test_001_t(self):
+        # set up fg
+        self.tb.run()
+        # check data
+
+
+if __name__ == '__main__':
+    gr_unittest.run(qa_source)

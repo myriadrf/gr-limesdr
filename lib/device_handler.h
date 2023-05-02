@@ -23,10 +23,10 @@
 
 #include <lime/LimeSuite.h>
 #include <lime/limeRFE.h>
+#include <math.h>
 #include <cmath>
 #include <iostream>
 #include <list>
-#include <math.h>
 #include <mutex>
 #include <string>
 #include <vector>
@@ -38,10 +38,9 @@
 #define LimeNET_Micro 2
 #define LimeSDR_USB 3
 
-#define GR_LIMESDR_VER "2.2.7"
-
-class device_handler {
-    private:
+class device_handler
+{
+private:
     int open_devices = 0;
     // Read device list once flag
     bool list_read = false;
@@ -62,12 +61,13 @@ class device_handler {
         std::string sink_filename;
     };
 
-    struct rfe_device
-    {
+    struct rfe_device {
         int rx_channel = 0;
         int tx_channel = 0;
         rfe_dev_t* rfe_dev = nullptr;
-    }rfe_device;
+    } rfe_device;
+
+
     // Device list
     lms_info_str_t* list = new lms_info_str_t[20];
     // Device vector. Adds devices from the list
@@ -80,8 +80,9 @@ class device_handler {
     void operator=(device_handler const&);
 
 
-    public:
-    static device_handler& getInstance() {
+public:
+    static device_handler& getInstance()
+    {
         static device_handler instance;
         return instance;
     }
@@ -136,8 +137,10 @@ class device_handler {
      *
      * @param   filename  Path to file if file switch is turned on.
      */
-    void
-    check_blocks(int device_number, int block_type, int channel_mode, const std::string& filename);
+    void check_blocks(int device_number,
+                      int block_type,
+                      int channel_mode,
+                      const std::string& filename);
 
     /**
      * Load settings from .ini file.
@@ -145,10 +148,12 @@ class device_handler {
      * @param   device_number Device number from the list of LMS_GetDeviceList.
      *
      * @param   filename Path to file if file switch is turned on.
-     * 
-     * @param   antenna_tx Pointer to TX antenna, so PA path would be updated in sink block
+     *
+     * @param   antenna_tx Pointer to TX antenna, so PA path would be updated in sink
+     * block
      */
-    void settings_from_file(int device_number, const std::string& filename, int* antenna_tx);
+    void
+    settings_from_file(int device_number, const std::string& filename, int* antenna_tx);
 
     /**
      * Set used channels
@@ -234,7 +239,10 @@ class device_handler {
      *
      * @param   analog_bandw  Channel filter bandwidth in Hz.
      */
-    double set_analog_filter(int device_number, bool direction, int channel, double analog_bandw);
+    double set_analog_filter(int device_number,
+                             bool direction,
+                             int channel,
+                             double analog_bandw);
 
     /**
      * Set digital filters (GFIR).
@@ -247,7 +255,10 @@ class device_handler {
      *
      * @param   digital_bandw  Channel filter bandwidth in Hz.
      */
-    double set_digital_filter(int device_number, bool direction, int channel, double digital_bandw);
+    double set_digital_filter(int device_number,
+                              bool direction,
+                              int channel,
+                              double digital_bandw);
 
     /**
      * Set the combined gain value in dB
@@ -281,24 +292,28 @@ class device_handler {
      * @param   nco_freq       NCO frequency in Hz.
      */
     void set_nco(int device_number, bool direction, int channel, float nco_freq);
-
+    /**
+     * Disables LimeSDR boards DC corrections
+     */
     void disable_DC_corrections(int device_number);
 
     /**
      * Set TCXO DAC.
-     * @note Care must be taken as this parameter is returned to default value only after power off.
+     * @note Care must be taken as this parameter is returned to default value only after
+     * power off.
      * @note LimeSDR-Mini default value is 180 range is [0,255]
      * LimeSDR-USB default value is 125 range is [0,255]
      * LimeSDR-PCIe default value is 134 range is [0,255]
      * LimeNET-Micro default value is 30714 range is [0,65535]
-     * 
+     *
      * @param   device_number  Device number from the list of LMS_GetDeviceList.
      *
      * @param   dacVal		   DAC value (0-65535)
      */
     void set_tcxo_dac(int device_number, uint16_t dacVal);
-        /**
-     * Sets up LimeRFE device pointer so that automatic channel configuration could be made
+    /**
+     * Sets up LimeRFE device pointer so that automatic channel configuration could be
+     * made
      * @param   rfe_dev  Pointer to LimeRFE device descriptor
      */
     void set_rfe_device(rfe_dev_t* rfe_dev);
@@ -320,7 +335,6 @@ class device_handler {
 
     // Read GPIO inputs, one bit per pin
     uint8_t read_gpio(int device_number);
-
 };
 
 
