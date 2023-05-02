@@ -370,6 +370,8 @@ void device_handler::set_oversampling(int device_number, int oversample)
 double
 device_handler::set_rf_freq(int device_number, bool direction, int channel, float rf_freq)
 {
+    double value = 0;
+
     if (rf_freq <= 0) {
         std::cout
             << "ERROR: device_handler::set_rf_freq(): rf_freq must be more than 0 Hz."
@@ -383,7 +385,6 @@ device_handler::set_rf_freq(int device_number, bool direction, int channel, floa
                                rf_freq) != LMS_SUCCESS)
             device_handler::getInstance().error(device_number);
 
-        double value = 0;
         LMS_GetLOFrequency(device_handler::getInstance().get_device(device_number),
                            direction,
                            channel,
@@ -392,8 +393,9 @@ device_handler::set_rf_freq(int device_number, bool direction, int channel, floa
         std::string s_dir[2] = { "RX", "TX" };
         std::cout << "RF frequency set [" << s_dir[direction] << "]: " << value / 1e6
                   << " MHz." << std::endl;
-        return value;
     }
+
+    return value;
 }
 
 void device_handler::calibrate(int device_number,
@@ -456,6 +458,8 @@ double device_handler::set_analog_filter(int device_number,
                                          int channel,
                                          double analog_bandw)
 {
+    double analog_value = 0;
+
     if (channel == 0 || channel == 1) {
         if (direction == LMS_CH_TX || direction == LMS_CH_RX) {
             std::cout << "INFO: device_handler::set_analog_filter(): ";
@@ -464,12 +468,10 @@ double device_handler::set_analog_filter(int device_number,
                          channel,
                          analog_bandw);
 
-            double analog_value;
             LMS_GetLPFBW(device_handler::getInstance().get_device(device_number),
                          direction,
                          channel,
                          &analog_value);
-            return analog_value;
         } else {
             std::cout << "ERROR: device_handler::set_analog_filter(): direction must be "
                          "0(LMS_CH_RX) or 1(LMS_CH_TX)."
@@ -481,6 +483,8 @@ double device_handler::set_analog_filter(int device_number,
                   << std::endl;
         close_all_devices();
     }
+
+    return analog_value;
 }
 
 double device_handler::set_digital_filter(int device_number,
@@ -504,7 +508,6 @@ double device_handler::set_digital_filter(int device_number,
                 std::cout << digital_bandw / 1e6 << " MHz." << std::endl;
             else
                 std::cout << "disabled" << std::endl;
-            return digital_bandw;
         } else {
             std::cout << "ERROR: device_handler::set_digital_filter(): direction must be "
                          "0(LMS_CH_RX) or 1(LMS_CH_TX)."
@@ -517,11 +520,15 @@ double device_handler::set_digital_filter(int device_number,
             << std::endl;
         close_all_devices();
     }
+
+    return digital_bandw;
 }
 
 unsigned
 device_handler::set_gain(int device_number, bool direction, int channel, unsigned gain_dB)
 {
+    unsigned gain_value = 0;
+
     if (gain_dB >= 0 && gain_dB <= 73) {
         std::cout << "INFO: device_handler::set_gain(): ";
         LMS_SetGaindB(device_handler::getInstance().get_device(device_number),
@@ -538,12 +545,13 @@ device_handler::set_gain(int device_number, bool direction, int channel, unsigne
                       &gain_value);
         std::cout << "set gain [" << s_dir[direction] << "] CH" << channel << ": "
                   << gain_value << " dB." << std::endl;
-        return gain_value;
     } else {
         std::cout << "ERROR: device_handler::set_gain(): valid range [0, 73]"
                   << std::endl;
         close_all_devices();
     }
+
+    return gain_value;
 }
 
 void device_handler::set_nco(int device_number,
