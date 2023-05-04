@@ -25,6 +25,8 @@
 #include "device_handler.h"
 #include <limesdr/rfe.h>
 
+#include <boost/format.hpp>
+
 #include <stdexcept>
 
 namespace gr {
@@ -40,10 +42,13 @@ rfe::rfe(int comm_type,
          char Notch,
          char Atten)
 {
-    std::cout << "---------------------------------------------------------------"
-              << std::endl;
-    std::cout << "LimeSuite RFE info" << std::endl;
-    std::cout << std::endl;
+    gr::configure_default_loggers(
+        d_logger,
+        d_debug_logger,
+        str(boost::format("LimeRFE %s") % device));
+
+    GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
+    GR_LOG_INFO(d_logger, "LimeSuite RFE Info");
 
     boardState.channelIDRX = IDRX;
     boardState.channelIDTX = IDTX;
@@ -57,7 +62,7 @@ rfe::rfe(int comm_type,
     {
         sdr_device_num = device_handler::getInstance().open_device(device);
 
-        std::cout << "LimeRFE: Opening through GPIO communication" << std::endl;
+        GR_LOG_INFO(d_logger, "Opening through GPIO communication.");
         rfe_dev =
             RFE_Open(nullptr, device_handler::getInstance().get_device(sdr_device_num));
         if (!rfe_dev) {
@@ -75,50 +80,43 @@ rfe::rfe(int comm_type,
     } else // Direct USB
     {
         // Not using device handler so print the version
-        std::cout << "##################" << std::endl;
-        std::cout << "LimeSuite version: " << LMS_GetLibraryVersion() << std::endl;
-        std::cout << "gr-limesdr version: " << GR_LIMESDR_VER << std::endl;
-        std::cout << "##################" << std::endl;
+        GR_LOG_INFO(d_logger, "##################");
+        GR_LOG_INFO(d_logger, boost::format("LimeSuite version: %s") % LMS_GetLibraryVersion());
+        GR_LOG_INFO(d_logger, boost::format("gr-limesdr version: %s") % GR_LIMESDR_VER);
+        GR_LOG_INFO(d_logger, "##################");
 
-        std::cout << "LimeRFE: Opening " << device << std::endl;
+        GR_LOG_INFO(d_logger, boost::format("Opening %s") % device);
         rfe_dev = RFE_Open(device.c_str(), nullptr);
         if (!rfe_dev) {
-            throw std::runtime_error("LimeRFE: failed to open device");
+            throw std::runtime_error("LimeRFE: failed to open " + device);
         }
     }
 
     int error = 0;
     unsigned char info[4] = { 0 };
     if ((error = RFE_GetInfo(rfe_dev, info)) != 0) {
-        std::cout << "LimeRFE: Failed to get device info: ";
-        print_error(error);
         throw std::runtime_error("LimeRFE: failed to get device info.");
     }
-    std::cout << "LimeRFE: FW: " << (int)info[0] << " HW: " << (int)info[1] << std::endl;
+    GR_LOG_INFO(d_logger, boost::format("FW: %d HW: %d") % (int)info[0] % (int)info[1]);
 
     if (config_file.empty()) {
         if ((error = RFE_ConfigureState(rfe_dev, boardState)) != 0) {
-            std::cout << "LimeRFE: Failed to configure device: ";
-            print_error(error);
             throw std::runtime_error("LimeRFE: failed to configure device.");
         }
     } else {
-        std::cout << "LimeRFE: Loading configuration file" << std::endl;
+        GR_LOG_INFO(d_logger, "Loading configuration file");
         if ((error = RFE_LoadConfig(rfe_dev, config_file.c_str())) != 0) {
-            std::cout << "LimeRFE: Failed to load configuration file: ";
-            print_error(error);
             throw std::runtime_error("LimeRFE: failed to load configuration file.");
         }
     }
-    std::cout << "LimeRFE: Board state: " << std::endl;
+    GR_LOG_INFO(d_logger, "Board state:");
     get_board_state();
-    std::cout << "---------------------------------------------------------------"
-              << std::endl;
+    GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
 }
 
 rfe::~rfe()
 {
-    std::cout << "LimeRFE: closing" << std::endl;
+    GR_LOG_INFO(d_logger, "Closing");
     if (rfe_dev) {
         RFE_Reset(rfe_dev);
         RFE_Close(rfe_dev);
@@ -131,41 +129,42 @@ int rfe::change_mode(int mode)
         if (mode == RFE_MODE_TXRX) {
             if (boardState.selPortRX == boardState.selPortTX &&
                 boardState.channelIDRX < RFE_CID_CELL_BAND01) {
-                std::cout
-                    << "LimeRFE: mode cannot be set to RX+TX when same port is selected"
-                    << std::endl;
+                GR_LOG_ERROR(
+                    d_logger,
+                    "Mode cannot be set to RX+TX when same port is selected");
                 return -1;
             }
         }
         int error = 0;
-        if (mode > 3 || mode < 0)
-            std::cout << "LimeRFE: invalid mode" << std::endl;
+        if (mode > 3 || mode < 0) {
+            GR_LOG_ERROR(d_logger, boost::format("Invalid mode %d") % mode);
+            return -1;
+        }
         std::string mode_str[4] = { "RX", "TX", "NONE", "RX+TX" };
-        std::cout << "LimeRFE: changing mode to " << mode_str[mode] << std::endl;
+        GR_LOG_INFO(d_logger, boost::format("Changing mode to %s") % mode_str);
+
         if ((error = RFE_Mode(rfe_dev, mode)) != 0) {
-            std::cout << "LimeRFE: failed to change mode:";
-            print_error(error);
+            GR_LOG_ERROR(d_logger, boost::format("Failed to change mode: %s") % this->strerror(error));
         }
         boardState.mode = mode;
         return error;
     }
-    std::cout << "LimeRFE: no RFE device opened" << std::endl;
+    GR_LOG_ERROR(d_logger, "No RFE device opened");
     return -1;
 }
 
 int rfe::set_fan(int enable)
 {
     if (rfe_dev) {
-        std::string enable_str[2] = { "disabling", "enabling" };
-        std::cout << "LimeRFE: " << enable_str[enable] << " fan" << std::endl;
+        std::string enable_str[2] = { "Disabling", "Enabling" };
+        GR_LOG_INFO(d_logger, boost::format("%s fan") % enable_str[enable]);
         int error = 0;
         if ((error = RFE_Fan(rfe_dev, enable)) != 0) {
-            std::cout << "LimeRFE: failed to change mode:";
-            print_error(error);
+            GR_LOG_ERROR(d_logger, boost::format("Failed to change mode: %s") % this->strerror(error));
         }
         return error;
     }
-    std::cout << "LimeRFE: no RFE device opened" << std::endl;
+    GR_LOG_ERROR(d_logger, "No RFE device opened");
     return -1;
 }
 
@@ -174,22 +173,18 @@ int rfe::set_attenuation(int attenuation)
     if (rfe_dev) {
         int error = 0;
         if (attenuation > 7) {
-            std::cout << "LimeRFE: attenuation value too high, valid range [0, 7]"
-                      << std::endl;
+            GR_LOG_ERROR(d_logger, "Attenuation value too high, valid range [0, 7]");
             return -1;
         }
-        std::cout << "LimeRFE: changing attenuation value to: " << attenuation
-                  << std::endl;
-        ;
+        GR_LOG_INFO(d_logger, boost::format("Changing attenuation value to: %d") % attenuation);
 
         boardState.attValue = attenuation;
         if ((error = RFE_ConfigureState(rfe_dev, boardState)) != 0) {
-            std::cout << "LimeRFE: failed to change attenuation: ";
-            print_error(error);
+            GR_LOG_ERROR(d_logger, boost::format("Failed to change attenuation: %s") % this->strerror(error));
         }
         return error;
     }
-    std::cout << "LimeRFE: no RFE device opened" << std::endl;
+    GR_LOG_ERROR(d_logger, "No RFE device opened");
     return -1;
 }
 
@@ -198,64 +193,66 @@ int rfe::set_notch(int enable)
     if (rfe_dev) {
         if (boardState.channelIDRX > RFE_CID_HAM_0920 ||
             boardState.channelIDRX == RFE_CID_WB_4000) {
-            std::cout << "LimeRFE: notch filter cannot be se for this RX channel"
-                      << std::endl;
+            GR_LOG_ERROR(d_logger, "Notch filter cannot be se for this RX channel");
             return -1;
         }
         int error = 0; //! TODO: might need renaming
         boardState.notchOnOff = enable;
-        std::string en_dis[2] = { "disabling", "enabling" };
-        std::cout << "LimeRFE: " << en_dis[enable] << " notch filter" << std::endl;
+        std::string en_dis[2] = { "Disabling", "Enabling" };
+        GR_LOG_INFO(d_logger, boost::format("%s notch filter") % en_dis[enable]);
         if ((error = RFE_ConfigureState(rfe_dev, boardState)) != 0) {
-            std::cout << "LimeRFE: failed to change change attenuation: ";
-            print_error(error);
+            GR_LOG_ERROR(d_logger, boost::format("Failed to change attenuation: %s") % this->strerror(error));
         }
         return error;
     }
     return -1;
 }
-void rfe::print_error(int error)
+
+std::string rfe::strerror(int error)
 {
     switch (error) {
     case -4:
-        std::cout << "error synchronizing communication" << std::endl;
-        break;
+        return "error synchronizing communication";
     case -3:
-        std::cout
-            << "non-configurable GPIO pin specified. Only pins 4 and 5 are configurable."
-            << std::endl;
-        break;
+        return "non-configurable GPIO pin specified. Only pins 4 and 5 are configurable.";
     case -2:
-        std::cout << "couldn't read the .ini configuration file" << std::endl;
-        break;
+        return "couldn't read the .ini configuration file";
     case -1:
-        std::cout << "communication error" << std::endl;
-        break;
+        return "communication error";
     case 1:
-        std::cout << "wrong TX port - not possible to route selected TX channel"
-                  << std::endl;
-        break;
+        return "wrong TX port - not possible to route selected TX channel";
     case 2:
-        std::cout << "wrong RX port - not possible to route selected RX channel"
-                  << std::endl;
-        break;
+        return "wrong RX port - not possible to route selected RX channel";
     case 3:
-        std::cout << "TX+RX mode cannot be used when same TX and RX port is used"
-                  << std::endl;
-        break;
+        return "TX+RX mode cannot be used when same TX and RX port is used";
     case 4:
-        std::cout << "wrong mode for the cellular channel" << std::endl;
-        break;
+        return "wrong mode for the cellular channel";
     case 5:
-        std::cout << "cellular channels must be the same both for RX and TX" << std::endl;
-        break;
+        return "cellular channels must be the same both for RX and TX";
     case 6:
-        std::cout << "requested channel code is wrong" << std::endl;
-        break;
+        return "requested channel code is wrong";
     default:
-        std::cout << "error code doesn't match" << std::endl;
-        break;
+        return "error code doesn't match";
     }
+}
+
+void rfe::get_board_state()
+{
+    rfe_boardState currentState = { 0 };
+    if (RFE_GetState(rfe_dev, &currentState) != 0) {
+        GR_LOG_ERROR(d_logger, "LimeRFE: failed to get board state");
+        return;
+    }
+
+    GR_LOG_INFO(d_logger, boost::format("LimeRFE: RX channel: %d") % (int)currentState.channelIDRX);
+    GR_LOG_INFO(d_logger, boost::format("LimeRFE: TX channel: %d") % (int)currentState.channelIDTX);
+    GR_LOG_INFO(d_logger, boost::format("LimeRFE: PortRX: %d") % (int)currentState.selPortRX);
+    GR_LOG_INFO(d_logger, boost::format("LimeRFE: PortTx: %d") % (int)currentState.selPortTX);
+    GR_LOG_INFO(d_logger, boost::format("LimeRFE: Mode: %d") % (int)currentState.mode);
+    GR_LOG_INFO(d_logger, boost::format("LimeRFE: Notch: %d") % (int)currentState.notchOnOff);
+    GR_LOG_INFO(d_logger, boost::format("LimeRFE: Attenuation: %d") % (int)currentState.attValue);
+    GR_LOG_INFO(d_logger, boost::format("LimeRFE: Enable SWR: %d") % (int)currentState.enableSWR);
+    GR_LOG_INFO(d_logger, boost::format("LimeRFE: SourceSWR: %d") % (int)currentState.sourceSWR);
 }
 
 } // namespace limesdr
