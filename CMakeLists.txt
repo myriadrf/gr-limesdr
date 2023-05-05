@@ -132,24 +132,7 @@ file(TO_CMAKE_PATH "${PYTHON_NUMPY_INCLUDE_DIR}" PYTHON_NUMPY_INCLUDE_DIR)
 # Find LimeSuite
 ########################################################################
 MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
-INCLUDE(FindPkgConfig)
-PKG_CHECK_MODULES(PC_LIMESUITE LimeSuite)
-find_path(LIMESUITE_INCLUDE_DIRS
- NAMES LimeSuite.h
- HINTS ${PC_LIMESUITE_INCLUDEDIR}/lime
- PATHS ${LIMESUITE_PKG_INCLUDE_DIRS}
-       /usr/include/lime
-       /usr/local/include/lime
-)
-find_library(LIMESUITE_LIB
- NAMES LimeSuite limesuite
- HINTS ${PC_LIMESUITE_LIBDIR}
- PATHS ${LIMESDR_PKG_LIBRARY_DIRS}
-       /usr/lib
-       /usr/local/lib
-)
-
-message(STATUS "Found LimeSuite: ${LIMESUITE_INCLUDE_DIRS}, ${LIMESUITE_LIB}")
+find_package(LimeSuite)
 
 ########################################################################
 # LimeRFE
@@ -198,11 +181,3 @@ if(ENABLE_PYTHON)
 else(ENABLE_PYTHON)
   message(STATUS "PYTHON and GRC components are disabled")
 endif(ENABLE_PYTHON)
-
-########################################################################
-# Install cmake search helper for this library
-########################################################################
-
-install(FILES cmake/Modules/limesdrConfig.cmake
-    DESTINATION ${CMAKE_MODULES_DIR}/limesdr
-)
