@@ -22,6 +22,7 @@
 #include "config.h"
 #endif
 
+#include "logging.h"
 #include "source_impl.h"
 #include <gnuradio/io_signature.h>
 
@@ -50,12 +51,11 @@ source_impl::source_impl(std::string serial,
                          const std::string& filename,
                          bool align_ch_phase)
     : gr::sync_block(
-          "source", gr::io_signature::make(0, 0, 0), args_to_io_signature(channel_mode))
+          str(boost::format("source %s") % serial),
+          gr::io_signature::make(0, 0, 0),
+          args_to_io_signature(channel_mode))
 {
-    std::cout << "---------------------------------------------------------------"
-              << std::endl;
-    std::cout << "LimeSuite Source (RX) info" << std::endl;
-    std::cout << std::endl;
+    set_limesuite_logger();
 
     // 1. Store private variables upon implementation to protect from changing
     // them later
@@ -243,8 +243,11 @@ void source_impl::init_stream(int device_number, int channel)
                         &streamId[channel]) != LMS_SUCCESS)
         device_handler::getInstance().error(stored.device_number);
 
-    std::cout << "INFO: source_impl::init_stream(): source channel " << channel
-              << " (device nr. " << device_number << ") stream setup done." << std::endl;
+    GR_LOG_INFO(
+        d_logger,
+        boost::format("init_stream: source channel %d (device nr. %d) stream setup done.")
+            % channel
+            % device_number);
 }
 
 void source_impl::release_stream(int device_number, lms_stream_t* stream)
@@ -263,12 +266,14 @@ void source_impl::print_stream_stats(lms_stream_status_t status)
     auto timePeriod =
         std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
     if (timePeriod >= 1000) {
-        std::cout << std::endl;
-        std::cout << "RX";
-        std::cout << "|rate: " << status.linkRate / 1e6 << " MB/s ";
-        std::cout << "|dropped packets: " << pktLoss << " ";
-        std::cout << "|FIFO: " << 100 * status.fifoFilledCount / status.fifoSize << "%"
-                  << std::endl;
+        GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
+        GR_LOG_INFO(
+            d_logger,
+            boost::format("RX |rate: %f MB/s |dropped packets: %d |FIFO: %d%")
+                % (status.linkRate / 1e6)
+                % pktLoss
+                % (100 * (status.fifoFilledCount / status.fifoSize)));
+        GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
         pktLoss = 0;
         t1 = t2;
     }

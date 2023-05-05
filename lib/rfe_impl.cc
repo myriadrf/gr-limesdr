@@ -23,6 +23,7 @@
 #endif
 
 #include "device_handler.h"
+#include "logging.h"
 #include <limesdr/rfe.h>
 
 #include <boost/format.hpp>
@@ -42,6 +43,8 @@ rfe::rfe(int comm_type,
          char Notch,
          char Atten)
 {
+    set_limesuite_logger();
+
     gr::configure_default_loggers(
         d_logger,
         d_debug_logger,

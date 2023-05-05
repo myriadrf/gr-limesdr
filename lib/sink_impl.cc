@@ -22,6 +22,7 @@
 #include "config.h"
 #endif
 
+#include "logging.h"
 #include "sink_impl.h"
 #include <gnuradio/io_signature.h>
 
@@ -43,12 +44,11 @@ sink_impl::sink_impl(std::string serial,
                      const std::string& filename,
                      const std::string& length_tag_name)
     : gr::sync_block(
-          "sink", args_to_io_signature(channel_mode), gr::io_signature::make(0, 0, 0))
+          str(boost::format("sink %s") % serial),
+          args_to_io_signature(channel_mode),
+          gr::io_signature::make(0, 0, 0))
 {
-    std::cout << "---------------------------------------------------------------"
-              << std::endl;
-    std::cout << "LimeSuite Sink (TX) info" << std::endl;
-    std::cout << std::endl;
+    set_limesuite_logger();
 
     LENGTH_TAG =
         length_tag_name.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(length_tag_name);
@@ -239,7 +239,7 @@ void sink_impl::work_tags(int noutput_items)
                 if (cTag.offset == current_sample) {
                     // Found length tag in the middle of the burst
                     if (burst_length > 0 && ret[0] > 0)
-                        std::cout << "Warning: Length tag has been preemted" << std::endl;
+                        GR_LOG_WARN(d_logger, "Length tag has been preempted");
                     burst_length = pmt::to_long(cTag.value);
                 } else {
                     nitems_send = int(cTag.offset - current_sample);
@@ -258,12 +258,14 @@ void sink_impl::print_stream_stats(int channel)
     if (timePeriod >= 1000) {
         lms_stream_status_t status;
         LMS_GetStreamStatus(&streamId[channel], &status);
-        std::cout << std::endl;
-        std::cout << "TX";
-        std::cout << "|rate: " << status.linkRate / 1e6 << " MB/s ";
-        std::cout << "|dropped packets: " << status.droppedPackets << " ";
-        std::cout << "|FIFO: " << 100 * status.fifoFilledCount / status.fifoSize << "%"
-                  << std::endl;
+        GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
+        GR_LOG_INFO(
+            d_logger,
+            boost::format("TX |rate: %f MB/s |dropped packets: %d |FIFO: %d%")
+                % (status.linkRate / 1e6)
+                % status.droppedPackets
+                % (100 * (status.fifoFilledCount / status.fifoSize)));
+        GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
         t1 = t2;
     }
 }
@@ -281,8 +283,11 @@ void sink_impl::init_stream(int device_number, int channel)
                         &streamId[channel]) != LMS_SUCCESS)
         device_handler::getInstance().error(device_number);
 
-    std::cout << "INFO: sink_impl::init_stream(): sink channel " << channel
-              << " (device nr. " << device_number << ") stream setup done." << std::endl;
+    GR_LOG_INFO(
+        d_logger,
+        boost::format("init_stream: sink channel %d (device nr. %d) stream setup done.")
+            % channel
+            % device_number);
 }
 
 void sink_impl::release_stream(int device_number, lms_stream_t* stream)
@@ -322,7 +327,7 @@ void sink_impl::set_antenna(int antenna, int channel)
 
 void sink_impl::toggle_pa_path(int device_number, bool enable)
 {
-    LMS_RegisterLogHandler([](int, const char*) {});
+    suppress_limesuite_logging();
     if (stored.channel_mode < 2) {
         LMS_SetAntenna(device_handler::getInstance().get_device(device_number),
                        LMS_CH_TX,
@@ -338,7 +343,7 @@ void sink_impl::toggle_pa_path(int device_number, bool enable)
                        LMS_CH_1,
                        enable ? pa_path[1] : 0);
     }
-    LMS_RegisterLogHandler(nullptr);
+    set_limesuite_logger(); // Restore our logging
 }
 
 void sink_impl::set_nco(float nco_freq, int channel)

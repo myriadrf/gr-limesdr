@@ -19,7 +19,9 @@
  */
 
 #include "device_handler.h"
-#include <LMS7002M_parameters.h>
+#include "logging.h"
+
+#include <lime/LMS7002M_parameters.h>
 
 #include <gnuradio/logger.h>
 
@@ -30,13 +32,14 @@
 device_handler::device_handler()
 {
     gr::configure_default_loggers(d_logger, d_debug_logger, "device_handler");
+    set_limesuite_logger();
 }
 
 device_handler::~device_handler() { delete list; }
 
 void device_handler::error(int device_number)
 {
-    // std::cout << "ERROR: " << LMS_GetLastErrorMessage() << std::endl;
+    GR_LOG_WARN(d_logger, LMS_GetLastErrorMessage());;
     if (this->device_vector[device_number].address != NULL)
         close_all_devices();
 }
@@ -48,6 +51,8 @@ lms_device_t* device_handler::get_device(int device_number)
 
 int device_handler::open_device(std::string& serial)
 {
+    set_limesuite_logger();
+
     int device_number = 0;
     std::string search_name;
 
@@ -99,14 +104,14 @@ int device_handler::open_device(std::string& serial)
             throw std::invalid_argument("Unable to find LMS device with serial "+serial);
         }
 
-        device_number = std::distance(list[0], *device_iter);
+        device_number = device_iter - &list[0];
         serial = device_to_serial(*device_iter);
     }
 
     // If device slot is empty, open and initialize device
     if (device_vector[device_number].address == NULL) {
         if (LMS_Open(&device_vector[device_number].address, list[device_number], NULL) != LMS_SUCCESS)
-            throw std::runtime_error("device_handler::open_device(): failed to device " + serial);
+            throw std::runtime_error("device_handler::open_device(): failed to open device " + serial);
 
         LMS_Init(device_vector[device_number].address);
         const lms_dev_info_t* info =
@@ -131,6 +136,7 @@ int device_handler::open_device(std::string& serial)
                 % device_number);
         GR_LOG_INFO(d_logger, "##################");
     }
+    set_limesuite_logger();
 
     return device_number; // return device number to identify
                           // device_vector[device_number].address connection in other
@@ -264,10 +270,11 @@ void device_handler::settings_from_file(int device_number,
     antenna_tx[0] = LMS_GetAntenna(
         device_handler::getInstance().get_device(device_number), LMS_CH_TX, LMS_CH_0);
     /* Don't print error message for the mini board */
-    LMS_RegisterLogHandler([](int, const char*) {});
+    suppress_limesuite_logging();
     antenna_tx[1] = LMS_GetAntenna(
         device_handler::getInstance().get_device(device_number), LMS_CH_TX, LMS_CH_1);
-    LMS_RegisterLogHandler(nullptr);
+    // Restore our logging
+    set_limesuite_logger();
     antenna_rx = LMS_GetAntenna(
         device_handler::getInstance().get_device(device_number), LMS_CH_RX, LMS_CH_0);
 
