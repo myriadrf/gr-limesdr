@@ -12,6 +12,8 @@
 include(GrPlatform) #define LIB_SUFFIX
 
 list(APPEND limesdr_sources
+    device_handler.cc
+    logging.cc
     source_impl.cc
     sink_impl.cc
     device_handler.cc

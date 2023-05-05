@@ -23,6 +23,7 @@
 
 #include <lime/LimeSuite.h>
 #include <lime/limeRFE.h>
+#include <gnuradio/logger.h>
 #include <math.h>
 #include <cmath>
 #include <iostream>
@@ -74,8 +75,11 @@ private:
     std::vector<device> device_vector;
     // Run close_all_devices once with this flag
     bool close_flag = false;
+    // Loggers
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
-    device_handler(){};
+    device_handler();
     device_handler(device_handler const&);
     void operator=(device_handler const&);
 

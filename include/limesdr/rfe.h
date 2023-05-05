@@ -23,14 +23,14 @@
 
 #include <lime/limeRFE.h>
 #include <limesdr/api.h>
-#include <iostream>
+#include <gnuradio/logger.h>
 #include <string>
 
 namespace gr {
 namespace limesdr {
 
 /*!
- * \brief GNURadio block to control LimeRFE boards
+ * \brief Allow directly controlling RFE boards
  * \ingroup limesdr
  *
  */
@@ -96,26 +96,11 @@ private:
                                   0 };
     int sdr_device_num = 0;
 
-    void print_error(int error);
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
-    void get_board_state()
-    {
-        rfe_boardState currentState = { 0 };
-        if (RFE_GetState(rfe_dev, &currentState) != 0) {
-            std::cout << "LimeRFE: failed to get board state" << std::endl;
-            return;
-        }
-
-        std::cout << "LimeRFE: RX channel: " << (int)currentState.channelIDRX << std::endl;
-        std::cout << "LimeRFE: TX channel: " << (int)currentState.channelIDTX << std::endl;
-        std::cout << "LimeRFE: PortRX: " << (int)currentState.selPortRX << std::endl;
-        std::cout << "LimeRFE: PortTx: " << (int)currentState.selPortTX << std::endl;
-        std::cout << "LimeRFE: Mode: " << (int)currentState.mode << std::endl;
-        std::cout << "LimeRFE: Notch: " << (int)currentState.notchOnOff << std::endl;
-        std::cout << "LimeRFE: Attenuation: " << (int)currentState.attValue << std::endl;
-        std::cout << "LimeRFE: Enable SWR: " << (int)currentState.enableSWR << std::endl;
-        std::cout << "LimeRFE: SourceSWR: " << (int)currentState.sourceSWR << std::endl;
-    }
+    std::string strerror(int error);
+    void get_board_state();
 };
 
 } // namespace limesdr
