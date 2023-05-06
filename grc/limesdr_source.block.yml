@@ -1,7 +1,7 @@
 id: limesdr_source
 label: LimeSDR Source (RX)
 category: '[LimeSDR]'
-flags: throttle
+flags: [cpp, python, throttle]
 
 parameters:
 - id: serial
@@ -224,6 +224,97 @@ templates:
    
     % if int(allow_tcxo_dac) == 1:
     self.${id}.set_tcxo_dac(${dacVal})
+    % endif
+
+  callbacks:
+  - set_center_freq(${rf_freq}, 0)
+  - set_antenna(${lna_path_ch0}, 0)
+  - set_antenna(${lna_path_ch1}, 1)
+  - set_nco(${nco_freq_ch0}, 0)
+  - set_nco(${nco_freq_ch1}, 1)
+  - set_bandwidth(${analog_bandw_ch0}, 0)
+  - set_bandwidth(${analog_bandw_ch1}, 1)
+  - set_digital_filter(${digital_bandw_ch0}, 0)
+  - set_digital_filter(${digital_bandw_ch1}, 1)
+  - set_gain(${gain_dB_ch0}, 0)
+  - set_gain(${gain_dB_ch1}, 1)
+  - set_tcxo_dac(${dacVal})
+
+cpp_templates:
+  packages: ["gnuradio-limesdr"]
+  includes: ["#include <limesdr/source.h>"]
+  link: ["gnuradio::gnuradio-limesdr"]
+  translations:
+    "True": "true"
+    "False": "false"
+    "''": '""'
+
+  declarations: "gr::limesdr::source::sptr ${id};"
+  make: |-
+    this->${id} = gr::limesdr::source::make(${serial}, ${channel_mode}, ${filename}, ${ch_align});
+
+    % if filename() == "":
+
+    this->${id}->set_sample_rate(${samp_rate});
+
+    % if int(oversample()) > 0:
+    this->${id}->set_oversampling(${oversample});
+    % endif
+
+    this->${id}->set_center_freq(${rf_freq}, 0);
+
+    % if analog_bandw_ch0() > 0 and (int(channel_mode()) == 0 or int(channel_mode()) == 2):
+    this->${id}->set_bandwidth(${analog_bandw_ch0}, 0);
+    % endif
+
+    % if analog_bandw_ch1() > 0 and int(channel_mode()) > 0:
+    this->${id}->set_bandwidth(${analog_bandw_ch1}, 1);
+    % endif
+
+    % if digital_bandw_ch0() > 0 and (int(channel_mode()) == 0 or int(channel_mode()) == 2):
+    this->${id}->set_digital_filter(${digital_bandw_ch0}, 0);
+    % endif
+
+    % if digital_bandw_ch1() > 0 and int(channel_mode()) > 0:
+    this->${id}->set_digital_filter(${digital_bandw_ch1}, 1);
+    % endif
+
+    % if int(channel_mode()) == 0 or int(channel_mode()) == 2:
+    this->${id}->set_gain(${gain_dB_ch0}, 0);
+    % endif
+
+    % if int(channel_mode()) > 0:
+    this->${id}->set_gain(${gain_dB_ch1}, 1);
+    % endif
+
+    % if int(channel_mode()) == 0 or int(channel_mode()) == 2:
+    this->${id}->set_antenna(${lna_path_ch0}, 0);
+    % endif
+
+    % if int(channel_mode()) > 0:
+    this->${id}->set_antenna(${lna_path_ch1}, 1);
+    % endif
+
+    % if calibr_bandw_ch0() > 0 and (int(channel_mode()) == 0 or int(channel_mode()) == 2):
+    this->${id}->calibrate(${calibr_bandw_ch0}, 0);
+    % endif
+
+    % if calibr_bandw_ch1() > 0 and int(channel_mode()) > 0:
+    this->${id}->calibrate(${calibr_bandw_ch1}, 1);
+    % endif
+
+    % if nco_freq_ch0() != 0 and (int(channel_mode()) == 0 or int(channel_mode()) == 2):
+    this->${id}->set_nco(${nco_freq_ch0},0);
+    % endif
+
+    % if nco_freq_ch1() != 0 and int(channel_mode()) > 0:
+    this->${id}->set_nco(${nco_freq_ch1}, 1);
+    % endif
+
+    % endif # if filename() == ""
+
+    % if int(allow_tcxo_dac) == 1:
+    this->${id}->set_tcxo_dac(${dacVal});
     % endif
 
   callbacks:
