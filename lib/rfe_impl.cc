@@ -32,9 +32,35 @@
 
 namespace gr {
 namespace limesdr {
+
+rfe::sptr rfe::make(
+    int comm_type,
+    const std::string &device,
+    const std::string &config_file,
+    char IDRX,
+    char IDTX,
+    char PortRX,
+    char PortTX,
+    char Mode,
+    char Notch,
+    char Atten)
+{
+    return sptr(new rfe(
+        comm_type,
+        device,
+        config_file,
+        IDRX,
+        IDTX,
+        PortRX,
+        PortTX,
+        Mode,
+        Notch,
+        Atten));
+}
+
 rfe::rfe(int comm_type,
-         std::string device,
-         std::string config_file,
+         const std::string &device_,
+         const std::string &config_file,
          char IDRX,
          char IDTX,
          char PortRX,
@@ -44,6 +70,7 @@ rfe::rfe(int comm_type,
          char Atten)
 {
     set_limesuite_logger();
+    auto device = device_;
 
     gr::configure_default_loggers(
         d_logger,

@@ -2,7 +2,8 @@
 
 id: limesdr_rfe
 label: LimeRFE Control
-category: '[LimeSuite]'
+category: '[LimeSDR]'
+flags: [cpp, python, throttle]
 
 parameters:
 -   id: comm_type
@@ -98,6 +99,42 @@ templates:
     - set_attenuation(${atten})
     - set_notch(${notch})
     - set_fan(${fan})
+
+templates:
+    imports: import limesdr
+    make: |-
+        limesdr.rfe(${comm_type},
+        % if comm_type == 0:
+            ${com_port},
+        % else:
+            ${sdr_serial},
+        % endif
+        ${filename}, ${rx_channel}, ${tx_channel}, ${rx_port}, ${tx_port}, ${mode}, ${notch}, ${atten})
+    callbacks:
+    - change_mode(${mode})
+    - set_attenuation(${atten})
+    - set_notch(${notch})
+    - set_fan(${fan})
+
+cpp_templates:
+  packages: ["gnuradio-limesdr"]
+  includes: ["#include <limesdr/rfe.h>"]
+  link: ["gnuradio::gnuradio-limesdr"]
+  translations:
+    "True": "true"
+    "False": "false"
+    "''": '""'
+
+  declarations: "gr::limesdr::rfe::sptr ${id};"
+  make: |-
+    this->${id} = gr::limesdr::rfe::make(
+        ${comm_type},
+        % if comm_type == 0:
+        ${com_port},
+        % else:
+        ${sdr_serial},
+        % endif
+        ${filename}, ${rx_channel}, ${tx_channel}, ${rx_port}, ${tx_port}, ${mode}, ${notch}, ${atten});
 
 documentation: |-
     -------------------------------------------------------------------------------------------------------------------

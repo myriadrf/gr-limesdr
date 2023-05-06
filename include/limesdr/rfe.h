@@ -37,9 +37,22 @@ namespace limesdr {
 class LIMESDR_API rfe
 {
 public:
+    typedef std::shared_ptr<rfe> sptr;
+
+    static sptr make(int comm_type,
+        const std::string &device,
+        const std::string &config_file,
+        char IDRX,
+        char IDTX,
+        char PortRX,
+        char PortTX,
+        char Mode,
+        char Notch,
+        char Atten);
+
     rfe(int comm_type,
-        std::string device,
-        std::string config_file,
+        const std::string &device,
+        const std::string &config_file,
         char IDRX,
         char IDTX,
         char PortRX,
