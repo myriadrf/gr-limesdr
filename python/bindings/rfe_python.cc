@@ -32,7 +32,11 @@ void bind_rfe(py::module& m)
     py::class_<rfe,
         std::shared_ptr<rfe>>(m, "rfe", D(rfe))
 
-        .def(py::init<int,std::string,std::string,char,char,char,char,char,char,char>(),           py::arg("comm_type"),
+        .def(py::init([](int comm_type, const std::string &device, const std::string &config_file, int IDRX, int IDTX, int PortRX, int PortTX, int Mode, int Notch, int Atten)
+            {
+                return rfe(comm_type, device, config_file, char(IDRX), char(IDTX), char(PortRX), char(PortTX), char(Mode), char(Notch), char(Atten));
+            }),
+           py::arg("comm_type"),
            py::arg("device"),
            py::arg("config_file"),
            py::arg("IDRX"),
@@ -44,7 +48,8 @@ void bind_rfe(py::module& m)
            py::arg("Atten"),
            D(rfe,rfe,0)
         )
-        .def(py::init<gr::limesdr::rfe const &>(),           py::arg("arg0"),
+        .def(py::init<gr::limesdr::rfe const &>(),
+           py::arg("arg0"),
            D(rfe,rfe,1)
         )
 
