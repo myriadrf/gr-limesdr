@@ -21,8 +21,8 @@
 #ifndef DEVICE_HANDLER_H
 #define DEVICE_HANDLER_H
 
-#include <lime/LimeSuite.h>
-#include <lime/limeRFE.h>
+#include <limesuite/LimeSuite.h>
+#include <limesuite/limeRFE.h>
 #include <gnuradio/logger.h>
 #include <math.h>
 #include <cmath>
