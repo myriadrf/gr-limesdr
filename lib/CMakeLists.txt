@@ -32,7 +32,7 @@ if(NOT limesdr_sources)
 endif(NOT limesdr_sources)
 
 add_library(gnuradio-limesdr SHARED ${limesdr_sources})
-target_link_libraries(gnuradio-limesdr PUBLIC gnuradio::gnuradio-runtime LimeSuite)
+target_link_libraries(gnuradio-limesdr PUBLIC gnuradio::gnuradio-runtime LimeSuite2)
 target_include_directories(gnuradio-limesdr
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     PUBLIC $<INSTALL_INTERFACE:include>

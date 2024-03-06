@@ -132,7 +132,7 @@ file(TO_CMAKE_PATH "${PYTHON_NUMPY_INCLUDE_DIR}" PYTHON_NUMPY_INCLUDE_DIR)
 # Find LimeSuite
 ########################################################################
 MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
-find_package(LimeSuite)
+find_package(LimeSuite2)
 
 ########################################################################
 # LimeRFE

@@ -21,7 +21,7 @@
 #include "device_handler.h"
 #include "logging.h"
 
-#include <lime/LMS7002M_parameters.h>
+#include <limesuite/LMS7002M_parameters.h>
 
 #include <gnuradio/logger.h>
 

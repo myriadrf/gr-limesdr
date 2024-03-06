@@ -50,10 +50,9 @@ source_impl::source_impl(std::string serial,
                          int channel_mode,
                          const std::string& filename,
                          bool align_ch_phase)
-    : gr::sync_block(
-          str(boost::format("source %s") % serial),
-          gr::io_signature::make(0, 0, 0),
-          args_to_io_signature(channel_mode))
+    : gr::sync_block(str(boost::format("source %s") % serial),
+                     gr::io_signature::make(0, 0, 0),
+                     args_to_io_signature(channel_mode))
 {
     set_limesuite_logger();
 
@@ -64,7 +63,8 @@ source_impl::source_impl(std::string serial,
     stored.align = align_ch_phase ? LMS_ALIGN_CH_PHASE : 0;
 
     if (stored.channel_mode < 0 && stored.channel_mode > 2) {
-        throw std::invalid_argument("source_impl::source_impl(): Channel must be A(0), B(1), or (A+B) MIMO(2)");
+        throw std::invalid_argument(
+            "source_impl::source_impl(): Channel must be A(0), B(1), or (A+B) MIMO(2)");
     }
 
     // 2. Open device if not opened
@@ -238,16 +238,16 @@ void source_impl::init_stream(int device_number, int channel)
     streamId[channel].throughputVsLatency = 0.5;
     streamId[channel].isTx = LMS_CH_RX;
     streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
+    streamId[channel].linkFmt = lms_stream_t::LMS_LINK_FMT_I16;
 
     if (LMS_SetupStream(device_handler::getInstance().get_device(stored.device_number),
                         &streamId[channel]) != LMS_SUCCESS)
         device_handler::getInstance().error(stored.device_number);
 
-    GR_LOG_INFO(
-        d_logger,
-        boost::format("init_stream: source channel %d (device nr. %d) stream setup done.")
-            % channel
-            % device_number);
+    GR_LOG_INFO(d_logger,
+                boost::format(
+                    "init_stream: source channel %d (device nr. %d) stream setup done.") %
+                    channel % device_number);
 }
 
 void source_impl::release_stream(int device_number, lms_stream_t* stream)
@@ -266,14 +266,14 @@ void source_impl::print_stream_stats(lms_stream_status_t status)
     auto timePeriod =
         std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
     if (timePeriod >= 1000) {
-        GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
-        GR_LOG_INFO(
-            d_logger,
-            boost::format("RX |rate: %f MB/s |dropped packets: %d |FIFO: %d%")
-                % (status.linkRate / 1e6)
-                % pktLoss
-                % (100 * (status.fifoFilledCount / status.fifoSize)));
-        GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
+        GR_LOG_INFO(d_logger,
+                    "---------------------------------------------------------------");
+        GR_LOG_INFO(d_logger,
+                    boost::format("RX |rate: %f MB/s |dropped packets: %d |FIFO: %d%") %
+                        (status.linkRate / 1e6) % pktLoss %
+                        (100 * (status.fifoFilledCount / status.fifoSize)));
+        GR_LOG_INFO(d_logger,
+                    "---------------------------------------------------------------");
         pktLoss = 0;
         t1 = t2;
     }
@@ -304,7 +304,8 @@ inline gr::io_signature::sptr source_impl::args_to_io_signature(int channel_numb
     } else if (channel_number == 2) {
         return gr::io_signature::make(2, 2, sizeof(gr_complex));
     } else {
-        throw std::invalid_argument("source_impl::args_to_io_signature(): channel_number must be 0, 1 or 2.");
+        throw std::invalid_argument(
+            "source_impl::args_to_io_signature(): channel_number must be 0, 1 or 2.");
     }
 }
 

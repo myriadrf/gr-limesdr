@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Lime Microsystems
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -84,7 +85,7 @@ blocks:
     gui_hint: 2,0,1,1
     label: Gain [dB]
     min_len: '70'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: int
     start: '0'
     step: '1'
@@ -111,6 +112,7 @@ blocks:
     label4: ''
     labels: '[]'
     num_opts: '4'
+    option0: '0'
     option1: '1'
     option2: '2'
     option3: '3'
@@ -118,7 +120,7 @@ blocks:
     options: '[0, 1, 2]'
     orient: Qt.QVBoxLayout
     type: int
-    value: '255'
+    value: '0'
     widget: combo_box
   states:
     bus_sink: false
@@ -164,6 +166,7 @@ blocks:
     analog_bandw_ch1: 1.5e6
     calibr_bandw_ch0: samp_rate
     calibr_bandw_ch1: 2.5e6
+    ch_align: 'False'
     channel_mode: '0'
     comment: ''
     dacVal: '180'
@@ -210,7 +213,7 @@ blocks:
     showports: 'False'
     showrf: 'True'
     type: complex
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
   states:
     bus_sink: false
     bus_source: false
@@ -224,3 +227,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.9.8.0
