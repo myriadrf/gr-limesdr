@@ -278,6 +278,7 @@ void sink_impl::init_stream(int device_number, int channel)
     streamId[channel].throughputVsLatency = 0.5;
     streamId[channel].isTx = LMS_CH_TX;
     streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
+    streamId[channel].linkFmt = lms_stream_t::LMS_LINK_FMT_I16;
 
     if (LMS_SetupStream(device_handler::getInstance().get_device(device_number),
                         &streamId[channel]) != LMS_SUCCESS)
