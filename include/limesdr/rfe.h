@@ -21,7 +21,7 @@
 #ifndef INCLUDED_LIMERFE_H
 #define INCLUDED_LIMERFE_H
 
-#include <lime/limeRFE.h>
+#include <limesuite/limeRFE.h>
 #include <limesdr/api.h>
 #include <gnuradio/logger.h>
 #include <string>
