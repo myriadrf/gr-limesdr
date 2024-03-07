@@ -1,6 +1,10 @@
 /*
- * Copyright 2023 Lime Microsystems info@limemicro.com
+ * Copyright 2024 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
  * SPDX-License-Identifier: GPL-3.0-or-later
+ *
  */
 
 /***********************************************************************************/
@@ -9,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(rfe.h)                                                     */
-/* BINDTOOL_HEADER_FILE_HASH(c8af915fcfdda460c8c0cad6f26345d6)                     */
+/* BINDTOOL_HEADER_FILE(rfe.h)                                        */
+/* BINDTOOL_HEADER_FILE_HASH(db1ab8d42e77f403fc6933e4de759ed8)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -26,72 +30,48 @@ namespace py = pybind11;
 void bind_rfe(py::module& m)
 {
 
-    using rfe    = ::gr::limesdr::rfe;
+    using rfe = ::gr::limesdr::rfe;
 
 
-    py::class_<rfe,
-        std::shared_ptr<rfe>>(m, "rfe", D(rfe))
+    py::class_<rfe, std::shared_ptr<rfe>>(m, "rfe", D(rfe))
 
-        .def(py::init([](int comm_type, const std::string &device, const std::string &config_file, int IDRX, int IDTX, int PortRX, int PortTX, int Mode, int Notch, int Atten)
-            {
-                return rfe(comm_type, device, config_file, char(IDRX), char(IDTX), char(PortRX), char(PortTX), char(Mode), char(Notch), char(Atten));
-            }),
-           py::arg("comm_type"),
-           py::arg("device"),
-           py::arg("config_file"),
-           py::arg("IDRX"),
-           py::arg("IDTX"),
-           py::arg("PortRX"),
-           py::arg("PortTX"),
-           py::arg("Mode"),
-           py::arg("Notch"),
-           py::arg("Atten"),
-           D(rfe,rfe,0)
-        )
-        .def(py::init<gr::limesdr::rfe const &>(),
-           py::arg("arg0"),
-           D(rfe,rfe,1)
-        )
-
-
-        
-        .def("change_mode",&rfe::change_mode,       
-            py::arg("mode"),
-            D(rfe,change_mode)
-        )
+        .def(py::init<int,
+                      std::string,
+                      std::string,
+                      int8_t,
+                      int8_t,
+                      int8_t,
+                      int8_t,
+                      int8_t,
+                      int8_t,
+                      int8_t>(),
+             py::arg("comm_type"),
+             py::arg("device"),
+             py::arg("config_file"),
+             py::arg("IDRX"),
+             py::arg("IDTX"),
+             py::arg("PortRX"),
+             py::arg("PortTX"),
+             py::arg("Mode"),
+             py::arg("Notch"),
+             py::arg("Atten"),
+             D(rfe, rfe, 0))
+        .def(py::init<gr::limesdr::rfe const&>(), py::arg("arg0"), D(rfe, rfe, 1))
 
 
-        
-        .def("set_fan",&rfe::set_fan,       
-            py::arg("enable"),
-            D(rfe,set_fan)
-        )
+        .def("change_mode", &rfe::change_mode, py::arg("mode"), D(rfe, change_mode))
 
 
-        
-        .def("set_attenuation",&rfe::set_attenuation,       
-            py::arg("attenuation"),
-            D(rfe,set_attenuation)
-        )
+        .def("set_fan", &rfe::set_fan, py::arg("enable"), D(rfe, set_fan))
 
 
-        
-        .def("set_notch",&rfe::set_notch,       
-            py::arg("enable"),
-            D(rfe,set_notch)
-        )
+        .def("set_attenuation",
+             &rfe::set_attenuation,
+             py::arg("attenuation"),
+             D(rfe, set_attenuation))
+
+
+        .def("set_notch", &rfe::set_notch, py::arg("enable"), D(rfe, set_notch))
 
         ;
-
-
-
-
 }
-
-
-
-
-
-
-
-

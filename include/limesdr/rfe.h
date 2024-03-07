@@ -24,6 +24,7 @@
 #include <limesuite/limeRFE.h>
 #include <limesdr/api.h>
 #include <gnuradio/logger.h>
+#include <cstdint>
 #include <string>
 
 namespace gr {
@@ -40,13 +41,13 @@ public:
     rfe(int comm_type,
         std::string device,
         std::string config_file,
-        char IDRX,
-        char IDTX,
-        char PortRX,
-        char PortTX,
-        char Mode,
-        char Notch,
-        char Atten);
+        int8_t IDRX,
+        int8_t IDTX,
+        int8_t PortRX,
+        int8_t PortTX,
+        int8_t Mode,
+        int8_t Notch,
+        int8_t Atten);
     ~rfe();
     /**
      * Change LimeRFE Mode
