@@ -45,7 +45,7 @@ if(APPLE)
     )
 endif(APPLE)
 
-add_definitions( -DGR_LIMESDR_VER="${VERSION}" )
+add_compile_definitions(GR_LIMESDR_VER="${VERSION}")
 
 ########################################################################
 # Install built library files
