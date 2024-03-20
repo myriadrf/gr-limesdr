@@ -60,7 +60,7 @@ source_impl::source_impl(std::string serial,
     // them later
     stored.serial = serial;
     stored.channel_mode = channel_mode;
-    stored.align = align_ch_phase ? LMS_ALIGN_CH_PHASE : 0;
+    stored.align = align_ch_phase ? (1 << 16) : 0;
 
     if (stored.channel_mode < 0 && stored.channel_mode > 2) {
         throw std::invalid_argument(
@@ -72,7 +72,7 @@ source_impl::source_impl(std::string serial,
     // 3. Check where to load settings from (file or block)
     if (!filename.empty()) {
         device_handler::getInstance().settings_from_file(
-            stored.device_number, filename, nullptr);
+            stored.device_number, filename, std::nullopt);
         device_handler::getInstance().check_blocks(
             stored.device_number, source_block, stored.channel_mode, filename);
     } else {
@@ -82,7 +82,7 @@ source_impl::source_impl(std::string serial,
 
         // 5. Enable required channel/s
         device_handler::getInstance().enable_channels(
-            stored.device_number, stored.channel_mode, LMS_CH_RX);
+            stored.device_number, stored.channel_mode, lime::TRXDir::Rx);
     }
 }
 
@@ -91,15 +91,7 @@ source_impl::source_impl(std::string serial,
  */
 source_impl::~source_impl()
 {
-    // Stop and destroy stream for channel 0 (if channel_mode is SISO)
-    if (stored.channel_mode < 2) {
-        this->release_stream(stored.device_number, &streamId[stored.channel_mode]);
-    }
-    // Stop and destroy stream for channels 0 & 1 (if channel_mode is MIMO)
-    else if (stored.channel_mode == 2) {
-        this->release_stream(stored.device_number, &streamId[LMS_CH_0]);
-        this->release_stream(stored.device_number, &streamId[LMS_CH_1]);
-    }
+    device_handler::getInstance().get_device(stored.device_number)->StreamStop(0);
     device_handler::getInstance().close_device(stored.device_number, source_block);
 }
 
@@ -110,22 +102,18 @@ bool source_impl::start(void)
     // Initialize and start stream for channel 0 (if channel_mode is SISO)
     if (stored.channel_mode < 2) // If SISO configure prefered channel
     {
-        this->init_stream(stored.device_number, stored.channel_mode);
-        if (LMS_StartStream(&streamId[stored.channel_mode]) != LMS_SUCCESS)
-            device_handler::getInstance().error(stored.device_number);
+        init_stream(stored.device_number, stored.channel_mode);
     }
 
     // Initialize and start stream for channels 0 & 1 (if channel_mode is MIMO)
     else if (stored.channel_mode == 2) {
 
-        this->init_stream(stored.device_number, LMS_CH_0);
-        this->init_stream(stored.device_number, LMS_CH_1);
-
-        if (LMS_StartStream(&streamId[LMS_CH_0]) != LMS_SUCCESS)
-            device_handler::getInstance().error(stored.device_number);
-        if (LMS_StartStream(&streamId[LMS_CH_1]) != LMS_SUCCESS)
-            device_handler::getInstance().error(stored.device_number);
+        init_stream(stored.device_number, 0);
+        init_stream(stored.device_number, 1);
     }
+
+    device_handler::getInstance().get_device(stored.device_number)->StreamStart(0);
+
     std::unique_lock<std::recursive_mutex> unlock(
         device_handler::getInstance().block_mutex);
 
@@ -143,15 +131,9 @@ bool source_impl::stop(void)
 {
     std::unique_lock<std::recursive_mutex> lock(
         device_handler::getInstance().block_mutex);
-    // Stop stream for channel 0 (if channel_mode is SISO)
-    if (stored.channel_mode < 2) {
-        this->release_stream(stored.device_number, &streamId[stored.channel_mode]);
-    }
-    // Stop streams for channels 0 & 1 (if channel_mode is MIMO)
-    else if (stored.channel_mode == 2) {
-        this->release_stream(stored.device_number, &streamId[LMS_CH_0]);
-        this->release_stream(stored.device_number, &streamId[LMS_CH_1]);
-    }
+
+    device_handler::getInstance().get_device(stored.device_number)->StreamStop(0);
+
     std::unique_lock<std::recursive_mutex> unlock(
         device_handler::getInstance().block_mutex);
     return true;
@@ -161,106 +143,100 @@ int source_impl::work(int noutput_items,
                       gr_vector_const_void_star& input_items,
                       gr_vector_void_star& output_items)
 {
-    gr_complex* out = (gr_complex*)output_items[0];
+    gr_complex* out = static_cast<gr_complex*>(output_items[0]);
+
+    int ret = 0;
 
     // Receive stream for channel 0 (if channel_mode is SISO)
-    if (stored.channel_mode < 2) {
-        lms_stream_status_t status;
-        lms_stream_meta_t rx_metadata;
+    lime::SDRDevice::StreamStats status;
+    lime::SDRDevice::StreamMeta rx_metadata;
 
-        int ret0 = LMS_RecvStream(&streamId[stored.channel_mode],
-                                  output_items[0],
-                                  noutput_items,
-                                  &rx_metadata,
-                                  100);
-        if (ret0 < 0) {
-            return 0;
-        }
+    switch (
+        device_handler::getInstance().get_stream_config(stored.device_number).format) {
+    case lime::SDRDevice::StreamConfig::DataFormat::F32:
+        ret = device_handler::getInstance()
+                  .get_device(stored.device_number)
+                  ->StreamRx(
+                      0,
+                      reinterpret_cast<lime::complex32f_t* const*>(output_items.data()),
+                      noutput_items,
+                      &rx_metadata);
+        break;
+    case lime::SDRDevice::StreamConfig::DataFormat::I16:
+        ret = device_handler::getInstance()
+                  .get_device(stored.device_number)
+                  ->StreamRx(
+                      0,
+                      reinterpret_cast<lime::complex16_t* const*>(output_items.data()),
+                      noutput_items,
+                      &rx_metadata);
+        break;
+    case lime::SDRDevice::StreamConfig::DataFormat::I12:
+        // ret = device_handler::getInstance()
+        //      .get_device(stored.device_number)
+        //      ->StreamRx(0,
+        //                 reinterpret_cast<lime::complex12_t*
+        //                 const*>(output_items.data()), noutput_items, &rx_metadata);
+        break;
 
-        LMS_GetStreamStatus(&streamId[stored.channel_mode], &status);
-
-        if (add_tag || status.droppedPackets > 0) {
-            pktLoss += status.droppedPackets;
-            add_tag = false;
-            this->add_time_tag(0, rx_metadata);
-        }
-        // Print stream stats to debug
-        if (stream_analyzer == true) {
-            this->print_stream_stats(status);
-        }
-
-        produce(0, ret0);
-        return WORK_CALLED_PRODUCE;
+    default:
+        throw std::logic_error("Unsupported format");
+        break;
     }
-    // Receive stream for channels 0 & 1 (if channel_mode is MIMO)
-    else if (stored.channel_mode == 2) {
-        lms_stream_status_t status[2];
 
-        lms_stream_meta_t rx_metadata[2];
-        int ret0 = LMS_RecvStream(
-            &streamId[LMS_CH_0], output_items[0], noutput_items, &rx_metadata[0], 100);
-        int ret1 = LMS_RecvStream(
-            &streamId[LMS_CH_1], output_items[1], noutput_items, &rx_metadata[1], 100);
-        if (ret0 <= 0 || ret1 <= 0) {
-            return 0;
-        }
-
-        LMS_GetStreamStatus(&streamId[LMS_CH_0], &status[0]);
-        LMS_GetStreamStatus(&streamId[LMS_CH_1], &status[1]);
-
-        if (add_tag || status[0].droppedPackets > 0 || status[1].droppedPackets > 0) {
-            pktLoss +=
-                status[0].droppedPackets; // because every time GetStreamStatus is called,
-            // packet loss is reset
-            add_tag = false;
-            this->add_time_tag(LMS_CH_0, rx_metadata[0]);
-            this->add_time_tag(LMS_CH_1, rx_metadata[1]);
-        }
-
-        // Print stream stats to debug
-        if (stream_analyzer == true) {
-            this->print_stream_stats(status[0]);
-        }
-
-        this->produce(0, ret0);
-        this->produce(1, ret1);
-        return WORK_CALLED_PRODUCE;
+    if (ret < 0) {
+        return 0;
     }
-    return 0;
+
+    device_handler::getInstance()
+        .get_device(stored.device_number)
+        ->StreamStatus(0, &status, nullptr);
+
+    if (add_tag || status.loss > 0) {
+        pktLoss += status.loss;
+        add_tag = false;
+        add_time_tag(0, rx_metadata);
+
+        if (stored.channel_mode == 2) {
+            add_time_tag(1, rx_metadata);
+        }
+    }
+    // Print stream stats to debug
+    if (stream_analyzer == true) {
+        print_stream_stats(status);
+    }
+
+    produce(0, ret);
+    if (stored.channel_mode == 2) {
+        produce(1, ret);
+    }
+
+    return WORK_CALLED_PRODUCE;
 }
 
 // Setup stream
 void source_impl::init_stream(int device_number, int channel)
 {
-    streamId[channel].channel = channel | stored.align;
-    streamId[channel].fifoSize =
-        (stored.FIFO_size == 0) ? (int)stored.samp_rate / 10 : stored.FIFO_size;
-    streamId[channel].throughputVsLatency = 0.5;
-    streamId[channel].isTx = LMS_CH_RX;
-    streamId[channel].dataFmt = lms_stream_t::LMS_FMT_F32;
-    streamId[channel].linkFmt = lms_stream_t::LMS_LINK_FMT_I16;
+    auto& config = device_handler::getInstance().get_stream_config(device_number);
+    config.channels.at(lime::TRXDir::Rx).push_back(channel);
+    config.bufferSize = (stored.FIFO_size == 0) ? static_cast<int>(stored.samp_rate) / 10
+                                                : stored.FIFO_size;
+    config.format = lime::SDRDevice::StreamConfig::DataFormat::F32;
+    config.linkFormat = lime::SDRDevice::StreamConfig::DataFormat::I16;
 
-    if (LMS_SetupStream(device_handler::getInstance().get_device(stored.device_number),
-                        &streamId[channel]) != LMS_SUCCESS)
-        device_handler::getInstance().error(stored.device_number);
+    if (device_handler::getInstance().get_device(device_number)->StreamSetup(config, 0) !=
+        lime::OpStatus::SUCCESS)
+        device_handler::getInstance().error(device_number);
 
     GR_LOG_INFO(d_logger,
-                boost::format(
-                    "init_stream: source channel %d (device nr. %d) stream setup done.") %
-                    channel % device_number);
-}
-
-void source_impl::release_stream(int device_number, lms_stream_t* stream)
-{
-    if (stream->handle != 0) {
-        LMS_StopStream(stream);
-        LMS_DestroyStream(device_handler::getInstance().get_device(device_number),
-                          stream);
-    }
+                fmt::v8::format(
+                    "init_stream: source channel %d (device nr. %d) stream setup done.",
+                    channel,
+                    device_number));
 }
 
 // Print stream status
-void source_impl::print_stream_stats(lms_stream_status_t status)
+void source_impl::print_stream_stats(lime::SDRDevice::StreamStats status)
 {
     t2 = std::chrono::high_resolution_clock::now();
     auto timePeriod =
@@ -270,8 +246,8 @@ void source_impl::print_stream_stats(lms_stream_status_t status)
                     "---------------------------------------------------------------");
         GR_LOG_INFO(d_logger,
                     boost::format("RX |rate: %f MB/s |dropped packets: %d |FIFO: %d%") %
-                        (status.linkRate / 1e6) % pktLoss %
-                        (100 * (status.fifoFilledCount / status.fifoSize)));
+                        (status.dataRate_Bps / 1e6) % pktLoss %
+                        (100 * status.FIFO.ratio()));
         GR_LOG_INFO(d_logger,
                     "---------------------------------------------------------------");
         pktLoss = 0;
@@ -280,10 +256,10 @@ void source_impl::print_stream_stats(lms_stream_status_t status)
 }
 
 // Add rx_time tag to stream
-void source_impl::add_time_tag(int channel, lms_stream_meta_t meta)
+void source_impl::add_time_tag(int channel, lime::SDRDevice::StreamMeta meta)
 {
 
-    uint64_t u_rate = (uint64_t)stored.samp_rate;
+    uint64_t u_rate = static_cast<uint64_t>(stored.samp_rate);
     double f_rate = stored.samp_rate - u_rate;
     uint64_t intpart = meta.timestamp / u_rate;
     double fracpart =
@@ -292,7 +268,7 @@ void source_impl::add_time_tag(int channel, lms_stream_meta_t meta)
     const pmt::pmt_t ID = pmt::string_to_symbol(stored.serial);
     const pmt::pmt_t t_val =
         pmt::make_tuple(pmt::from_uint64(intpart), pmt::from_double(fracpart));
-    this->add_item_tag(channel, nitems_written(channel), TIME_TAG, t_val, ID);
+    add_item_tag(channel, nitems_written(channel), TIME_TAG, t_val, ID);
 }
 
 // Return io_signature to manage module output count
@@ -313,46 +289,46 @@ double source_impl::set_center_freq(double freq, size_t chan)
 {
     add_tag = true;
     return device_handler::getInstance().set_rf_freq(
-        stored.device_number, LMS_CH_RX, LMS_CH_0, freq);
+        stored.device_number, lime::TRXDir::Rx, 0, freq);
 }
 
 void source_impl::set_nco(float nco_freq, int channel)
 {
     device_handler::getInstance().set_nco(
-        stored.device_number, LMS_CH_RX, channel, nco_freq);
+        stored.device_number, lime::TRXDir::Rx, channel, nco_freq);
     add_tag = true;
 }
 
 void source_impl::set_antenna(int antenna, int channel)
 {
     device_handler::getInstance().set_antenna(
-        stored.device_number, channel, LMS_CH_RX, antenna);
+        stored.device_number, channel, lime::TRXDir::Rx, antenna);
 }
 
 double source_impl::set_bandwidth(double analog_bandw, int channel)
 {
     add_tag = true;
     return device_handler::getInstance().set_analog_filter(
-        stored.device_number, LMS_CH_RX, channel, analog_bandw);
+        stored.device_number, lime::TRXDir::Rx, channel, analog_bandw);
 }
 
 void source_impl::set_digital_filter(double digital_bandw, int channel)
 {
     device_handler::getInstance().set_digital_filter(
-        stored.device_number, LMS_CH_RX, channel, digital_bandw);
+        stored.device_number, lime::TRXDir::Rx, channel, digital_bandw);
     add_tag = true;
 }
 
 unsigned source_impl::set_gain(unsigned gain_dB, int channel)
 {
     return device_handler::getInstance().set_gain(
-        stored.device_number, LMS_CH_RX, channel, gain_dB);
+        stored.device_number, lime::TRXDir::Rx, channel, gain_dB);
 }
 
 void source_impl::calibrate(double bandw, int channel)
 {
     device_handler::getInstance().calibrate(
-        stored.device_number, LMS_CH_RX, channel, bandw);
+        stored.device_number, lime::TRXDir::Rx, channel, bandw);
 }
 
 double source_impl::set_sample_rate(double rate)

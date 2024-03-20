@@ -21,68 +21,66 @@
 #ifndef DEVICE_HANDLER_H
 #define DEVICE_HANDLER_H
 
-#include <limesuite/LimeSuite.h>
+#include <limesuite/DeviceHandle.h>
+#include <limesuite/SDRDevice.h>
+#ifdef ENABLE_RFE
 #include <limesuite/limeRFE.h>
+#endif
 #include <gnuradio/logger.h>
-#include <math.h>
-#include <cmath>
-#include <iostream>
-#include <list>
+#include <cstdint>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <vector>
 
-#define LMS_CH_0 0
-#define LMS_CH_1 1
-
-#define LimeSDR_Mini 1
-#define LimeNET_Micro 2
-#define LimeSDR_USB 3
+using namespace std::literals::string_literals;
 
 class device_handler
 {
 private:
-    int open_devices = 0;
     // Read device list once flag
     bool list_read = false;
-    // Calculate open devices to close them all on close_all_devices
-    int device_count;
 
     struct device {
         // Device address
-        lms_device_t* address = NULL;
+        lime::SDRDevice* address = nullptr;
+        lime::SDRDevice::StreamConfig stream_config{};
 
         // Flags and variables used to check
         // shared settings and blocks usage
         bool source_flag = false;
         bool sink_flag = false;
+
         int source_channel_mode = -1;
         int sink_channel_mode = -1;
-        std::string source_filename;
-        std::string sink_filename;
+
+        std::string source_filename = ""s;
+        std::string sink_filename = ""s;
     };
 
+#ifdef ENABLE_RFE
     struct rfe_device {
         int rx_channel = 0;
         int tx_channel = 0;
         rfe_dev_t* rfe_dev = nullptr;
     } rfe_device;
+#endif
 
+    // Found devices list
+    std::vector<lime::DeviceHandle> found_devices;
 
-    // Device list
-    lms_info_str_t* list = new lms_info_str_t[20];
     // Device vector. Adds devices from the list
     std::vector<device> device_vector;
+
     // Run close_all_devices once with this flag
     bool close_flag = false;
+
     // Loggers
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;
 
     device_handler();
     device_handler(device_handler const&);
-    void operator=(device_handler const&);
-
 
 public:
     static device_handler& getInstance()
@@ -98,28 +96,35 @@ public:
     /**
      * Print device error and close all devices.
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      */
     void error(int device_number);
 
     /**
      * Get device connection handler in order to configure it.
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      */
-    lms_device_t* get_device(int device_number);
+    lime::SDRDevice* get_device(int device_number);
 
     /**
-     * Connect to the device and create singletone.
+     * Get a reference to the stream configuration in order to configure it.
      *
-     * @param   serial Device serial from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
+     */
+    lime::SDRDevice::StreamConfig& get_stream_config(int device_number);
+
+    /**
+     * Connect to the device.
+     *
+     * @param   serial Device serial.
      */
     int open_device(std::string& serial);
 
     /**
      * Disconnect from the device.
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
      * @param   block_type Source block(1), Sink block(2).
      */
@@ -133,7 +138,7 @@ public:
     /**
      * Check what blocks are used for single device.
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
      * @param   block_type Source block(1), Sink block(2).
      *
@@ -149,31 +154,32 @@ public:
     /**
      * Load settings from .ini file.
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
      * @param   filename Path to file if file switch is turned on.
      *
-     * @param   antenna_tx Pointer to TX antenna, so PA path would be updated in sink
-     * block
+     * @param   antenna_tx Array reference to antenna information
      */
-    void
-    settings_from_file(int device_number, const std::string& filename, int* antenna_tx);
+    void settings_from_file(
+        int device_number,
+        const std::string& filename,
+        std::optional<std::reference_wrapper<std::array<int, 2>>> antenna_tx);
 
     /**
      * Set used channels
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
      * @param   channel_mode  Channel A(0), Channel B(1), MIMO(2)
      *
-     * @param   direction  Direction of samples RX(LMS_CH_RX), TX(LMS_CH_RX).
+     * @param   direction  Direction of samples
      */
-    void enable_channels(int device_number, int channel_mode, bool direction);
+    void enable_channels(int device_number, int channel_mode, lime::TRXDir direction);
 
     /**
      * Set the same sample rate for both channels.
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
      * @param   rate  Sample rate in S/s.
      */
@@ -182,7 +188,7 @@ public:
     /**
      * Set oversampling value for both channels
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
      * @param   oversample  Oversampling value (0 (default),1,2,4,8,16,32).
      */
@@ -191,9 +197,9 @@ public:
     /**
      * Set RF frequency of both channels (RX and TX separately).
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
-     * @param   direction  Direction of samples RX(LMS_CH_RX), TX(LMS_CH_TX).
+     * @param   direction  Direction of samples
      *
      * @param   channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
@@ -201,66 +207,68 @@ public:
      *
      * @return  returns RF frequency in Hz
      */
-    double set_rf_freq(int device_number, bool direction, int channel, float rf_freq);
+    double
+    set_rf_freq(int device_number, lime::TRXDir direction, int channel, float rf_freq);
 
     /**
      * Perform device calibration.
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
-     * @param   direction  Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_RX).
+     * @param   direction  Direction of samples
      *
      * @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
      * @param   bandwidth Set calibration bandwidth in Hz.
      *
      */
-    void calibrate(int device_number, int direction, int channel, double bandwidth);
+    void
+    calibrate(int device_number, lime::TRXDir direction, int channel, double bandwidth);
 
     /**
      * Set which antenna is used
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
      * @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
-     * @param   direction  Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_RX).
+     * @param   direction  Direction of samples
      *
      * @param   antenna Antenna to set: None(0), LNAH(1), LNAL(2), LNAW(3) for RX
      *                                  None(0), BAND1(1), BAND(2), NONE(3) for TX
      *
      */
-    void set_antenna(int device_number, int channel, int direction, int antenna);
+    void set_antenna(int device_number, int channel, lime::TRXDir direction, int antenna);
 
     /**
      * Set analog filters.
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
-     * @param   direction  Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_TX).
+     * @param   direction  Direction of samples.
      *
      * @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
      * @param   analog_bandw  Channel filter bandwidth in Hz.
      */
     double set_analog_filter(int device_number,
-                             bool direction,
+                             lime::TRXDir direction,
                              int channel,
                              double analog_bandw);
 
     /**
      * Set digital filters (GFIR).
      *
-     * @param   device_number Device number from the list of LMS_GetDeviceList.
+     * @param   device_number Device number.
      *
-     * @param   direction  Direction of samples: RX(LMS_CH_RX),TX(LMS_CH_TX).
+     * @param   direction  Direction of samples.
      *
      * @param   channel  Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
      * @param   digital_bandw  Channel filter bandwidth in Hz.
      */
     double set_digital_filter(int device_number,
-                              bool direction,
+                              lime::TRXDir direction,
                               int channel,
                               double digital_bandw);
 
@@ -272,30 +280,31 @@ public:
      * @note actual gain depends on LO frequency and analog LPF configuration and
      * resulting output signal level may be different when those values are changed
      *
-     * @param   device_number  Device number from the list of LMS_GetDeviceList.
+     * @param   device_number  Device number.
      *
-     * @param   direction      Select RX or TX.
+     * @param   direction      Direction of samples.
      *
      * @param   channel        Channel selection: A(LMS_CH_0),B(LMS_CH_1).
      *
      * @param   gain_dB        Desired gain: [0,73] dB
      */
-    unsigned set_gain(int device_number, bool direction, int channel, unsigned gain_dB);
+    unsigned
+    set_gain(int device_number, lime::TRXDir direction, int channel, unsigned gain_dB);
 
     /**
      * Set NCO (numerically controlled oscillator).
      * By selecting NCO frequency
      * configure NCO. When NCO frequency is 0, NCO is off.
      *
-     * @param   device_number  Device number from the list of LMS_GetDeviceList.
+     * @param   device_number  Device number.
      *
-     * @param   direction      Select RX or TX.
+     * @param   direction      Direction of samples.
      *
      * @param   channel        Channel index.
      *
      * @param   nco_freq       NCO frequency in Hz.
      */
-    void set_nco(int device_number, bool direction, int channel, float nco_freq);
+    void set_nco(int device_number, lime::TRXDir direction, int channel, float nco_freq);
     /**
      * Disables LimeSDR boards DC corrections
      */
@@ -310,11 +319,12 @@ public:
      * LimeSDR-PCIe default value is 134 range is [0,255]
      * LimeNET-Micro default value is 30714 range is [0,65535]
      *
-     * @param   device_number  Device number from the list of LMS_GetDeviceList.
+     * @param   device_number  Device number.
      *
      * @param   dacVal		   DAC value (0-65535)
      */
     void set_tcxo_dac(int device_number, uint16_t dacVal);
+#ifdef ENABLE_RFE
     /**
      * Sets up LimeRFE device pointer so that automatic channel configuration could be
      * made
@@ -325,7 +335,7 @@ public:
      * Assigns configured LimeSDR channels to LimeRFE for automatic channel switching
      */
     void update_rfe_channels();
-
+#endif
     /**
      * Writes an LMS register by calling LMS_WriteLMSReg()
      */
@@ -340,6 +350,5 @@ public:
     // Read GPIO inputs, one bit per pin
     uint8_t read_gpio(int device_number);
 };
-
 
 #endif

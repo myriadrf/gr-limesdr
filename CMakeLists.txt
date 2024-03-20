@@ -48,6 +48,7 @@ if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     AND NOT WIN32)
     #http://gcc.gnu.org/wiki/Visibility
     add_compile_options(-fvisibility=hidden)
+    add_compile_options(-Wold-style-cast)
 endif()
 
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

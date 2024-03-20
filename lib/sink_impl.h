@@ -32,18 +32,16 @@ namespace limesdr {
 class sink_impl : public sink
 {
 private:
-    lms_stream_t streamId[2];
-
     bool stream_analyzer = false;
 
     int sink_block = 2;
 
     pmt::pmt_t LENGTH_TAG;
-    lms_stream_meta_t tx_meta;
+    lime::SDRDevice::StreamMeta tx_meta;
     long burst_length = 0;
     int nitems_send = 0;
-    int ret[2] = { 0 };
-    int pa_path[2] = { 0 }; // TX PA path NONE
+    int ret = 0;
+    std::array<int, 2> pa_path = { 0, 0 }; // TX PA path NONE
 
     struct constant_data {
         std::string serial;
@@ -77,7 +75,6 @@ public:
     inline gr::io_signature::sptr args_to_io_signature(int channel_number);
 
     void init_stream(int device_number, int channel);
-    void release_stream(int device_number, lms_stream_t* stream);
 
     double set_center_freq(double freq, size_t chan = 0);
 

@@ -33,8 +33,6 @@ namespace limesdr {
 class source_impl : public source
 {
 private:
-    lms_stream_t streamId[2];
-
     bool stream_analyzer = false;
 
     int source_block = 1;
@@ -53,9 +51,9 @@ private:
 
     std::chrono::high_resolution_clock::time_point t1, t2;
 
-    void print_stream_stats(lms_stream_status_t status);
+    void print_stream_stats(lime::SDRDevice::StreamStats status);
 
-    void add_time_tag(int channel, lms_stream_meta_t meta);
+    void add_time_tag(int channel, lime::SDRDevice::StreamMeta meta);
 
 public:
     source_impl(std::string serial,
@@ -76,7 +74,6 @@ public:
     inline gr::io_signature::sptr args_to_io_signature(int channel_mode);
 
     void init_stream(int device_number, int channel);
-    void release_stream(int device_number, lms_stream_t* stream);
 
     double set_center_freq(double freq, size_t chan = 0);
 
