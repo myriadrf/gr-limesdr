@@ -24,6 +24,8 @@
 #include <limesuite/Logger.h>
 
 #include <gnuradio/logger.h>
+#include <fmt/core.h>
+#include <fmt/format.h>
 
 // Redirect LimeSuite logging into GNU Radio's logging.
 void set_limesuite_logger(void);

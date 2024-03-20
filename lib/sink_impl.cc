@@ -43,10 +43,9 @@ sink_impl::sink_impl(std::string serial,
                      int channel_mode,
                      const std::string& filename,
                      const std::string& length_tag_name)
-    : gr::sync_block(
-          str(boost::format("sink %s") % serial),
-          args_to_io_signature(channel_mode),
-          gr::io_signature::make(0, 0, 0))
+    : gr::sync_block(fmt::v8::format("sink %s", serial),
+                     args_to_io_signature(channel_mode),
+                     gr::io_signature::make(0, 0, 0))
 {
     set_limesuite_logger();
 
@@ -57,7 +56,8 @@ sink_impl::sink_impl(std::string serial,
     stored.channel_mode = channel_mode;
 
     if (stored.channel_mode < 0 && stored.channel_mode > 2) {
-        throw std::invalid_argument("sink_impl::sink_impl(): Channel must be A(0), B(1), or (A+B) MIMO(2)");
+        throw std::invalid_argument(
+            "sink_impl::sink_impl(): Channel must be A(0), B(1), or (A+B) MIMO(2)");
     }
 
     // 2. Open device if not opened
@@ -260,14 +260,15 @@ void sink_impl::print_stream_stats(int channel)
         device_handler::getInstance()
             .get_device(stored.device_number)
             ->StreamStatus(0, nullptr, &status);
-        GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
-        GR_LOG_INFO(
-            d_logger,
-            boost::format("TX |rate: %f MB/s |dropped packets: %d |FIFO: %d%")
-                % (status.dataRate_Bps / 1e6)
-                % status.loss
-                % (100 * status.FIFO.ratio()));
-        GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
+        GR_LOG_INFO(d_logger,
+                    "---------------------------------------------------------------");
+        GR_LOG_INFO(d_logger,
+                    fmt::v8::format("TX |rate: %f MB/s |dropped packets: %d |FIFO: %d%",
+                                    status.dataRate_Bps / 1e6,
+                                    status.loss,
+                                    100 * status.FIFO.ratio()));
+        GR_LOG_INFO(d_logger,
+                    "---------------------------------------------------------------");
         t1 = t2;
     }
 }
@@ -288,9 +289,9 @@ void sink_impl::init_stream(int device_number, int channel)
 
     GR_LOG_INFO(
         d_logger,
-        boost::format("init_stream: sink channel %d (device nr. %d) stream setup done.")
-            % channel
-            % device_number);
+        fmt::v8::format("init_stream: sink channel %d (device nr. %d) stream setup done.",
+                        channel,
+                        device_number));
 }
 
 // Return io_signature to manage module input count
@@ -302,7 +303,8 @@ inline gr::io_signature::sptr sink_impl::args_to_io_signature(int channel_number
     } else if (channel_number == 2) {
         return gr::io_signature::make(2, 2, sizeof(gr_complex));
     } else {
-        throw std::invalid_argument("sink_impl::args_to_io_signature(): channel_number must be 0, 1 or 2.");
+        throw std::invalid_argument(
+            "sink_impl::args_to_io_signature(): channel_number must be 0, 1 or 2.");
     }
 }
 

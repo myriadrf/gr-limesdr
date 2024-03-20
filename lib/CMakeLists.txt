@@ -19,11 +19,6 @@ list(APPEND limesdr_sources
     device_handler.cc
 )
 
-if(ENABLE_RFE)
-    list(APPEND limesdr_sources
-    rfe_impl.cc
-    )
-endif()
 
 set(limesdr_sources "${limesdr_sources}" PARENT_SCOPE)
 if(NOT limesdr_sources)
@@ -38,6 +33,11 @@ target_include_directories(gnuradio-limesdr
     PUBLIC $<INSTALL_INTERFACE:include>
   )
 set_target_properties(gnuradio-limesdr PROPERTIES DEFINE_SYMBOL "gnuradio_limesdr_EXPORTS")
+
+if(ENABLE_RFE)
+    target_sources(gnuradio-limesdr PRIVATE rfe_impl.cc)
+    target_compile_definitions(gnuradio-limesdr PRIVATE ENABLE_RFE=1)
+endif()
 
 if(APPLE)
     set_target_properties(gnuradio-limesdr PROPERTIES
