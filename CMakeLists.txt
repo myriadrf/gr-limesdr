@@ -78,6 +78,33 @@ include(FindPkgConfig)
 find_package(Gnuradio "3.9" REQUIRED)
 include(GrVersion)
 
+# Find dependencies and create uninstall file if we are standalone building
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    ########################################################################
+    # Find LimeSuite
+    ########################################################################
+    MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
+    find_package(LimeSuite2)
+
+    ########################################################################
+    # Create uninstall target
+    ########################################################################
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+    @ONLY)
+
+    add_custom_target(uninstall
+        ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+        )
+else()
+    # Cancel the package build if in-tree build is not possible
+    # Requires GNU Radio commit 02da1cb623f77d7d443ddbb291b7fec1eb147b04 (for v3.10) or 4b030830625849df9620e6aac78b7da46c788d26 (v3.11+) to be present
+    if(Gnuradio_VERSION VERSION_LESS "3.10.4")
+        return()
+    endif()
+endif()
+
 include(GrPlatform) #define LIB_SUFFIX
 
 if(NOT CMAKE_MODULES_DIR)
@@ -128,27 +155,6 @@ execute_process(
 # format path in CMake-style for consistency with other path variables
 # (a consistent style helps conda builds by using the same path separators)
 file(TO_CMAKE_PATH "${PYTHON_NUMPY_INCLUDE_DIR}" PYTHON_NUMPY_INCLUDE_DIR)
-
-# Find dependencies and create uninstall file if we are standalone building
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    ########################################################################
-    # Find LimeSuite
-    ########################################################################
-    MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
-    find_package(LimeSuite2)
-
-    ########################################################################
-    # Create uninstall target
-    ########################################################################
-    configure_file(
-        ${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
-        ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-    @ONLY)
-
-    add_custom_target(uninstall
-        ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-        )
-endif()
 
 ########################################################################
 # LimeRFE
