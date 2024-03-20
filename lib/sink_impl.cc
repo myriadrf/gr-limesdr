@@ -65,7 +65,7 @@ sink_impl::sink_impl(std::string serial,
     // 3. Check where to load settings from (file or block)
     if (!filename.empty()) {
         device_handler::getInstance().settings_from_file(
-            stored.device_number, filename, pa_path);
+            stored.device_number, filename, pa_path.data());
         device_handler::getInstance().check_blocks(
             stored.device_number, sink_block, stored.channel_mode, filename);
     } else {

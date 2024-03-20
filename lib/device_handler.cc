@@ -31,7 +31,7 @@
 #include <optional>
 #include <stdexcept>
 
-using namespace std::literals::string_view_literals;
+using namespace std::literals::string_literals;
 
 device_handler::device_handler()
 {
@@ -272,10 +272,9 @@ void device_handler::check_blocks(int device_number,
     }
 }
 
-void device_handler::settings_from_file(
-    int device_number,
-    const std::string& filename,
-    std::optional<std::reference_wrapper<std::array<int, 2>>> pAntenna_tx)
+void device_handler::settings_from_file(int device_number,
+                                        const std::string& filename,
+                                        int* pAntenna_tx)
 {
     auto status =
         device_handler::getInstance().get_device(device_number)->LoadConfig(0, filename);
@@ -303,9 +302,9 @@ void device_handler::settings_from_file(
                         .get_device(device_number)
                         ->GetAntenna(0, lime::TRXDir::Rx, 0);
 
-    if (pAntenna_tx) {
-        (*pAntenna_tx).get()[0] = antenna_tx[0];
-        (*pAntenna_tx).get()[1] = antenna_tx[1];
+    if (pAntenna_tx != nullptr) {
+        pAntenna_tx[0] = antenna_tx[0];
+        pAntenna_tx[1] = antenna_tx[1];
     }
 
     device_handler::getInstance()
@@ -429,7 +428,7 @@ double device_handler::set_rf_freq(int device_number,
                     .get_device(device_number)
                     ->GetFrequency(0, direction, channel);
 
-        constexpr std::array<std::string_view, 2> s_dir = { "RX"sv, "TX"sv };
+        const std::array<std::string, 2> s_dir = { "RX"s, "TX"s };
         GR_LOG_INFO(d_logger,
                     boost::format("RF frequency set [%s]: %f MHz.") %
                         s_dir[direction == lime::TRXDir::Tx ? 1 : 0] % (value / 1e6));
@@ -486,11 +485,11 @@ void device_handler::set_antenna(int device_number,
                             .get_device(device_number)
                             ->GetAntenna(0, direction, channel);
 
-    constexpr std::array<std::array<std::string_view, 4>, 2> s_antenna = {
-        { { "Auto(NONE)"sv, "LNAH"sv, "LNAL"sv, "LNAW"sv },
-          { "Auto(NONE)"sv, "BAND1"sv, "BAND2"sv, "NONE"sv } }
+    const std::array<std::array<std::string, 4>, 2> s_antenna = {
+        { { "Auto(NONE)"s, "LNAH"s, "LNAL"s, "LNAW"s },
+          { "Auto(NONE)"s, "BAND1"s, "BAND2"s, "NONE"s } }
     };
-    constexpr std::array<std::string_view, 2> s_dir = { "RX"sv, "TX"sv };
+    const std::array<std::string, 2> s_dir = { "RX"s, "TX"s };
     GR_LOG_INFO(d_logger,
                 boost::format("CH%d antenna set [%s]: %s.") % channel %
                     s_dir[direction == lime::TRXDir::Tx ? 1 : 0] %
@@ -538,7 +537,7 @@ double device_handler::set_digital_filter(int device_number,
             lime::OpStatus::SUCCESS)
             device_handler::getInstance().error(device_number);
 
-        constexpr std::array<std::string_view, 2> s_dir = { "RX"sv, "TX"sv };
+        const std::array<std::string, 2> s_dir = { "RX"s, "TX"s };
         const std::string msg_start =
             str(boost::format("Digital filter CH%d [%s]") % channel %
                 s_dir[direction == lime::TRXDir::Tx ? 1 : 0]);
@@ -574,7 +573,7 @@ unsigned device_handler::set_gain(int device_number,
             lime::OpStatus::SUCCESS)
             device_handler::getInstance().error(device_number);
 
-        constexpr std::array<std::string_view, 2> s_dir = { "RX"sv, "TX"sv };
+        const std::array<std::string, 2> s_dir = { "RX"s, "TX"s };
 
         double gain_double = 0.0;
         if (device_handler::getInstance()
@@ -601,7 +600,7 @@ void device_handler::set_nco(int device_number,
                              int channel,
                              float nco_freq)
 {
-    constexpr std::array<std::string_view, 2> s_dir = { "RX"sv, "TX"sv };
+    const std::array<std::string, 2> s_dir = { "RX"s, "TX"s };
 
     GR_LOG_DEBUG(d_debug_logger, "device_handler::set_nco(): ");
     if (nco_freq == 0) {
@@ -636,8 +635,7 @@ void device_handler::set_nco(int device_number,
             lime::OpStatus::SUCCESS)
             device_handler::getInstance().error(device_number);
 
-        constexpr std::array<std::string_view, 2> s_cmix = { "UPCONVERT"sv,
-                                                             "DOWNCONVERT"sv };
+        const std::array<std::string, 2> s_cmix = { "UPCONVERT"s, "DOWNCONVERT"s };
 
         std::array<double, 16> freq_value_out;
         double pho_value_out;

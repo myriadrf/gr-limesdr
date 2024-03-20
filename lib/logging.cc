@@ -32,13 +32,12 @@ static gr::logger_ptr debug_logger;
 
 static std::mutex log_handler_mutex;
 
-static void gr_loghandler(const lime::LogLevel level, const char *message)
+static void gr_loghandler(const lime::LogLevel level, const char* message)
 {
     assert(logger);
     assert(message);
 
-    switch(level)
-    {
+    switch (level) {
     case lime::LogLevel::CRITICAL:
         GR_LOG_CRIT(logger, message);
         break;
@@ -67,16 +66,15 @@ static void gr_loghandler(const lime::LogLevel level, const char *message)
 void set_limesuite_logger(void)
 {
     std::lock_guard<std::mutex> lock(log_handler_mutex);
-    if(!logger)
+    if (!logger)
         gr::configure_default_loggers(logger, debug_logger, "LimeSuite");
 
     lime::registerLogHandler(gr_loghandler);
-
 }
 
 void suppress_limesuite_logging(void)
 {
     std::lock_guard<std::mutex> lock(log_handler_mutex);
 
-    lime::registerLogHandler([](const lime::LogLevel, const char *){});
+    lime::registerLogHandler([](const lime::LogLevel, const char*) {});
 }

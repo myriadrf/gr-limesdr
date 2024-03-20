@@ -29,7 +29,6 @@
 #include <gnuradio/logger.h>
 #include <cstdint>
 #include <mutex>
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -163,7 +162,7 @@ public:
     void settings_from_file(
         int device_number,
         const std::string& filename,
-        std::optional<std::reference_wrapper<std::array<int, 2>>> antenna_tx);
+        int* antenna_tx);
 
     /**
      * Set used channels
