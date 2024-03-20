@@ -129,11 +129,26 @@ execute_process(
 # (a consistent style helps conda builds by using the same path separators)
 file(TO_CMAKE_PATH "${PYTHON_NUMPY_INCLUDE_DIR}" PYTHON_NUMPY_INCLUDE_DIR)
 
-########################################################################
-# Find LimeSuite
-########################################################################
-MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
-find_package(LimeSuite2)
+# Find dependencies and create uninstall file if we are standalone building
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    ########################################################################
+    # Find LimeSuite
+    ########################################################################
+    MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
+    find_package(LimeSuite2)
+
+    ########################################################################
+    # Create uninstall target
+    ########################################################################
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+    @ONLY)
+
+    add_custom_target(uninstall
+        ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+        )
+endif()
 
 ########################################################################
 # LimeRFE
@@ -154,18 +169,6 @@ if(DOXYGEN_FOUND)
 else(DOXYGEN_FOUND)
     option(ENABLE_DOXYGEN "Build docs using Doxygen" OFF)
 endif(DOXYGEN_FOUND)
-
-########################################################################
-# Create uninstall target
-########################################################################
-configure_file(
-    ${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-@ONLY)
-
-add_custom_target(uninstall
-    ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-    )
 
 ########################################################################
 # Add subdirectories
