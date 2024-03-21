@@ -34,6 +34,11 @@ target_include_directories(gnuradio-limesdr
   )
 set_target_properties(gnuradio-limesdr PROPERTIES DEFINE_SYMBOL "gnuradio_limesdr_EXPORTS")
 
+if(Gnuradio_VERSION VERSION_LESS "3.10")
+    find_package(fmt REQUIRED)
+    target_link_libraries(gnuradio-limesdr PUBLIC fmt::fmt)
+endif()
+
 if(ENABLE_RFE)
     target_sources(gnuradio-limesdr PRIVATE rfe_impl.cc)
     target_compile_definitions(gnuradio-limesdr PRIVATE ENABLE_RFE=1)
