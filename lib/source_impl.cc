@@ -50,7 +50,7 @@ source_impl::source_impl(std::string serial,
                          int channel_mode,
                          const std::string& filename,
                          bool align_ch_phase)
-    : gr::sync_block(fmt::format("source %s", serial),
+    : gr::sync_block(fmt::format("source {:s}", serial),
                      gr::io_signature::make(0, 0, 0),
                      args_to_io_signature(channel_mode))
 {
@@ -230,7 +230,7 @@ void source_impl::init_stream(int device_number, int channel)
 
     GR_LOG_INFO(
         d_logger,
-        fmt::format("init_stream: source channel %d (device nr. %d) stream setup done.",
+        fmt::format("init_stream: source channel {:d} (device nr. {:d}) stream setup done.",
                     channel,
                     device_number));
 }
@@ -245,7 +245,7 @@ void source_impl::print_stream_stats(lime::SDRDevice::StreamStats status)
         GR_LOG_INFO(d_logger,
                     "---------------------------------------------------------------");
         GR_LOG_INFO(d_logger,
-                    fmt::format("RX |rate: %f MB/s |dropped packets: %d |FIFO: %d%",
+                    fmt::format("RX |rate: {:f} MB/s |dropped packets: {:d} |FIFO: {:d}%",
                                 (status.dataRate_Bps / 1e6),
                                 pktLoss,
                                 (100 * status.FIFO.ratio())));
