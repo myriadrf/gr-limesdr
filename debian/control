@@ -3,13 +3,11 @@ Section: comm
 Priority: optional
 Maintainer: Lime Microsystems <info@limemicro.com>
 Build-Depends: cmake,
-               debhelper (>= 9~),
+               debhelper-compat (= 13),
                gnuradio-dev,
-               liblimesuite-dev (>= 20.07),
-               pkg-config,
-               python-dev,
-               swig
-X-Python-Version: >= 2.7, << 2.8
+               liblimesuite-dev (>= 24.0),
+               pkg-config
+X-Python-Version: 3.7
 Standards-Version: 4.1.1
 Homepage: http://github.com/myriadrf/gr-limesdr
 Vcs-Git: git://github.com/myriadrf/gr-limesdr.git

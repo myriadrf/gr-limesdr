@@ -1,3 +1,9 @@
+gr-limesdr (4.0.0-0) unstable; urgency=low
+
+  * Using new Lime Suite NG API.
+
+ -- Lime Microsystems <info@limemicro.com>  Thu, 21 Mar 2024 14:00:00 +0200
+
 gr-limesdr (2.1.7-1) unstable; urgency=low
 
   * Moved .ini file loading to advanced tab in GRC block description
