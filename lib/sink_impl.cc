@@ -43,7 +43,7 @@ sink_impl::sink_impl(std::string serial,
                      int channel_mode,
                      const std::string& filename,
                      const std::string& length_tag_name)
-    : gr::sync_block(fmt::v8::format("sink %s", serial),
+    : gr::sync_block(fmt::format("sink %s", serial),
                      args_to_io_signature(channel_mode),
                      gr::io_signature::make(0, 0, 0))
 {
@@ -263,10 +263,10 @@ void sink_impl::print_stream_stats(int channel)
         GR_LOG_INFO(d_logger,
                     "---------------------------------------------------------------");
         GR_LOG_INFO(d_logger,
-                    fmt::v8::format("TX |rate: %f MB/s |dropped packets: %d |FIFO: %d%",
-                                    status.dataRate_Bps / 1e6,
-                                    status.loss,
-                                    100 * status.FIFO.ratio()));
+                    fmt::format("TX |rate: %f MB/s |dropped packets: %d |FIFO: %d%",
+                                status.dataRate_Bps / 1e6,
+                                status.loss,
+                                100 * status.FIFO.ratio()));
         GR_LOG_INFO(d_logger,
                     "---------------------------------------------------------------");
         t1 = t2;
@@ -289,9 +289,9 @@ void sink_impl::init_stream(int device_number, int channel)
 
     GR_LOG_INFO(
         d_logger,
-        fmt::v8::format("init_stream: sink channel %d (device nr. %d) stream setup done.",
-                        channel,
-                        device_number));
+        fmt::format("init_stream: sink channel %d (device nr. %d) stream setup done.",
+                    channel,
+                    device_number));
 }
 
 // Return io_signature to manage module input count

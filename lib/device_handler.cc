@@ -70,8 +70,8 @@ int device_handler::open_device(std::string& serial)
     if (list_read == false) {
         GR_LOG_INFO(d_logger, "##################");
         GR_LOG_INFO(d_logger,
-                    fmt::v8::format("LimeSuite version: %s", lime::GetLibraryVersion()));
-        GR_LOG_INFO(d_logger, fmt::v8::format("gr-limesdr version: %s", GR_LIMESDR_VER));
+                    fmt::format("LimeSuite version: %s", lime::GetLibraryVersion()));
+        GR_LOG_INFO(d_logger, fmt::format("gr-limesdr version: %s", GR_LIMESDR_VER));
         GR_LOG_INFO(d_logger, "##################");
 
         found_devices = lime::DeviceRegistry::enumerate();
@@ -83,7 +83,7 @@ int device_handler::open_device(std::string& serial)
 
         for (std::size_t i = 0; i < found_devices.size(); i++) {
             GR_LOG_INFO(d_logger,
-                        fmt::v8::format("Device %d: %s", i, found_devices[i].ToString()));
+                        fmt::format("Device %d: %s", i, found_devices[i].ToString()));
         }
         device_vector.resize(found_devices.size());
         GR_LOG_INFO(d_logger, "##################");
@@ -131,18 +131,18 @@ int device_handler::open_device(std::string& serial)
         const auto& descriptor = sdr_device->GetDescriptor();
 
         GR_LOG_INFO(d_logger,
-                    fmt::v8::format("Using device: %s (%s) GW: %s FW: %s",
-                                    descriptor.name,
-                                    serial,
-                                    descriptor.gatewareVersion,
-                                    descriptor.firmwareVersion));
+                    fmt::format("Using device: %s (%s) GW: %s FW: %s",
+                                descriptor.name,
+                                serial,
+                                descriptor.gatewareVersion,
+                                descriptor.firmwareVersion));
         GR_LOG_INFO(d_logger, "##################");
     }
     // If device is open do nothing
     else {
-        GR_LOG_INFO(d_logger,
-                    fmt::v8::format(
-                        "Previously connected device serial %s from the list is used.",
+        GR_LOG_INFO(
+            d_logger,
+            fmt::format("Previously connected device serial %s from the list is used.",
                         found_devices[device_number].serial));
         GR_LOG_INFO(d_logger, "##################");
     }
@@ -177,11 +177,10 @@ void device_handler::close_device(int device_number, int block_type)
 
             lime::DeviceRegistry::freeDevice(device_vector[device_number].address);
 
-            GR_LOG_INFO(
-                d_logger,
-                fmt::v8::format("device_handler::close_device(): disconnected from "
-                                "device number %d.",
-                                device_number));
+            GR_LOG_INFO(d_logger,
+                        fmt::format("device_handler::close_device(): disconnected from "
+                                    "device number %d.",
+                                    device_number));
             device_vector[device_number].address = nullptr;
             GR_LOG_INFO(d_logger, "##################");
         }
@@ -238,9 +237,9 @@ void device_handler::check_blocks(int device_number,
     default:
         close_all_devices();
         throw std::invalid_argument(
-            fmt::v8::format("device_handler::check_blocks(): internal error, incorrect "
-                            "block_type value %d.",
-                            block_type));
+            fmt::format("device_handler::check_blocks(): internal error, incorrect "
+                        "block_type value %d.",
+                        block_type));
     }
 
     // Check block settings which must match
@@ -251,7 +250,7 @@ void device_handler::check_blocks(int device_number,
             device_vector[device_number].sink_channel_mode) {
 
             close_all_devices();
-            throw std::invalid_argument(fmt::v8::format(
+            throw std::invalid_argument(fmt::format(
                 "device_handler::check_blocks(): channel mismatch in LimeSuite "
                 "Source (RX) (%d) and LimeSuite Sink (TX) (%d)",
                 device_vector[device_number].source_channel_mode,
@@ -264,7 +263,7 @@ void device_handler::check_blocks(int device_number,
             device_vector[device_number].sink_filename) {
 
             close_all_devices();
-            throw std::invalid_argument(fmt::v8::format(
+            throw std::invalid_argument(fmt::format(
                 "device_handler::check_blocks(): file must match in LimeSuite "
                 "Source (RX) (%s) and LimeSuite Sink (TX) (%s)",
                 device_vector[device_number].source_filename,
@@ -330,8 +329,8 @@ void device_handler::enable_channels(int device_number,
             lime::OpStatus::SUCCESS)
             device_handler::getInstance().error(device_number);
         GR_LOG_INFO(d_logger,
-                    fmt::v8::format("SISO CH%d set for device number %d.",
-                                    channel_mode % device_number));
+                    fmt::format("SISO CH%d set for device number %d.",
+                                channel_mode % device_number));
 
 #ifdef ENABLE_RFE
         if (direction == lime::TRXDir::Tx)
@@ -353,9 +352,8 @@ void device_handler::enable_channels(int device_number,
                 ->EnableChannel(0, direction, 1, true) != lime::OpStatus::SUCCESS)
             device_handler::getInstance().error(device_number);
 
-        GR_LOG_INFO(
-            d_logger,
-            fmt::v8::format("MIMO mode set for device number %d.", device_number));
+        GR_LOG_INFO(d_logger,
+                    fmt::format("MIMO mode set for device number %d.", device_number));
     }
 }
 
@@ -372,8 +370,7 @@ void device_handler::set_samp_rate(int device_number, double& rate)
                             .get_device(device_number)
                             ->GetSampleRate(0, lime::TRXDir::Rx, 1);
 
-    GR_LOG_INFO(d_logger,
-                fmt::v8::format("Set sampling rate: %f MS/s.", (host_value / 1e6)));
+    GR_LOG_INFO(d_logger, fmt::format("Set sampling rate: %f MS/s.", (host_value / 1e6)));
     rate = host_value; // Get the real rate back
 }
 
@@ -398,7 +395,7 @@ void device_handler::set_oversampling(int device_number, int oversample)
             lime::OpStatus::SUCCESS)
             device_handler::getInstance().error(device_number);
 
-        GR_LOG_INFO(d_logger, fmt::v8::format("Set oversampling: %d.", oversample));
+        GR_LOG_INFO(d_logger, fmt::format("Set oversampling: %d.", oversample));
     } break;
     default:
         close_all_devices();
@@ -432,9 +429,9 @@ double device_handler::set_rf_freq(int device_number,
 
         const std::array<std::string, 2> s_dir = { "RX"s, "TX"s };
         GR_LOG_INFO(d_logger,
-                    fmt::v8::format("RF frequency set [%s]: %f MHz.",
-                                    s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
-                                    (value / 1e6)));
+                    fmt::format("RF frequency set [%s]: %f MHz.",
+                                s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
+                                (value / 1e6)));
     }
 
     return value;
@@ -495,10 +492,10 @@ void device_handler::set_antenna(int device_number,
     const std::array<std::string, 2> s_dir = { "RX"s, "TX"s };
     GR_LOG_INFO(
         d_logger,
-        fmt::v8::format("CH%d antenna set [%s]: %s.",
-                        channel,
-                        s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
-                        s_antenna[direction == lime::TRXDir::Tx ? 1 : 0][antenna_value]));
+        fmt::format("CH%d antenna set [%s]: %s.",
+                    channel,
+                    s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
+                    s_antenna[direction == lime::TRXDir::Tx ? 1 : 0][antenna_value]));
 }
 
 double device_handler::set_analog_filter(int device_number,
@@ -544,15 +541,15 @@ double device_handler::set_digital_filter(int device_number,
 
         const std::array<std::string, 2> s_dir = { "RX"s, "TX"s };
         const std::string msg_start =
-            fmt::v8::format("Digital filter CH%d [%s]",
-                            channel,
-                            s_dir[direction == lime::TRXDir::Tx ? 1 : 0]);
+            fmt::format("Digital filter CH%d [%s]",
+                        channel,
+                        s_dir[direction == lime::TRXDir::Tx ? 1 : 0]);
 
         if (enable) {
             GR_LOG_INFO(d_logger,
-                        fmt::v8::format("%s set: %f", msg_start, digital_bandw / 1e6));
+                        fmt::format("%s set: %f", msg_start, digital_bandw / 1e6));
         } else {
-            GR_LOG_INFO(d_logger, fmt::v8::format("%s disabled.", msg_start));
+            GR_LOG_INFO(d_logger, fmt::format("%s disabled.", msg_start));
         }
     } else {
         close_all_devices();
@@ -591,10 +588,10 @@ unsigned device_handler::set_gain(int device_number,
 
         gain_value = std::lround(gain_double) + 12;
         GR_LOG_INFO(d_logger,
-                    fmt::v8::format("CH%d gain set [%s]: %s.",
-                                    channel,
-                                    s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
-                                    gain_value));
+                    fmt::format("CH%d gain set [%s]: %s.",
+                                channel,
+                                s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
+                                gain_value));
     } else {
         close_all_devices();
         throw std::invalid_argument("device_handler::set_gain(): valid range [0, 73]");
@@ -619,9 +616,9 @@ void device_handler::set_nco(int device_number,
             device_handler::getInstance().error(device_number);
 
         GR_LOG_INFO(d_logger,
-                    fmt::v8::format("NCO [%s] CH%d gain disabled.",
-                                    s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
-                                    channel));
+                    fmt::format("NCO [%s] CH%d gain disabled.",
+                                s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
+                                channel));
     } else {
         int cmix_mode;
 
@@ -657,12 +654,12 @@ void device_handler::set_nco(int device_number,
         }
 
         GR_LOG_INFO(d_logger,
-                    fmt::v8::format("NCO [%s] CH%d: %f MHz (%f deg.)(%s).",
-                                    s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
-                                    channel,
-                                    freq_value_out[0] / 1e6,
-                                    pho_value_out,
-                                    s_cmix[cmix_mode]));
+                    fmt::format("NCO [%s] CH%d: %f MHz (%f deg.)(%s).",
+                                s_dir[direction == lime::TRXDir::Tx ? 1 : 0],
+                                channel,
+                                freq_value_out[0] / 1e6,
+                                pho_value_out,
+                                s_cmix[cmix_mode]));
     }
 }
 
@@ -694,8 +691,7 @@ void device_handler::set_tcxo_dac(int device_number, uint16_t dacVal)
             ->CustomParameterRead(parameter) != lime::OpStatus::SUCCESS)
         device_handler::getInstance().error(device_number);
 
-    GR_LOG_INFO(d_logger,
-                fmt::v8::format("VCTCXO DAC value set: %u", parameter.at(0).value));
+    GR_LOG_INFO(d_logger, fmt::format("VCTCXO DAC value set: %u", parameter.at(0).value));
 }
 
 #ifdef ENABLE_RFE
@@ -710,8 +706,8 @@ void device_handler::update_rfe_channels()
             throw std::runtime_error("Failed to assign SDR channels");
         }
         GR_LOG_INFO(d_logger,
-                    fmt::v8::format("RFE RX channel: %d TX channel: %d",
-                                    rfe_device.rx_channel % rfe_device.tx_channel));
+                    fmt::format("RFE RX channel: %d TX channel: %d",
+                                rfe_device.rx_channel % rfe_device.tx_channel));
     } else {
         throw std::runtime_error(
             "device_handler::update_rfe_channels(): no assigned RFE device");
