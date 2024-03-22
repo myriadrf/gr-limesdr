@@ -101,6 +101,7 @@ else()
     # Cancel the package build if in-tree build is not possible
     # Requires GNU Radio commit 02da1cb623f77d7d443ddbb291b7fec1eb147b04 (for v3.10) or 4b030830625849df9620e6aac78b7da46c788d26 (v3.11+) to be present
     if(Gnuradio_VERSION VERSION_LESS "3.10.4")
+        message(SEND_ERROR "gr-limesdr in-tree build is not possible. Needed GNU Radio version is at least 3.10.4, GNU Radio version found: ${Gnuradio_VERSION}")
         return()
     endif()
 endif()
