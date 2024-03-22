@@ -6,7 +6,6 @@ Build-Depends: cmake,
                debhelper-compat (= 13),
                gnuradio-dev,
                liblimesuite-dev (>= 24.0),
-               pkg-config
 X-Python-Version: 3.7
 Standards-Version: 4.1.1
 Homepage: http://github.com/myriadrf/gr-limesdr
