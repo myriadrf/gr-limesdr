@@ -10,8 +10,8 @@ Package includes GNU Radio blocks for various LimeSDR boards.
 
 ## Dependencies
  
-* GNU Radio(3.9)
-* BOOST
+* GNU Radio (versions 3.9, 3.10 or 3.11)
+* libfmt
 * pybind11
 * LimeSuite
 
@@ -21,7 +21,7 @@ Package includes GNU Radio blocks for various LimeSDR boards.
 
 * Building from source
 <pre>
-git clone https://github.com/chrisjohgorman/gr-limesdr.git
+git clone https://github.com/myriadrf/gr-limesdr.git
 cd gr-limesdr
 mkdir build
 cd build
@@ -30,11 +30,6 @@ make
 sudo make install
 sudo ldconfig
 </pre>
-
-## Known issues
-
-Known issues are located in:
-gr-limesdr/docs/known_issues.txt
 
 ## GNU Radio-Companion examples
 
