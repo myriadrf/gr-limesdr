@@ -84,7 +84,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     # Find LimeSuite
     ########################################################################
     MESSAGE(STATUS "Configuring LimeSuite C++ Libraries...")
-    find_package(LimeSuite2)
+    find_package(LimeSuite2 REQUIRED)
 
     ########################################################################
     # Create uninstall target

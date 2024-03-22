@@ -16,7 +16,7 @@ Vcs-Browser: https://github.com/myriadrf/gr-limesdr
 Package: gr-limesdr
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${misc:Depends}, ${python:Depends}, ${shlibs:Depends},
+Depends: ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends},
          gnuradio,
          liblimesuite-dev (>= 20.07)
 Description:GNU-Radio blocks used to interface with various LimeSDR boards.
