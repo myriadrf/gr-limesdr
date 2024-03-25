@@ -140,18 +140,18 @@ int sink_impl::work(int noutput_items,
     // Init number of items to be sent and timestamps
     nitems_send = noutput_items;
     uint64_t current_sample = nitems_read(0);
-    tx_meta.useTimestamp = false;
-    tx_meta.flush = false;
+    tx_meta.waitForTimestamp = false;
+    tx_meta.flushPartialPacket = false;
     // Check if channel 0 has any tags
     work_tags(noutput_items);
     // If length tag has been found burst_length should be higher than 0
     if (burst_length > 0) {
         nitems_send = std::min<long>(burst_length, nitems_send);
         // Make sure to wait for timestamp
-        tx_meta.useTimestamp = true;
+        tx_meta.waitForTimestamp = true;
         // Check if it is the end of the burst
         if (burst_length - static_cast<long>(nitems_send) == 0) {
-            tx_meta.flush = true;
+            tx_meta.flushPartialPacket = true;
         }
     }
 
@@ -181,11 +181,13 @@ int sink_impl::work(int noutput_items,
                              &tx_meta);
         break;
     case lime::SDRDevice::StreamConfig::DataFormat::I12:
-        // ret=device_handler::getInstance()
-        //     .get_device(stored.device_number)
-        //     ->StreamTx(0,
-        //                reinterpret_cast<const lime::complex12_t*
-        //                const*>(input_items.data()), nitems_send, &tx_meta);
+        ret = device_handler::getInstance()
+                  .get_device(stored.device_number)
+                  ->StreamTx(0,
+                             reinterpret_cast<const lime::complex12_t* const*>(
+                                 input_items.data()),
+                             nitems_send,
+                             &tx_meta);
         break;
 
     default:
@@ -226,7 +228,7 @@ void sink_impl::work_tags(int noutput_items)
                     u_rate * secs + llround(secs * f_rate + fracs * stored.samp_rate);
 
                 if (cTag.offset == current_sample) {
-                    tx_meta.useTimestamp = true;
+                    tx_meta.waitForTimestamp = true;
                     tx_meta.timestamp = timestamp;
                 } else {
                     nitems_send = static_cast<int>(cTag.offset - current_sample);

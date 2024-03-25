@@ -172,11 +172,13 @@ int source_impl::work(int noutput_items,
                       &rx_metadata);
         break;
     case lime::SDRDevice::StreamConfig::DataFormat::I12:
-        // ret = device_handler::getInstance()
-        //      .get_device(stored.device_number)
-        //      ->StreamRx(0,
-        //                 reinterpret_cast<lime::complex12_t*
-        //                 const*>(output_items.data()), noutput_items, &rx_metadata);
+        ret = device_handler::getInstance()
+                  .get_device(stored.device_number)
+                  ->StreamRx(
+                      0,
+                      reinterpret_cast<lime::complex12_t* const*>(output_items.data()),
+                      noutput_items,
+                      &rx_metadata);
         break;
 
     default:
@@ -230,9 +232,10 @@ void source_impl::init_stream(int device_number, int channel)
 
     GR_LOG_INFO(
         d_logger,
-        fmt::format("init_stream: source channel {:d} (device nr. {:d}) stream setup done.",
-                    channel,
-                    device_number));
+        fmt::format(
+            "init_stream: source channel {:d} (device nr. {:d}) stream setup done.",
+            channel,
+            device_number));
 }
 
 // Print stream status
