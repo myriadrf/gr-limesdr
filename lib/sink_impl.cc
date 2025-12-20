@@ -44,7 +44,7 @@ sink_impl::sink_impl(std::string serial,
                      const std::string& filename,
                      const std::string& length_tag_name)
     : gr::sync_block(
-          str(boost::format("sink %s") % serial),
+          fmt::format("sink {}", serial),
           args_to_io_signature(channel_mode),
           gr::io_signature::make(0, 0, 0))
 {
@@ -261,10 +261,10 @@ void sink_impl::print_stream_stats(int channel)
         GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
         GR_LOG_INFO(
             d_logger,
-            boost::format("TX |rate: %f MB/s |dropped packets: %d |FIFO: %d%")
-                % (status.linkRate / 1e6)
-                % status.droppedPackets
-                % (100 * (status.fifoFilledCount / status.fifoSize)));
+            fmt::format("TX |rate: {} MB/s |dropped packets: {} |FIFO: {}%",
+                (status.linkRate / 1e6),
+                status.droppedPackets,
+                (100 * (status.fifoFilledCount / status.fifoSize))));
         GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
         t1 = t2;
     }
@@ -285,9 +285,9 @@ void sink_impl::init_stream(int device_number, int channel)
 
     GR_LOG_INFO(
         d_logger,
-        boost::format("init_stream: sink channel %d (device nr. %d) stream setup done.")
-            % channel
-            % device_number);
+        fmt::format("init_stream: sink channel {} (device nr. {}) stream setup done.",
+            channel,
+            device_number));
 }
 
 void sink_impl::release_stream(int device_number, lms_stream_t* stream)

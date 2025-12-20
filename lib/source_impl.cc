@@ -51,7 +51,7 @@ source_impl::source_impl(std::string serial,
                          const std::string& filename,
                          bool align_ch_phase)
     : gr::sync_block(
-          str(boost::format("source %s") % serial),
+          fmt::format("source {}", serial),
           gr::io_signature::make(0, 0, 0),
           args_to_io_signature(channel_mode))
 {
@@ -245,9 +245,9 @@ void source_impl::init_stream(int device_number, int channel)
 
     GR_LOG_INFO(
         d_logger,
-        boost::format("init_stream: source channel %d (device nr. %d) stream setup done.")
-            % channel
-            % device_number);
+        fmt::format("init_stream: source channel {} (device nr. {}) stream setup done.",
+            channel,
+            device_number));
 }
 
 void source_impl::release_stream(int device_number, lms_stream_t* stream)
@@ -269,10 +269,10 @@ void source_impl::print_stream_stats(lms_stream_status_t status)
         GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
         GR_LOG_INFO(
             d_logger,
-            boost::format("RX |rate: %f MB/s |dropped packets: %d |FIFO: %d%")
-                % (status.linkRate / 1e6)
-                % pktLoss
-                % (100 * (status.fifoFilledCount / status.fifoSize)));
+            fmt::format("RX |rate: {} MB/s |dropped packets: {} |FIFO: {}%",
+                (status.linkRate / 1e6),
+                pktLoss,
+                (100 * (status.fifoFilledCount / status.fifoSize))));
         GR_LOG_INFO(d_logger, "---------------------------------------------------------------");
         pktLoss = 0;
         t1 = t2;

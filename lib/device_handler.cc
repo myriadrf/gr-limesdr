@@ -23,9 +23,9 @@
 
 #include <lime/LMS7002M_parameters.h>
 
-#include <gnuradio/logger.h>
+#include <fmt/core.h>
 
-#include <boost/format.hpp>
+#include <gnuradio/logger.h>
 
 #include <stdexcept>
 
@@ -59,8 +59,8 @@ int device_handler::open_device(std::string& serial)
     // Print device and library information only once
     if (list_read == false) {
         GR_LOG_INFO(d_logger, "##################");
-        GR_LOG_INFO(d_logger, boost::format("LimeSuite version: %s") % LMS_GetLibraryVersion());
-        GR_LOG_INFO(d_logger, boost::format("gr-limesdr version: %s") % GR_LIMESDR_VER);
+        GR_LOG_INFO(d_logger, fmt::format("LimeSuite version: {}", LMS_GetLibraryVersion()));
+        GR_LOG_INFO(d_logger, fmt::format("gr-limesdr version: {}", GR_LIMESDR_VER));
         GR_LOG_INFO(d_logger, "##################");
 
         device_count = LMS_GetDeviceList(list);
@@ -70,7 +70,7 @@ int device_handler::open_device(std::string& serial)
         GR_LOG_INFO(d_logger, "Device list:");
 
         for (int i = 0; i < device_count; i++) {
-            GR_LOG_INFO(d_logger, boost::format("Device %d: %s") % i % list[i]);
+            GR_LOG_INFO(d_logger, fmt::format("Device {}: {}", i, list[i]));
             device_vector.push_back(device());
         }
         GR_LOG_INFO(d_logger, "##################");
@@ -119,11 +119,11 @@ int device_handler::open_device(std::string& serial)
 
         GR_LOG_INFO(
             d_logger,
-            boost::format("Using device: %s (%s) GW: %s FW: %s")
-                % info->deviceName
-                % serial
-                % info->gatewareVersion
-                % info->firmwareVersion);
+            fmt::format("Using device: {} ({}) GW: {} FW: {}",
+                info->deviceName,
+                serial,
+                info->gatewareVersion,
+                info->firmwareVersion));
         GR_LOG_INFO(d_logger, "##################");
 
         ++open_devices; // Count open devices
@@ -132,8 +132,8 @@ int device_handler::open_device(std::string& serial)
     else {
         GR_LOG_INFO(
             d_logger,
-            boost::format("Previously connected device number %d from the list is used.")
-                % device_number);
+            fmt::format("Previously connected device number {} from the list is used.",
+                device_number));
         GR_LOG_INFO(d_logger, "##################");
     }
     set_limesuite_logger();
@@ -156,8 +156,8 @@ void device_handler::close_device(int device_number, int block_type)
                 error(device_number);
             GR_LOG_INFO(
                 d_logger,
-                boost::format("device_handler::close_device(): disconnected from device number %d.")
-                    % device_number);
+                fmt::format("device_handler::close_device(): disconnected from device number {}.",
+                    device_number));
             device_vector[device_number].address = NULL;
             GR_LOG_INFO(d_logger, "##################");
         }
@@ -221,9 +221,9 @@ void device_handler::check_blocks(int device_number,
 
     default:
         close_all_devices();
-        throw std::invalid_argument(str(
-            boost::format("device_handler::check_blocks(): internal error, incorrect block_type value %d.")
-                % block_type));
+        throw std::invalid_argument(fmt::format(
+            "device_handler::check_blocks(): internal error, incorrect block_type value {}.",
+                block_type));
     }
 
     // Check block settings which must match
@@ -234,11 +234,11 @@ void device_handler::check_blocks(int device_number,
             device_vector[device_number].sink_channel_mode) {
 
             close_all_devices();
-            throw std::invalid_argument(str(
-                boost::format("device_handler::check_blocks(): channel mismatch in LimeSuite "
-                              "Source (RX) (%d) and LimeSuite Sink (TX) (%d)")
-                    % device_vector[device_number].source_channel_mode
-                    % device_vector[device_number].sink_channel_mode));
+            throw std::invalid_argument(fmt::format(
+                "device_handler::check_blocks(): channel mismatch in LimeSuite "
+                              "Source (RX) ({}) and LimeSuite Sink (TX) ({})",
+                    device_vector[device_number].source_channel_mode,
+                    device_vector[device_number].sink_channel_mode));
         }
 
         // When file_switch is 1 check filename match throughout the blocks with the same
@@ -247,11 +247,11 @@ void device_handler::check_blocks(int device_number,
             device_vector[device_number].sink_filename) {
 
             close_all_devices();
-            throw std::invalid_argument(str(
-                boost::format("device_handler::check_blocks(): file must match in LimeSuite "
-                              "Source (RX) (%s) and LimeSuite Sink (TX) (%s)")
-                    % device_vector[device_number].source_filename
-                    % device_vector[device_number].sink_filename));
+            throw std::invalid_argument(fmt::format(
+                "device_handler::check_blocks(): file must match in LimeSuite "
+                              "Source (RX) ({}) and LimeSuite Sink (TX) ({})",
+                    device_vector[device_number].source_filename,
+                    device_vector[device_number].sink_filename));
         }
     }
 }
@@ -305,9 +305,9 @@ void device_handler::enable_channels(int device_number, int channel_mode, bool d
             device_handler::getInstance().error(device_number);
         GR_LOG_INFO(
             d_logger,
-            boost::format("SISO CH%d set for device number %d.")
-                % channel_mode
-                % device_number);
+            fmt::format("SISO CH{} set for device number {}.",
+                channel_mode,
+                device_number));
 
         if (direction)
             rfe_device.tx_channel = channel_mode;
@@ -331,8 +331,8 @@ void device_handler::enable_channels(int device_number, int channel_mode, bool d
 
         GR_LOG_INFO(
             d_logger,
-            boost::format("MIMO mode set for device number %d.")
-                % device_number);
+            fmt::format("MIMO mode set for device number {}.",
+                device_number));
     }
 }
 
@@ -354,7 +354,7 @@ void device_handler::set_samp_rate(int device_number, double& rate)
 
     GR_LOG_INFO(
         d_logger,
-        boost::format("Set sampling rate: %f MS/s.") % (host_value / 1e6));
+        fmt::format("Set sampling rate: {} MS/s.", (host_value / 1e6)));
     rate = host_value; // Get the real rate back
 }
 
@@ -379,7 +379,7 @@ void device_handler::set_oversampling(int device_number, int oversample)
 
         GR_LOG_INFO(
             d_logger,
-            boost::format("Set oversampling: %d.") % oversample);
+            fmt::format("Set oversampling: {}.", oversample));
     } else {
         close_all_devices();
         throw std::invalid_argument(
@@ -412,9 +412,9 @@ device_handler::set_rf_freq(int device_number, bool direction, int channel, floa
         std::string s_dir[2] = { "RX", "TX" };
         GR_LOG_INFO(
             d_logger,
-            boost::format("RF frequency set [%s]: %f MHz.")
-                % s_dir[direction]
-                % (value / 1e6));
+            fmt::format("RF frequency set [{}]: {} MHz.",
+                s_dir[direction],
+                (value / 1e6)));
     }
 
     return value;
@@ -472,10 +472,10 @@ void device_handler::set_antenna(int device_number,
     std::string s_dir[2] = { "RX", "TX" };
     GR_LOG_INFO(
         d_logger,
-        boost::format("CH%d antenna set [%s]: %s.")
-            % channel
-            % s_dir[direction]
-            % s_antenna[direction][antenna_value]);
+        fmt::format("CH{} antenna set [{}]: {}.",
+            channel,
+            s_dir[direction],
+            s_antenna[direction][antenna_value]));
 }
 
 double device_handler::set_analog_filter(int device_number,
@@ -526,19 +526,19 @@ double device_handler::set_digital_filter(int device_number,
                            enable,
                            digital_bandw);
             std::string s_dir[2] = { "RX", "TX" };
-            const std::string msg_start = str(boost::format("Digital filter CH%d [%s]")
-                % channel
-                % s_dir[direction]);
+            const std::string msg_start = fmt::format("Digital filter CH{} [{}]",
+                channel,
+                s_dir[direction]);
 
             if (enable) {
                 GR_LOG_INFO(d_logger,
-                    boost::format("%s set: %f")
-                        % msg_start
-                        % (digital_bandw / 1e6));
+                    fmt::format("{} set: {}",
+                        msg_start,
+                        (digital_bandw / 1e6)));
             } else {
                 GR_LOG_INFO(d_logger,
-                    boost::format("%s disabled.")
-                        % msg_start);
+                    fmt::format("{} disabled.",
+                        msg_start));
             }
         } else {
             close_all_devices();
@@ -575,10 +575,10 @@ device_handler::set_gain(int device_number, bool direction, int channel, unsigne
                       &gain_value);
         GR_LOG_INFO(
             d_logger,
-            boost::format("CH%d gain set [%s]: %s.")
-                % channel
-                % s_dir[direction]
-                % gain_value);
+            fmt::format("CH{} gain set [{}]: {}.",
+                channel,
+                s_dir[direction],
+                gain_value));
     } else {
         close_all_devices();
         throw std::invalid_argument("device_handler::set_gain(): valid range [0, 73]");
@@ -602,9 +602,9 @@ void device_handler::set_nco(int device_number,
                         0);
         GR_LOG_INFO(
             d_logger,
-            boost::format("NCO [%s] CH%d gain disabled.")
-                % s_dir[direction]
-                % channel);
+            fmt::format("NCO [{}] CH{} gain disabled.",
+                s_dir[direction],
+                channel));
     } else {
         double freq_value_in[16] = { nco_freq };
         int cmix_mode;
@@ -636,12 +636,12 @@ void device_handler::set_nco(int device_number,
                             pho_value_out);
         GR_LOG_INFO(
             d_logger,
-            boost::format("NCO [%s] CH%d: %f MHz (%f deg.)(%s).")
-                % s_dir[direction]
-                % channel
-                % (freq_value_out[0] / 1e6)
-                % pho_value_out[0]
-                % s_cmix[cmix_mode]);
+            fmt::format("NCO [{}] CH{}: {} MHz ({} deg.)({}).",
+                s_dir[direction],
+                channel,
+                (freq_value_out[0] / 1e6),
+                pho_value_out[0],
+                s_cmix[cmix_mode]));
     }
 }
 
@@ -668,7 +668,7 @@ void device_handler::set_tcxo_dac(int device_number, uint16_t dacVal)
                              &dac_value,
                              NULL);
 
-    GR_LOG_INFO(d_logger, boost::format("VCTCXO DAC value set: %u") % dac_value);
+    GR_LOG_INFO(d_logger, fmt::format("VCTCXO DAC value set: {}", dac_value));
 }
 
 void device_handler::set_rfe_device(rfe_dev_t* rfe_dev) { rfe_device.rfe_dev = rfe_dev; }
@@ -683,9 +683,9 @@ void device_handler::update_rfe_channels()
         }
         GR_LOG_INFO(
             d_logger,
-            boost::format("RFE RX channel: %d TX channel: %d")
-                % rfe_device.rx_channel
-                % rfe_device.tx_channel);
+            fmt::format("RFE RX channel: {} TX channel: {}",
+                rfe_device.rx_channel,
+                rfe_device.tx_channel));
     } else {
         throw std::runtime_error("device_handler::update_rfe_channels(): no assigned RFE device");
     }
