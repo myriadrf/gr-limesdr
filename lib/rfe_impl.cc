@@ -82,11 +82,11 @@ rfe::rfe(int comm_type,
     {
         // Not using device handler so print the version
         GR_LOG_INFO(d_logger, "##################");
-        GR_LOG_INFO(d_logger, "LimeSuite version: {}", LMS_GetLibraryVersion());
-        GR_LOG_INFO(d_logger, "gr-limesdr version: {}", GR_LIMESDR_VER);
+        GR_LOG_INFO(d_logger, fmt::format("LimeSuite version: {}", LMS_GetLibraryVersion()));
+        GR_LOG_INFO(d_logger, fmt::format("gr-limesdr version: {}", GR_LIMESDR_VER));
         GR_LOG_INFO(d_logger, "##################");
 
-        GR_LOG_INFO(d_logger, "Opening {}", device);
+        GR_LOG_INFO(d_logger, fmt::format("Opening {}", device));
         rfe_dev = RFE_Open(device.c_str(), nullptr);
         if (!rfe_dev) {
             throw std::runtime_error("LimeRFE: failed to open " + device);
@@ -98,7 +98,7 @@ rfe::rfe(int comm_type,
     if ((error = RFE_GetInfo(rfe_dev, info)) != 0) {
         throw std::runtime_error("LimeRFE: failed to get device info.");
     }
-    GR_LOG_INFO(d_logger, "FW: {} HW: {}", (int)info[0], (int)info[1]);
+    GR_LOG_INFO(d_logger, fmt::format("FW: {} HW: {}", (int)info[0], (int)info[1]));
 
     if (config_file.empty()) {
         if ((error = RFE_ConfigureState(rfe_dev, boardState)) != 0) {
@@ -138,14 +138,14 @@ int rfe::change_mode(int mode)
         }
         int error = 0;
         if (mode > 3 || mode < 0) {
-            GR_LOG_ERROR(d_logger, "Invalid mode {}", mode);
+            GR_LOG_ERROR(d_logger, fmt::format("Invalid mode {}", mode));
             return -1;
         }
         std::string mode_str[4] = { "RX", "TX", "NONE", "RX+TX" };
-        GR_LOG_INFO(d_logger, "Changing mode to {}", mode_str);
+        GR_LOG_INFO(d_logger, fmt::format("Changing mode to {}", mode_str[mode]));
 
         if ((error = RFE_Mode(rfe_dev, mode)) != 0) {
-            GR_LOG_ERROR(d_logger, "Failed to change mode: {}", this->strerror(error));
+            GR_LOG_ERROR(d_logger, fmt::format("Failed to change mode: {}", this->strerror(error)));
         }
         boardState.mode = mode;
         return error;
@@ -158,10 +158,10 @@ int rfe::set_fan(int enable)
 {
     if (rfe_dev) {
         std::string enable_str[2] = { "Disabling", "Enabling" };
-        GR_LOG_INFO(d_logger, "{} fan", enable_str[enable]);
+        GR_LOG_INFO(d_logger, fmt::format("{} fan", enable_str[enable]));
         int error = 0;
         if ((error = RFE_Fan(rfe_dev, enable)) != 0) {
-            GR_LOG_ERROR(d_logger, "Failed to change mode: {}", this->strerror(error));
+            GR_LOG_ERROR(d_logger, fmt::format("Failed to change mode: {}", this->strerror(error)));
         }
         return error;
     }
@@ -177,11 +177,11 @@ int rfe::set_attenuation(int attenuation)
             GR_LOG_ERROR(d_logger, "Attenuation value too high, valid range [0, 7]");
             return -1;
         }
-        GR_LOG_INFO(d_logger, "Changing attenuation value to: {}", attenuation);
+        GR_LOG_INFO(d_logger, fmt::format("Changing attenuation value to: {}", attenuation));
 
         boardState.attValue = attenuation;
         if ((error = RFE_ConfigureState(rfe_dev, boardState)) != 0) {
-            GR_LOG_ERROR(d_logger, "Failed to change attenuation: {}", this->strerror(error));
+            GR_LOG_ERROR(d_logger, fmt::format("Failed to change attenuation: {}", this->strerror(error)));
         }
         return error;
     }
@@ -200,9 +200,9 @@ int rfe::set_notch(int enable)
         int error = 0; //! TODO: might need renaming
         boardState.notchOnOff = enable;
         std::string en_dis[2] = { "Disabling", "Enabling" };
-        GR_LOG_INFO(d_logger, "{} notch filter", en_dis[enable]);
+        GR_LOG_INFO(d_logger, fmt::format("{} notch filter", en_dis[enable]));
         if ((error = RFE_ConfigureState(rfe_dev, boardState)) != 0) {
-            GR_LOG_ERROR(d_logger, "Failed to change attenuation: {}", this->strerror(error));
+            GR_LOG_ERROR(d_logger, fmt::format("Failed to change attenuation: {}", this->strerror(error)));
         }
         return error;
     }
@@ -245,15 +245,15 @@ void rfe::get_board_state()
         return;
     }
 
-    GR_LOG_INFO(d_logger, "LimeRFE: RX channel: {}", (int)currentState.channelIDRX);
-    GR_LOG_INFO(d_logger, "LimeRFE: TX channel: {}", (int)currentState.channelIDTX);
-    GR_LOG_INFO(d_logger, "LimeRFE: PortRX: {}", (int)currentState.selPortRX);
-    GR_LOG_INFO(d_logger, "LimeRFE: PortTx: {}", (int)currentState.selPortTX);
-    GR_LOG_INFO(d_logger, "LimeRFE: Mode: {}", (int)currentState.mode);
-    GR_LOG_INFO(d_logger, "LimeRFE: Notch: {}", (int)currentState.notchOnOff);
-    GR_LOG_INFO(d_logger, "LimeRFE: Attenuation: {}", (int)currentState.attValue);
-    GR_LOG_INFO(d_logger, "LimeRFE: Enable SWR: {}", (int)currentState.enableSWR);
-    GR_LOG_INFO(d_logger, "LimeRFE: SourceSWR: {}", (int)currentState.sourceSWR);
+    GR_LOG_INFO(d_logger, fmt::format("LimeRFE: RX channel: {}", (int)currentState.channelIDRX));
+    GR_LOG_INFO(d_logger, fmt::format("LimeRFE: TX channel: {}", (int)currentState.channelIDTX));
+    GR_LOG_INFO(d_logger, fmt::format("LimeRFE: PortRX: {}", (int)currentState.selPortRX));
+    GR_LOG_INFO(d_logger, fmt::format("LimeRFE: PortTx: {}", (int)currentState.selPortTX));
+    GR_LOG_INFO(d_logger, fmt::format("LimeRFE: Mode: {}", (int)currentState.mode));
+    GR_LOG_INFO(d_logger, fmt::format("LimeRFE: Notch: {}", (int)currentState.notchOnOff));
+    GR_LOG_INFO(d_logger, fmt::format("LimeRFE: Attenuation: {}", (int)currentState.attValue));
+    GR_LOG_INFO(d_logger, fmt::format("LimeRFE: Enable SWR: {}", (int)currentState.enableSWR));
+    GR_LOG_INFO(d_logger, fmt::format("LimeRFE: SourceSWR: {}", (int)currentState.sourceSWR));
 }
 
 } // namespace limesdr
