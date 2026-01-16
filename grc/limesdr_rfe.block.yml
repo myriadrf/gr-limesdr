@@ -87,7 +87,7 @@ templates:
     imports: import limesdr
     make: |-
         limesdr.rfe(${comm_type},
-        % if comm_type == 0:
+        % if comm_type == '0':
             ${com_port},
         % else:
             ${sdr_serial},
