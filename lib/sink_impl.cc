@@ -27,6 +27,7 @@
 #include <gnuradio/io_signature.h>
 
 #include <stdexcept>
+#include <thread>
 
 namespace gr {
 namespace limesdr {
@@ -120,11 +121,16 @@ bool sink_impl::start(void)
         this->init_stream(stored.device_number, LMS_CH_0);
         this->init_stream(stored.device_number, LMS_CH_1);
 
+        //We need the Tx and RX streams to be initialized before starting
+        //any of them in 2-channel mode
+        lock.unlock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        lock.lock();
+
         LMS_StartStream(&streamId[LMS_CH_0]);
         LMS_StartStream(&streamId[LMS_CH_1]);
     }
-    std::unique_lock<std::recursive_mutex> unlock(
-        device_handler::getInstance().block_mutex);
+    
     return true;
 }
 
